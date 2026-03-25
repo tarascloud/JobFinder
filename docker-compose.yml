@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        DATABASE_URL: postgresql://jobfinder:jobfinder@pg:5432/jobfinder
+    container_name: jobfinder
+    restart: unless-stopped
+    ports:
+      - "3456:3456"
+    env_file: .env
+    depends_on:
+      pg:
+        condition: service_healthy
+  pg:
+    image: postgres:16-alpine
+    container_name: jobfinder-pg
+    environment:
+      POSTGRES_USER: jobfinder
+      POSTGRES_PASSWORD: jobfinder
+      POSTGRES_DB: jobfinder
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U jobfinder
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  pg-data:

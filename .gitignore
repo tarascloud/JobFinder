@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.env
+.env.local
+*.tsbuildinfo
+public/resumes/
+
+# Serwist PWA (generated)
+public/sw.js
+public/sw.js.map
+public/serwist-*.js
+public/serwist-*.js.map
+
+# Apply screenshots
+public/screenshots/

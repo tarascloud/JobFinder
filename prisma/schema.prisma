@@ -1,0 +1,276 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  image     String?
+  googleId  String?  @unique @map("google_id")
+  role      String   @default("user")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  profile          UserProfile?
+  searchProfiles   SearchProfile[]
+  vacancyScores    VacancyScore[]
+  applications     Application[]
+  qaPairs          QaPair[]
+  platformAccounts PlatformAccount[]
+  aiFeedback       AiFeedback[]
+  aiSettings       UserAISettings?
+  notifications    Notification[]
+
+  @@map("users")
+}
+
+model GuestInvite {
+  email     String   @id
+  invitedBy String   @map("invited_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("guest_invites")
+}
+
+model UserProfile {
+  userId             Int      @id
+  headline           String?
+  summary            String?
+  yearsExperience    Int?
+  skills             String[]
+  languages          String[]
+  portfolioUrls      String[]
+  resumeUrl          String?
+  resumeText         String?
+  salaryMin          Int?
+  salaryCurrency     String?
+  preferredLocations String[]
+  preferredRemoteType String?
+  employmentTypes    String[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model SearchProfile {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  name              String
+  isActive          Boolean  @default(true)
+  jobTitles         String[]
+  minSalary         Int?
+  currency          String?
+  employmentTypes   String[]
+  remoteOnly        Boolean  @default(true)
+  geographies       String[]
+  excludedCompanies String[]
+  excludedIndustries String[]
+  stackFilter       String[]
+  applyHoursStart   Int      @default(18)
+  applyHoursEnd     Int      @default(22)
+  applyTimezone     String   @default("Europe/Madrid")
+  maxDailyApplies   Int      @default(20)
+  autoApply         Boolean  @default(false)
+  scrapeSchedule    String   @default("daily")
+  createdAt         DateTime @default(now())
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vacancyScores VacancyScore[]
+  applications  Application[]
+
+  @@index([userId])
+  @@map("search_profiles")
+}
+
+model Vacancy {
+  id             Int       @id @default(autoincrement())
+  platform       String
+  externalId     String
+  url            String
+  title          String
+  company        String?
+  location       String?
+  salaryText     String?
+  salaryMin      Int?
+  salaryMax      Int?
+  salaryCurrency String?
+  salaryMinEur   Int?      @map("salary_min_eur")
+  salaryMaxEur   Int?      @map("salary_max_eur")
+  remoteType     String?
+  employmentType String?
+  description    String    @db.Text
+  language       String?
+  postedAt       DateTime?
+  scrapedAt      DateTime  @default(now())
+  rawHtml        String?   @db.Text
+  isDuplicateOf  Int?      @map("is_duplicate_of")
+  tagStack       String[]  @default([]) @map("tag_stack")
+  tagLevel       String?   @map("tag_level")
+  tagIndustry    String?   @map("tag_industry")
+  tagTeamSize    String?   @map("tag_team_size")
+
+  duplicateOf   Vacancy?  @relation("VacancyDuplicates", fields: [isDuplicateOf], references: [id], onDelete: SetNull)
+  duplicates    Vacancy[] @relation("VacancyDuplicates")
+
+  vacancyScores VacancyScore[]
+  applications  Application[]
+  qaPairs       QaPair[]
+
+  @@unique([platform, externalId])
+  @@map("vacancies")
+}
+
+model VacancyScore {
+  id              Int      @id @default(autoincrement())
+  vacancyId       Int
+  userId          Int
+  searchProfileId Int
+  matchScore      Int
+  salaryFit       Boolean?
+  remoteFit       Boolean?
+  notes           String?
+  dismissed       Boolean  @default(false)
+  scoredAt        DateTime @default(now())
+  scoredBy        String?
+
+  vacancy       Vacancy       @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  searchProfile SearchProfile @relation(fields: [searchProfileId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([vacancyId])
+  @@map("vacancy_scores")
+}
+
+model Application {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  vacancyId       Int
+  searchProfileId Int
+  status          String    @default("queued")
+  coverLetter     String?   @db.Text
+  interviewPrep   String?   @db.Text @map("interview_prep")
+  appliedAt       DateTime?
+  screenshotPath  String?
+  applyLog        String?   @db.Text
+  createdAt       DateTime  @default(now())
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vacancy       Vacancy       @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
+  searchProfile SearchProfile @relation(fields: [searchProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, vacancyId])
+  @@index([userId])
+  @@map("applications")
+}
+
+model QaPair {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  question        String
+  answer          String?
+  sourceVacancyId Int?
+  answeredAt      DateTime?
+  timesUsed       Int       @default(0)
+  category        String?
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceVacancy Vacancy? @relation(fields: [sourceVacancyId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@map("qa_pairs")
+}
+
+model PlatformAccount {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  platform          String
+  authType          String    @default("password")
+  email             String?
+  passwordEncrypted String?
+  sessionData       String?   @db.Text
+  lastLogin         DateTime?
+  status            String    @default("active")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("platform_accounts")
+}
+
+model AiFeedback {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  field     String   // "profile.headline", "profile.summary", "cover_letter", "qa.answer", etc.
+  context   String?  @db.Text // the prompt/input that generated the content
+  content   String   @db.Text // the AI-generated content
+  rating    String   // "like" or "dislike"
+  comment   String?  // optional user comment on why
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, field])
+  @@map("ai_feedback")
+}
+
+model UserAISettings {
+  userId        Int      @id @map("user_id")
+  provider      String   @default("ollama") // ollama, gemini, groq
+  ollamaUrl     String   @default("http://ollama:11434") @map("ollama_url")
+  ollamaModel   String   @default("qwen2.5:14b-instruct-q4_K_M") @map("ollama_model")
+  geminiApiKey  String?  @map("gemini_api_key")
+  groqApiKey    String?  @map("groq_api_key")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_ai_settings")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  type      String   // "new_vacancies", "application_response", "interview_scheduled", "qa_pending", "scrape_complete"
+  title     String
+  message   String
+  link      String?  // URL to navigate to
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+model CompanyResearch {
+  id          Int      @id @default(autoincrement())
+  companyName String   @unique @map("company_name")
+  data        String   @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("company_research")
+}
+
+model EmailResponse {
+  id            Int      @id @default(autoincrement())
+  userId        Int?     @map("user_id")
+  applicationId Int?     @map("application_id")
+  fromEmail     String   @map("from_email")
+  subject       String
+  body          String?  @db.Text
+  responseType  String   @map("response_type") // positive, rejection, interview, info
+  matched       Boolean  @default(false)
+  receivedAt    DateTime @default(now()) @map("received_at")
+
+  @@map("email_responses")
+}

@@ -1,0 +1,465 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+import {
+  getApplicationFunnel,
+  getWeeklyApplicationStats,
+  getPlatformStats,
+  getTopCompanies,
+  getScoreDistribution,
+  getApplyTimeAnalysis,
+} from "@/actions/analytics";
+
+interface FunnelData {
+  queued: number;
+  approved: number;
+  applied: number;
+  response: number;
+  interview: number;
+  offer: number;
+  rejected: number;
+}
+
+interface WeeklyData {
+  week: string;
+  applied: number;
+  responses: number;
+  interviews: number;
+}
+
+interface PlatformData {
+  platform: string;
+  vacancies: number;
+  applied: number;
+  responses: number;
+  responseRate: number;
+}
+
+interface CompanyData {
+  company: string;
+  vacancies: number;
+  applied: number;
+  avgScore: number;
+}
+
+interface ScoreData {
+  range: string;
+  count: number;
+}
+
+interface TimeData {
+  hour: number;
+  applications: number;
+  responses: number;
+}
+
+const CHART_COLORS = {
+  blue: "#3b82f6",
+  green: "#22c55e",
+  yellow: "#eab308",
+  purple: "#a855f7",
+  red: "#ef4444",
+  cyan: "#06b6d4",
+  orange: "#f97316",
+};
+
+const FUNNEL_COLORS = [
+  CHART_COLORS.yellow,
+  CHART_COLORS.blue,
+  CHART_COLORS.cyan,
+  CHART_COLORS.green,
+  CHART_COLORS.purple,
+  CHART_COLORS.orange,
+];
+
+const SCORE_COLORS = [
+  CHART_COLORS.red,
+  CHART_COLORS.orange,
+  CHART_COLORS.yellow,
+  CHART_COLORS.blue,
+  CHART_COLORS.green,
+];
+
+function ChartSkeleton() {
+  return (
+    <div className="space-y-3">
+      <Skeleton className="h-4 w-32" />
+      <Skeleton className="h-[250px] w-full" />
+    </div>
+  );
+}
+
+export default function AnalyticsPage() {
+  const t = useTranslations("analytics");
+
+  const [funnel, setFunnel] = useState<FunnelData | null>(null);
+  const [weekly, setWeekly] = useState<WeeklyData[]>([]);
+  const [platforms, setPlatforms] = useState<PlatformData[]>([]);
+  const [companies, setCompanies] = useState<CompanyData[]>([]);
+  const [scores, setScores] = useState<ScoreData[]>([]);
+  const [timeData, setTimeData] = useState<TimeData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [f, w, p, c, s, td] = await Promise.all([
+          getApplicationFunnel(),
+          getWeeklyApplicationStats(),
+          getPlatformStats(),
+          getTopCompanies(),
+          getScoreDistribution(),
+          getApplyTimeAnalysis(),
+        ]);
+
+        if (f && !("error" in f)) setFunnel(f);
+        if (Array.isArray(w)) setWeekly(w);
+        if (Array.isArray(p)) setPlatforms(p);
+        if (Array.isArray(c)) setCompanies(c);
+        if (Array.isArray(s)) setScores(s);
+        if (Array.isArray(td)) setTimeData(td);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const hasData =
+    funnel &&
+    (funnel.queued > 0 ||
+      funnel.approved > 0 ||
+      funnel.applied > 0 ||
+      funnel.interview > 0 ||
+      funnel.offer > 0);
+
+  if (!loading && !hasData) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <p className="text-muted-foreground">{t("no_data")}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const funnelChartData = funnel
+    ? [
+        { name: "Queued", value: funnel.queued },
+        { name: "Approved", value: funnel.approved },
+        { name: "Applied", value: funnel.applied },
+        { name: "Response", value: funnel.response },
+        { name: "Interview", value: funnel.interview },
+        { name: "Offer", value: funnel.offer },
+      ]
+    : [];
+
+  // Filter time data to only hours with activity
+  const activeHours = timeData.filter((d) => d.applications > 0);
+  const showTimeChart = activeHours.length > 0;
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">{t("title")}</h1>
+
+      {/* Row 1: Funnel + Weekly Trends */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Funnel Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("funnel")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={funnelChartData} layout="vertical" margin={{ left: 10, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis type="number" stroke="#888" fontSize={12} />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    stroke="#888"
+                    fontSize={12}
+                    width={80}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                    {funnelChartData.map((_, idx) => (
+                      <Cell key={idx} fill={FUNNEL_COLORS[idx % FUNNEL_COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Weekly Trends */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("weekly_trends")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <LineChart data={weekly} margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis
+                    dataKey="week"
+                    stroke="#888"
+                    fontSize={11}
+                    tickFormatter={(v: string) => v.replace(/^\d{4}-/, "")}
+                  />
+                  <YAxis stroke="#888" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="applied"
+                    stroke={CHART_COLORS.blue}
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    name="Applied"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="responses"
+                    stroke={CHART_COLORS.green}
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    name="Responses"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="interviews"
+                    stroke={CHART_COLORS.purple}
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    name="Interviews"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Row 2: Platform Comparison + Score Distribution */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Platform Comparison */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("platform_comparison")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : platforms.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("no_data")}</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={platforms} margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="platform" stroke="#888" fontSize={12} />
+                  <YAxis stroke="#888" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                    formatter={(value, name) => {
+                      if (name === "responseRate") return [`${value}%`, t("response_rate")];
+                      return [value, name];
+                    }}
+                  />
+                  <Bar dataKey="vacancies" fill={CHART_COLORS.blue} name="Vacancies" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="applied" fill={CHART_COLORS.green} name="Applied" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="responseRate" fill={CHART_COLORS.purple} name="responseRate" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Score Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("score_distribution")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={scores} margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="range" stroke="#888" fontSize={12} />
+                  <YAxis stroke="#888" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                    {scores.map((_, idx) => (
+                      <Cell key={idx} fill={SCORE_COLORS[idx % SCORE_COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Row 3: Top Companies + Best Apply Time */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Top Companies */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("top_companies")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                ))}
+              </div>
+            ) : companies.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("no_data")}</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-muted-foreground">
+                      <th className="text-left py-2 font-medium">Company</th>
+                      <th className="text-right py-2 font-medium">Vacancies</th>
+                      <th className="text-right py-2 font-medium">Applied</th>
+                      <th className="text-right py-2 font-medium">Avg Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {companies.map((c) => (
+                      <tr key={c.company} className="border-b border-border/50">
+                        <td className="py-2 text-foreground truncate max-w-[200px]">
+                          {c.company}
+                        </td>
+                        <td className="py-2 text-right text-foreground/80">{c.vacancies}</td>
+                        <td className="py-2 text-right text-foreground/80">{c.applied}</td>
+                        <td className="py-2 text-right">
+                          <span
+                            className={
+                              c.avgScore >= 70
+                                ? "text-green-400"
+                                : c.avgScore >= 40
+                                  ? "text-yellow-400"
+                                  : "text-muted-foreground"
+                            }
+                          >
+                            {c.avgScore}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Best Apply Time */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("best_time")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : !showTimeChart ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("no_data")}</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={timeData} margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis
+                    dataKey="hour"
+                    stroke="#888"
+                    fontSize={11}
+                    tickFormatter={(h: number) => `${String(h).padStart(2, "0")}:00`}
+                  />
+                  <YAxis stroke="#888" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "8px",
+                      color: "#fff",
+                    }}
+                    labelFormatter={(h) => `${String(h).padStart(2, "0")}:00`}
+                  />
+                  <Bar
+                    dataKey="applications"
+                    fill={CHART_COLORS.blue}
+                    name="Applications"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="responses"
+                    fill={CHART_COLORS.green}
+                    name="Responses"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
