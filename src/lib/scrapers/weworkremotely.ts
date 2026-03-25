@@ -1,4 +1,5 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
+import { getRandomUserAgent } from "@/lib/proxy";
 
 const RSS_FEEDS = [
   "https://weworkremotely.com/categories/remote-programming-jobs.rss",
@@ -90,7 +91,7 @@ function extractExternalId(link: string): string {
 async function fetchFeed(url: string): Promise<RssItem[]> {
   const res = await fetch(url, {
     headers: {
-      "User-Agent": "JobFinder/1.0 (job search aggregator)",
+      "User-Agent": getRandomUserAgent(),
       Accept: "application/rss+xml, application/xml, text/xml",
     },
   });

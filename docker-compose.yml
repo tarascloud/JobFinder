@@ -9,6 +9,8 @@ services:
     ports:
       - "3456:3456"
     env_file: .env
+    volumes:
+      - app-data:/app/data
     depends_on:
       pg:
         condition: service_healthy
@@ -28,3 +30,4 @@ services:
       retries: 10
 volumes:
   pg-data:
+  app-data:

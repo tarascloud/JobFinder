@@ -49,6 +49,7 @@ export type QaPairMinAggregateOutputType = {
   answeredAt: Date | null
   timesUsed: number | null
   category: string | null
+  source: string | null
 }
 
 export type QaPairMaxAggregateOutputType = {
@@ -60,6 +61,7 @@ export type QaPairMaxAggregateOutputType = {
   answeredAt: Date | null
   timesUsed: number | null
   category: string | null
+  source: string | null
 }
 
 export type QaPairCountAggregateOutputType = {
@@ -71,6 +73,7 @@ export type QaPairCountAggregateOutputType = {
   answeredAt: number
   timesUsed: number
   category: number
+  source: number
   _all: number
 }
 
@@ -98,6 +101,7 @@ export type QaPairMinAggregateInputType = {
   answeredAt?: true
   timesUsed?: true
   category?: true
+  source?: true
 }
 
 export type QaPairMaxAggregateInputType = {
@@ -109,6 +113,7 @@ export type QaPairMaxAggregateInputType = {
   answeredAt?: true
   timesUsed?: true
   category?: true
+  source?: true
 }
 
 export type QaPairCountAggregateInputType = {
@@ -120,6 +125,7 @@ export type QaPairCountAggregateInputType = {
   answeredAt?: true
   timesUsed?: true
   category?: true
+  source?: true
   _all?: true
 }
 
@@ -218,6 +224,7 @@ export type QaPairGroupByOutputType = {
   answeredAt: Date | null
   timesUsed: number
   category: string | null
+  source: string
   _count: QaPairCountAggregateOutputType | null
   _avg: QaPairAvgAggregateOutputType | null
   _sum: QaPairSumAggregateOutputType | null
@@ -252,6 +259,7 @@ export type QaPairWhereInput = {
   answeredAt?: Prisma.DateTimeNullableFilter<"QaPair"> | Date | string | null
   timesUsed?: Prisma.IntFilter<"QaPair"> | number
   category?: Prisma.StringNullableFilter<"QaPair"> | string | null
+  source?: Prisma.StringFilter<"QaPair"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sourceVacancy?: Prisma.XOR<Prisma.VacancyNullableScalarRelationFilter, Prisma.VacancyWhereInput> | null
 }
@@ -265,6 +273,7 @@ export type QaPairOrderByWithRelationInput = {
   answeredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   sourceVacancy?: Prisma.VacancyOrderByWithRelationInput
 }
@@ -281,6 +290,7 @@ export type QaPairWhereUniqueInput = Prisma.AtLeast<{
   answeredAt?: Prisma.DateTimeNullableFilter<"QaPair"> | Date | string | null
   timesUsed?: Prisma.IntFilter<"QaPair"> | number
   category?: Prisma.StringNullableFilter<"QaPair"> | string | null
+  source?: Prisma.StringFilter<"QaPair"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sourceVacancy?: Prisma.XOR<Prisma.VacancyNullableScalarRelationFilter, Prisma.VacancyWhereInput> | null
 }, "id">
@@ -294,6 +304,7 @@ export type QaPairOrderByWithAggregationInput = {
   answeredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
   _count?: Prisma.QaPairCountOrderByAggregateInput
   _avg?: Prisma.QaPairAvgOrderByAggregateInput
   _max?: Prisma.QaPairMaxOrderByAggregateInput
@@ -313,6 +324,7 @@ export type QaPairScalarWhereWithAggregatesInput = {
   answeredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"QaPair"> | Date | string | null
   timesUsed?: Prisma.IntWithAggregatesFilter<"QaPair"> | number
   category?: Prisma.StringNullableWithAggregatesFilter<"QaPair"> | string | null
+  source?: Prisma.StringWithAggregatesFilter<"QaPair"> | string
 }
 
 export type QaPairCreateInput = {
@@ -321,6 +333,7 @@ export type QaPairCreateInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
   user: Prisma.UserCreateNestedOneWithoutQaPairsInput
   sourceVacancy?: Prisma.VacancyCreateNestedOneWithoutQaPairsInput
 }
@@ -334,6 +347,7 @@ export type QaPairUncheckedCreateInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
 }
 
 export type QaPairUpdateInput = {
@@ -342,6 +356,7 @@ export type QaPairUpdateInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutQaPairsNestedInput
   sourceVacancy?: Prisma.VacancyUpdateOneWithoutQaPairsNestedInput
 }
@@ -355,6 +370,7 @@ export type QaPairUncheckedUpdateInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type QaPairCreateManyInput = {
@@ -366,6 +382,7 @@ export type QaPairCreateManyInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
 }
 
 export type QaPairUpdateManyMutationInput = {
@@ -374,6 +391,7 @@ export type QaPairUpdateManyMutationInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type QaPairUncheckedUpdateManyInput = {
@@ -385,6 +403,7 @@ export type QaPairUncheckedUpdateManyInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type QaPairListRelationFilter = {
@@ -406,6 +425,7 @@ export type QaPairCountOrderByAggregateInput = {
   answeredAt?: Prisma.SortOrder
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  source?: Prisma.SortOrder
 }
 
 export type QaPairAvgOrderByAggregateInput = {
@@ -424,6 +444,7 @@ export type QaPairMaxOrderByAggregateInput = {
   answeredAt?: Prisma.SortOrder
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  source?: Prisma.SortOrder
 }
 
 export type QaPairMinOrderByAggregateInput = {
@@ -435,6 +456,7 @@ export type QaPairMinOrderByAggregateInput = {
   answeredAt?: Prisma.SortOrder
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  source?: Prisma.SortOrder
 }
 
 export type QaPairSumOrderByAggregateInput = {
@@ -534,6 +556,7 @@ export type QaPairCreateWithoutUserInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
   sourceVacancy?: Prisma.VacancyCreateNestedOneWithoutQaPairsInput
 }
 
@@ -545,6 +568,7 @@ export type QaPairUncheckedCreateWithoutUserInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
 }
 
 export type QaPairCreateOrConnectWithoutUserInput = {
@@ -585,6 +609,7 @@ export type QaPairScalarWhereInput = {
   answeredAt?: Prisma.DateTimeNullableFilter<"QaPair"> | Date | string | null
   timesUsed?: Prisma.IntFilter<"QaPair"> | number
   category?: Prisma.StringNullableFilter<"QaPair"> | string | null
+  source?: Prisma.StringFilter<"QaPair"> | string
 }
 
 export type QaPairCreateWithoutSourceVacancyInput = {
@@ -593,6 +618,7 @@ export type QaPairCreateWithoutSourceVacancyInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
   user: Prisma.UserCreateNestedOneWithoutQaPairsInput
 }
 
@@ -604,6 +630,7 @@ export type QaPairUncheckedCreateWithoutSourceVacancyInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
 }
 
 export type QaPairCreateOrConnectWithoutSourceVacancyInput = {
@@ -640,6 +667,7 @@ export type QaPairCreateManyUserInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
 }
 
 export type QaPairUpdateWithoutUserInput = {
@@ -648,6 +676,7 @@ export type QaPairUpdateWithoutUserInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   sourceVacancy?: Prisma.VacancyUpdateOneWithoutQaPairsNestedInput
 }
 
@@ -659,6 +688,7 @@ export type QaPairUncheckedUpdateWithoutUserInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type QaPairUncheckedUpdateManyWithoutUserInput = {
@@ -669,6 +699,7 @@ export type QaPairUncheckedUpdateManyWithoutUserInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type QaPairCreateManySourceVacancyInput = {
@@ -679,6 +710,7 @@ export type QaPairCreateManySourceVacancyInput = {
   answeredAt?: Date | string | null
   timesUsed?: number
   category?: string | null
+  source?: string
 }
 
 export type QaPairUpdateWithoutSourceVacancyInput = {
@@ -687,6 +719,7 @@ export type QaPairUpdateWithoutSourceVacancyInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutQaPairsNestedInput
 }
 
@@ -698,6 +731,7 @@ export type QaPairUncheckedUpdateWithoutSourceVacancyInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type QaPairUncheckedUpdateManyWithoutSourceVacancyInput = {
@@ -708,6 +742,7 @@ export type QaPairUncheckedUpdateManyWithoutSourceVacancyInput = {
   answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -721,6 +756,7 @@ export type QaPairSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   answeredAt?: boolean
   timesUsed?: boolean
   category?: boolean
+  source?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
 }, ExtArgs["result"]["qaPair"]>
@@ -734,6 +770,7 @@ export type QaPairSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   answeredAt?: boolean
   timesUsed?: boolean
   category?: boolean
+  source?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
 }, ExtArgs["result"]["qaPair"]>
@@ -747,6 +784,7 @@ export type QaPairSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   answeredAt?: boolean
   timesUsed?: boolean
   category?: boolean
+  source?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
 }, ExtArgs["result"]["qaPair"]>
@@ -760,9 +798,10 @@ export type QaPairSelectScalar = {
   answeredAt?: boolean
   timesUsed?: boolean
   category?: boolean
+  source?: boolean
 }
 
-export type QaPairOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "question" | "answer" | "sourceVacancyId" | "answeredAt" | "timesUsed" | "category", ExtArgs["result"]["qaPair"]>
+export type QaPairOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "question" | "answer" | "sourceVacancyId" | "answeredAt" | "timesUsed" | "category" | "source", ExtArgs["result"]["qaPair"]>
 export type QaPairInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
@@ -791,6 +830,7 @@ export type $QaPairPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     answeredAt: Date | null
     timesUsed: number
     category: string | null
+    source: string
   }, ExtArgs["result"]["qaPair"]>
   composites: {}
 }
@@ -1224,6 +1264,7 @@ export interface QaPairFieldRefs {
   readonly answeredAt: Prisma.FieldRef<"QaPair", 'DateTime'>
   readonly timesUsed: Prisma.FieldRef<"QaPair", 'Int'>
   readonly category: Prisma.FieldRef<"QaPair", 'String'>
+  readonly source: Prisma.FieldRef<"QaPair", 'String'>
 }
     
 

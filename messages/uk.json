@@ -11,7 +11,10 @@
     "next": "Далі",
     "search": "Пошук",
     "filter": "Фільтр",
-    "no_data": "Даних поки немає"
+    "no_data": "Даних поки немає",
+    "source_ai": "Згенеровано ШІ",
+    "source_manual": "Вручну",
+    "source_ai_edited": "ШІ (редаговано)"
   },
   "login": {
     "title": "JobFinder",
@@ -80,7 +83,11 @@
     "accept_all": "Прийняти все",
     "dismiss": "Відхилити",
     "new_search_profiles": "{count} нових профілів пошуку запропоновано",
-    "new_qa_pairs": "{count} нових пар питань-відповідей згенеровано"
+    "new_qa_pairs": "{count} нових пар питань-відповідей згенеровано",
+    "upload_complete": "Завантаження завершено!",
+    "upload_complete_analyzing": "Завантаження завершено. ШІ аналізує у фоновому режимі...",
+    "bg_analyzing": "ШІ аналізує ваше резюме у фоновому режимі...",
+    "bg_analyzing_desc": "Можете перейти на іншу сторінку — результати збережуться автоматично."
   },
   "searches": {
     "title": "Профілі пошуку",
@@ -169,7 +176,8 @@
     "all_levels": "Всі рівні",
     "all_industries": "Всі галузі",
     "all_stack": "Всі технології",
-    "tags": "Теги"
+    "tags": "Теги",
+    "rate_limited": "Ліміт запитів вичерпано. Спробуйте через {minutes} хв."
   },
   "applications": {
     "title": "Заявки",
@@ -294,14 +302,24 @@
     "queued_count": "{count} вакансій додано в чергу"
   },
   "onboarding": {
-    "step_resume": "Резюме",
+    "step_upload": "Завантаження",
+    "step_analysis": "Аналіз",
     "step_review": "Перевірка",
+    "step_recommendations": "Рекомендації",
+    "step_improve": "Покращення",
     "step_ready": "Готово",
+    "select_ai_model": "Модель ШІ",
+    "configure_ai": "Налаштувати в Параметрах",
     "upload_title": "Завантажте резюме",
     "upload_description": "Завантажте PDF або вставте посилання. ШІ згенерує профіль, стратегії пошуку та питання для співбесід.",
     "analyze_button": "Аналізувати з ШІ",
     "analyzing_title": "ШІ аналізує ваше резюме...",
     "analyzing_description": "Генеруємо профіль, стратегії пошуку та пари питань-відповідей",
+    "analyzing_extracting": "Витягуємо навички та досвід...",
+    "analyzing_profile": "Генеруємо професійний профіль...",
+    "analyzing_searches": "Створюємо стратегії пошуку...",
+    "analyzing_qa": "Формуємо пари питань-відповідей для співбесід...",
+    "analysis_error": "Аналіз не вдався. Спробуйте ще раз.",
     "skip_manual": "Пропустити та заповнити вручну",
     "review_title": "Перегляд згенерованих даних",
     "review_description": "Все згенеровано з вашого резюме. Перегляньте та відредагуйте у вкладках перед збереженням.",
@@ -312,6 +330,23 @@
     "add_search": "Додати профіль пошуку",
     "add_qa": "Додати питання",
     "no_qa_generated": "Питання не згенеровано. Додайте свої або повторіть аналіз резюме.",
+    "recommendations_title": "Рекомендації щодо покращення резюме",
+    "recommendations_desc": "ШІ проаналізував ваш профіль і пропонує покращення",
+    "recommendations_loading": "Генеруємо рекомендації...",
+    "apply_suggestions": "Застосувати пропозиції",
+    "apply_all": "Застосувати все",
+    "skip_improvements": "Пропустити покращення",
+    "improve_title": "Перегляд покращень",
+    "improve_desc": "Порівняйте профіль до та після покращень",
+    "before": "До",
+    "after": "Після",
+    "accept_improvements": "Прийняти покращення",
+    "reject_improvements": "Залишити оригінал",
+    "applying_improvements": "Застосовуємо покращення...",
+    "priority_high": "Високий пріоритет",
+    "priority_medium": "Середній",
+    "priority_low": "Було б непогано",
+    "no_recommendations": "Ваш профіль виглядає чудово! Покращення не потрібні.",
     "ready_title": "Все готово!",
     "ready_description": "JobFinder налаштовано. Починайте шукати роботу!",
     "start_button": "Почати пошук",
@@ -344,7 +379,24 @@
     "field_profile_summary": "Опис профілю",
     "field_profile_skills": "Навички профілю",
     "field_cover_letter": "Супровідний лист",
-    "field_qa_answer": "Відповідь Q&A"
+    "field_qa_answer": "Відповідь Q&A",
+    "field_search": "Профіль пошуку",
+    "field_profile_languages": "Мови",
+    "field_profile_preferredLocations": "Бажані локації",
+    "field_profile_employmentTypes": "Типи зайнятості",
+    "field_profile_portfolioUrls": "Портфоліо URL",
+    "field_profile_yearsExperience": "Роки досвіду",
+    "field_profile_salaryMin": "Мінімальна зарплата",
+    "field_profile_salaryCurrency": "Валюта зарплати",
+    "field_profile_preferredRemoteType": "Формат роботи"
+  },
+  "ai_edit_tracking": {
+    "edited": "Змінено",
+    "kept": "Залишено",
+    "total_fields": "Полів згенеровано ШІ",
+    "accepted_as_is": "Прийнято без змін",
+    "user_edited": "Відредаговано",
+    "edit_rate": "Частка редагувань"
   },
   "about": {
     "back_to_login": "Назад до входу",
@@ -439,6 +491,20 @@
     "add_to_calendar": "Додати в календар",
     "google_calendar": "Google Календар",
     "download_ics": "Завантажити .ics"
+  },
+  "translations": {
+    "translate_to": "Перекласти на {language}",
+    "original": "Оригінал",
+    "translated": "Переклад",
+    "translating": "Перекладаємо...",
+    "show_english": "Показати англійською",
+    "show_translated": "Показати переклад",
+    "ai_content_lang": "ШІ контент англійською",
+    "ui_language": "Інтерфейс: {language}",
+    "translate_description": "Перекласти на {language}",
+    "en": "англійську",
+    "uk": "українську",
+    "es": "іспанську"
   },
   "emails": {
     "title": "Відповіді на листи",

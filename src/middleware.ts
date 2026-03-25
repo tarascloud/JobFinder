@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import crypto from "crypto";
 
 const PUBLIC_PATHS = ["/login", "/about", "/api/auth", "/api/health", "/api/status"];
 
@@ -16,16 +15,38 @@ function isAsset(pathname: string): boolean {
     pathname.startsWith("/favicon") ||
     pathname.startsWith("/icon-") ||
     pathname.startsWith("/manifest") ||
+    pathname.startsWith("/sw") ||
+    pathname.startsWith("/serwist") ||
     pathname.endsWith(".svg") ||
     pathname.endsWith(".png") ||
     pathname.endsWith(".ico") ||
     pathname.endsWith(".json") ||
     pathname.endsWith(".js") ||
-    pathname.endsWith(".css")
+    pathname.endsWith(".css") ||
+    pathname.endsWith(".pdf") ||
+    pathname.startsWith("/resumes/") ||
+    pathname.startsWith("/screenshots/")
   );
 }
 
-export function middleware(request: NextRequest) {
+async function verifyDemoToken(token: string): Promise<boolean> {
+  const secret = process.env.NEXTAUTH_SECRET || "demo-secret";
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode("demo"));
+  const expected = Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return token === expected;
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow assets and public routes
@@ -42,15 +63,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for valid demo token
+  // Check for valid demo token (Edge-compatible Web Crypto)
   const demoToken = request.cookies.get("demo_token")?.value;
   if (demoToken) {
-    const secret = process.env.NEXTAUTH_SECRET || "demo-secret";
-    const expected = crypto
-      .createHmac("sha256", secret)
-      .update("demo")
-      .digest("hex");
-    if (demoToken === expected) {
+    if (await verifyDemoToken(demoToken)) {
       return NextResponse.next();
     }
   }

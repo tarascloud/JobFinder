@@ -11,7 +11,10 @@
     "next": "Next",
     "search": "Search",
     "filter": "Filter",
-    "no_data": "No data yet"
+    "no_data": "No data yet",
+    "source_ai": "AI Generated",
+    "source_manual": "Manual",
+    "source_ai_edited": "AI Edited"
   },
   "login": {
     "title": "JobFinder",
@@ -80,7 +83,11 @@
     "accept_all": "Accept All Changes",
     "dismiss": "Dismiss",
     "new_search_profiles": "{count} new search profiles suggested",
-    "new_qa_pairs": "{count} new Q&A pairs generated (will be saved when you save profile)"
+    "new_qa_pairs": "{count} new Q&A pairs generated (will be saved when you save profile)",
+    "upload_complete": "Upload complete!",
+    "upload_complete_analyzing": "Upload complete. AI is analyzing in the background...",
+    "bg_analyzing": "AI is analyzing your resume in the background...",
+    "bg_analyzing_desc": "You can navigate away — we'll save the results when ready."
   },
   "searches": {
     "title": "Search Profiles",
@@ -169,7 +176,8 @@
     "all_levels": "All Levels",
     "all_industries": "All Industries",
     "all_stack": "All Tech",
-    "tags": "Tags"
+    "tags": "Tags",
+    "rate_limited": "Rate limit reached. Try again in {minutes} minutes."
   },
   "applications": {
     "title": "Applications",
@@ -294,14 +302,24 @@
     "queued_count": "{count} vacancies queued"
   },
   "onboarding": {
-    "step_resume": "Resume",
+    "step_upload": "Upload",
+    "step_analysis": "Analysis",
     "step_review": "Review",
+    "step_recommendations": "Recommendations",
+    "step_improve": "Improve",
     "step_ready": "Ready",
+    "select_ai_model": "AI Model",
+    "configure_ai": "Configure in Settings",
     "upload_title": "Upload Your Resume",
     "upload_description": "Upload a PDF or paste a URL. AI will generate your complete profile, search strategies, and interview Q&A.",
     "analyze_button": "Analyze with AI",
     "analyzing_title": "AI is analyzing your resume...",
     "analyzing_description": "Generating profile, search strategies, and interview Q&A pairs",
+    "analyzing_extracting": "Extracting skills and experience...",
+    "analyzing_profile": "Generating professional profile...",
+    "analyzing_searches": "Creating search strategies...",
+    "analyzing_qa": "Building interview Q&A pairs...",
+    "analysis_error": "Analysis failed. Please try again.",
     "skip_manual": "Skip and fill manually",
     "review_title": "Review AI-Generated Data",
     "review_description": "Everything was generated from your resume. Review and edit across tabs before saving.",
@@ -312,6 +330,23 @@
     "add_search": "Add Search Profile",
     "add_qa": "Add Q&A Pair",
     "no_qa_generated": "No Q&A pairs were generated. Add your own or re-analyze your resume.",
+    "recommendations_title": "Resume Improvement Suggestions",
+    "recommendations_desc": "AI analyzed your profile and suggests these improvements",
+    "recommendations_loading": "Generating improvement suggestions...",
+    "apply_suggestions": "Apply Suggestions",
+    "apply_all": "Apply All",
+    "skip_improvements": "Skip Improvements",
+    "improve_title": "Review Improvements",
+    "improve_desc": "Compare your profile before and after improvements",
+    "before": "Before",
+    "after": "After",
+    "accept_improvements": "Accept Improvements",
+    "reject_improvements": "Keep Original",
+    "applying_improvements": "Applying improvements...",
+    "priority_high": "High Priority",
+    "priority_medium": "Medium",
+    "priority_low": "Nice to have",
+    "no_recommendations": "Your profile looks great! No improvements needed.",
     "ready_title": "All Set!",
     "ready_description": "Your JobFinder is configured. Start finding jobs!",
     "start_button": "Start Finding Jobs",
@@ -344,7 +379,24 @@
     "field_profile_summary": "Profile Summary",
     "field_profile_skills": "Profile Skills",
     "field_cover_letter": "Cover Letter",
-    "field_qa_answer": "Q&A Answer"
+    "field_qa_answer": "Q&A Answer",
+    "field_search": "Search Profile",
+    "field_profile_languages": "Languages",
+    "field_profile_preferredLocations": "Preferred Locations",
+    "field_profile_employmentTypes": "Employment Types",
+    "field_profile_portfolioUrls": "Portfolio URLs",
+    "field_profile_yearsExperience": "Years Experience",
+    "field_profile_salaryMin": "Minimum Salary",
+    "field_profile_salaryCurrency": "Salary Currency",
+    "field_profile_preferredRemoteType": "Remote Preference"
+  },
+  "ai_edit_tracking": {
+    "edited": "Edited",
+    "kept": "Kept",
+    "total_fields": "AI Fields Generated",
+    "accepted_as_is": "Accepted As-Is",
+    "user_edited": "User Edited",
+    "edit_rate": "Edit Rate"
   },
   "about": {
     "back_to_login": "Back to login",
@@ -439,6 +491,20 @@
     "add_to_calendar": "Add to Calendar",
     "google_calendar": "Google Calendar",
     "download_ics": "Download .ics"
+  },
+  "translations": {
+    "translate_to": "Translate to {language}",
+    "original": "Original",
+    "translated": "Translated",
+    "translating": "Translating...",
+    "show_english": "Show English",
+    "show_translated": "Show Translation",
+    "ai_content_lang": "AI content in English",
+    "ui_language": "Interface: {language}",
+    "translate_description": "Translate to {language}",
+    "en": "English",
+    "uk": "Ukrainian",
+    "es": "Spanish"
   },
   "emails": {
     "title": "Email Responses",

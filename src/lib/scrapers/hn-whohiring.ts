@@ -1,4 +1,5 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
+import { getRandomUserAgent } from "@/lib/proxy";
 
 const ALGOLIA_SEARCH_URL =
   "https://hn.algolia.com/api/v1/search_by_date";
@@ -215,7 +216,7 @@ async function findLatestThread(): Promise<string | null> {
   try {
     const res = await fetch(`${ALGOLIA_SEARCH_URL}?${params.toString()}`, {
       headers: {
-        "User-Agent": "JobFinder/1.0 (job search aggregator)",
+        "User-Agent": getRandomUserAgent(),
       },
     });
 
@@ -259,7 +260,7 @@ async function fetchThreadComments(
   try {
     const res = await fetch(`${ALGOLIA_ITEM_URL}/${threadId}`, {
       headers: {
-        "User-Agent": "JobFinder/1.0 (job search aggregator)",
+        "User-Agent": getRandomUserAgent(),
       },
     });
 

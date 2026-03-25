@@ -1,10 +1,63 @@
+// Cache for model availability check (TTL: 5 minutes)
+let jfAssistantAvailable: boolean | null = null;
+let jfAssistantCheckedAt = 0;
+const MODEL_CHECK_TTL = 5 * 60 * 1000;
+
+/**
+ * Check if jf-assistant model is available in Ollama.
+ * Result is cached for 5 minutes to avoid repeated API calls.
+ */
+export async function isJfAssistantAvailable(url?: string): Promise<boolean> {
+  const now = Date.now();
+  if (jfAssistantAvailable !== null && now - jfAssistantCheckedAt < MODEL_CHECK_TTL) {
+    return jfAssistantAvailable;
+  }
+
+  const baseUrl = url || process.env.OLLAMA_URL || "http://ollama:11434";
+  try {
+    const resp = await fetch(`${baseUrl}/api/tags`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!resp.ok) {
+      jfAssistantAvailable = false;
+      jfAssistantCheckedAt = now;
+      return false;
+    }
+    const data = await resp.json();
+    const models: { name: string }[] = data.models || [];
+    jfAssistantAvailable = models.some((m) => m.name.startsWith("jf-assistant"));
+    jfAssistantCheckedAt = now;
+    return jfAssistantAvailable;
+  } catch {
+    jfAssistantAvailable = false;
+    jfAssistantCheckedAt = now;
+    return false;
+  }
+}
+
+/**
+ * Resolve the best model to use: prefer jf-assistant if available,
+ * then user-configured model, then default qwen2.5.
+ */
+async function resolveModel(options?: { model?: string; url?: string }): Promise<string> {
+  // If user explicitly specified a model, use it
+  if (options?.model) return options.model;
+
+  // Check if jf-assistant is available (fine-tuned for JobFinder)
+  const url = options?.url || process.env.OLLAMA_URL || "http://ollama:11434";
+  if (await isJfAssistantAvailable(url)) {
+    return "jf-assistant";
+  }
+
+  return process.env.OLLAMA_MODEL || "qwen2.5:14b-instruct-q4_K_M";
+}
+
 export async function callOllama(
   prompt: string,
   options?: { model?: string; url?: string; systemPrompt?: string }
 ): Promise<string> {
   const url = options?.url || process.env.OLLAMA_URL || "http://ollama:11434";
-  const modelName =
-    options?.model || process.env.OLLAMA_MODEL || "qwen2.5:14b-instruct-q4_K_M";
+  const modelName = await resolveModel(options);
 
   const body: Record<string, unknown> = {
     model: modelName,
@@ -16,10 +69,14 @@ export async function callOllama(
     body.system = options.systemPrompt;
   }
 
+  console.log(`[callOllama] Using model: ${modelName}`);
+
+  // 14B model can take 2-3 minutes for complex prompts
   const resp = await fetch(`${url}/api/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(300000), // 5 min timeout
   });
 
   if (!resp.ok) throw new Error(`Ollama API error: ${resp.status}`);

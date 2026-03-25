@@ -58,6 +58,7 @@ export type SearchProfileMinAggregateOutputType = {
   maxDailyApplies: number | null
   autoApply: boolean | null
   scrapeSchedule: string | null
+  source: string | null
   createdAt: Date | null
 }
 
@@ -75,6 +76,7 @@ export type SearchProfileMaxAggregateOutputType = {
   maxDailyApplies: number | null
   autoApply: boolean | null
   scrapeSchedule: string | null
+  source: string | null
   createdAt: Date | null
 }
 
@@ -98,6 +100,7 @@ export type SearchProfileCountAggregateOutputType = {
   maxDailyApplies: number
   autoApply: number
   scrapeSchedule: number
+  source: number
   createdAt: number
   _all: number
 }
@@ -135,6 +138,7 @@ export type SearchProfileMinAggregateInputType = {
   maxDailyApplies?: true
   autoApply?: true
   scrapeSchedule?: true
+  source?: true
   createdAt?: true
 }
 
@@ -152,6 +156,7 @@ export type SearchProfileMaxAggregateInputType = {
   maxDailyApplies?: true
   autoApply?: true
   scrapeSchedule?: true
+  source?: true
   createdAt?: true
 }
 
@@ -175,6 +180,7 @@ export type SearchProfileCountAggregateInputType = {
   maxDailyApplies?: true
   autoApply?: true
   scrapeSchedule?: true
+  source?: true
   createdAt?: true
   _all?: true
 }
@@ -285,6 +291,7 @@ export type SearchProfileGroupByOutputType = {
   maxDailyApplies: number
   autoApply: boolean
   scrapeSchedule: string
+  source: string
   createdAt: Date
   _count: SearchProfileCountAggregateOutputType | null
   _avg: SearchProfileAvgAggregateOutputType | null
@@ -331,6 +338,7 @@ export type SearchProfileWhereInput = {
   maxDailyApplies?: Prisma.IntFilter<"SearchProfile"> | number
   autoApply?: Prisma.BoolFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringFilter<"SearchProfile"> | string
+  source?: Prisma.StringFilter<"SearchProfile"> | string
   createdAt?: Prisma.DateTimeFilter<"SearchProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
@@ -357,6 +365,7 @@ export type SearchProfileOrderByWithRelationInput = {
   maxDailyApplies?: Prisma.SortOrder
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   vacancyScores?: Prisma.VacancyScoreOrderByRelationAggregateInput
@@ -386,6 +395,7 @@ export type SearchProfileWhereUniqueInput = Prisma.AtLeast<{
   maxDailyApplies?: Prisma.IntFilter<"SearchProfile"> | number
   autoApply?: Prisma.BoolFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringFilter<"SearchProfile"> | string
+  source?: Prisma.StringFilter<"SearchProfile"> | string
   createdAt?: Prisma.DateTimeFilter<"SearchProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
@@ -412,6 +422,7 @@ export type SearchProfileOrderByWithAggregationInput = {
   maxDailyApplies?: Prisma.SortOrder
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SearchProfileCountOrderByAggregateInput
   _avg?: Prisma.SearchProfileAvgOrderByAggregateInput
@@ -443,6 +454,7 @@ export type SearchProfileScalarWhereWithAggregatesInput = {
   maxDailyApplies?: Prisma.IntWithAggregatesFilter<"SearchProfile"> | number
   autoApply?: Prisma.BoolWithAggregatesFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringWithAggregatesFilter<"SearchProfile"> | string
+  source?: Prisma.StringWithAggregatesFilter<"SearchProfile"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SearchProfile"> | Date | string
 }
 
@@ -464,6 +476,7 @@ export type SearchProfileCreateInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSearchProfilesInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutSearchProfileInput
@@ -490,6 +503,7 @@ export type SearchProfileUncheckedCreateInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutSearchProfileInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutSearchProfileInput
@@ -513,6 +527,7 @@ export type SearchProfileUpdateInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSearchProfilesNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutSearchProfileNestedInput
@@ -539,6 +554,7 @@ export type SearchProfileUncheckedUpdateInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutSearchProfileNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutSearchProfileNestedInput
@@ -564,6 +580,7 @@ export type SearchProfileCreateManyInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
 }
 
@@ -585,6 +602,7 @@ export type SearchProfileUpdateManyMutationInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -608,6 +626,7 @@ export type SearchProfileUncheckedUpdateManyInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -641,6 +660,7 @@ export type SearchProfileCountOrderByAggregateInput = {
   maxDailyApplies?: Prisma.SortOrder
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -667,6 +687,7 @@ export type SearchProfileMaxOrderByAggregateInput = {
   maxDailyApplies?: Prisma.SortOrder
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -684,6 +705,7 @@ export type SearchProfileMinOrderByAggregateInput = {
   maxDailyApplies?: Prisma.SortOrder
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
+  source?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -847,6 +869,7 @@ export type SearchProfileCreateWithoutUserInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutSearchProfileInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutSearchProfileInput
@@ -871,6 +894,7 @@ export type SearchProfileUncheckedCreateWithoutUserInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutSearchProfileInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutSearchProfileInput
@@ -925,6 +949,7 @@ export type SearchProfileScalarWhereInput = {
   maxDailyApplies?: Prisma.IntFilter<"SearchProfile"> | number
   autoApply?: Prisma.BoolFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringFilter<"SearchProfile"> | string
+  source?: Prisma.StringFilter<"SearchProfile"> | string
   createdAt?: Prisma.DateTimeFilter<"SearchProfile"> | Date | string
 }
 
@@ -946,6 +971,7 @@ export type SearchProfileCreateWithoutVacancyScoresInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSearchProfilesInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutSearchProfileInput
@@ -971,6 +997,7 @@ export type SearchProfileUncheckedCreateWithoutVacancyScoresInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutSearchProfileInput
 }
@@ -1009,6 +1036,7 @@ export type SearchProfileUpdateWithoutVacancyScoresInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSearchProfilesNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutSearchProfileNestedInput
@@ -1034,6 +1062,7 @@ export type SearchProfileUncheckedUpdateWithoutVacancyScoresInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutSearchProfileNestedInput
 }
@@ -1056,6 +1085,7 @@ export type SearchProfileCreateWithoutApplicationsInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSearchProfilesInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutSearchProfileInput
@@ -1081,6 +1111,7 @@ export type SearchProfileUncheckedCreateWithoutApplicationsInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutSearchProfileInput
 }
@@ -1119,6 +1150,7 @@ export type SearchProfileUpdateWithoutApplicationsInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSearchProfilesNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutSearchProfileNestedInput
@@ -1144,6 +1176,7 @@ export type SearchProfileUncheckedUpdateWithoutApplicationsInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutSearchProfileNestedInput
 }
@@ -1167,6 +1200,7 @@ export type SearchProfileCreateManyUserInput = {
   maxDailyApplies?: number
   autoApply?: boolean
   scrapeSchedule?: string
+  source?: string
   createdAt?: Date | string
 }
 
@@ -1188,6 +1222,7 @@ export type SearchProfileUpdateWithoutUserInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutSearchProfileNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutSearchProfileNestedInput
@@ -1212,6 +1247,7 @@ export type SearchProfileUncheckedUpdateWithoutUserInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutSearchProfileNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutSearchProfileNestedInput
@@ -1236,6 +1272,7 @@ export type SearchProfileUncheckedUpdateManyWithoutUserInput = {
   maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1299,6 +1336,7 @@ export type SearchProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   maxDailyApplies?: boolean
   autoApply?: boolean
   scrapeSchedule?: boolean
+  source?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancyScores?: boolean | Prisma.SearchProfile$vacancyScoresArgs<ExtArgs>
@@ -1326,6 +1364,7 @@ export type SearchProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   maxDailyApplies?: boolean
   autoApply?: boolean
   scrapeSchedule?: boolean
+  source?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["searchProfile"]>
@@ -1350,6 +1389,7 @@ export type SearchProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   maxDailyApplies?: boolean
   autoApply?: boolean
   scrapeSchedule?: boolean
+  source?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["searchProfile"]>
@@ -1374,10 +1414,11 @@ export type SearchProfileSelectScalar = {
   maxDailyApplies?: boolean
   autoApply?: boolean
   scrapeSchedule?: boolean
+  source?: boolean
   createdAt?: boolean
 }
 
-export type SearchProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "isActive" | "jobTitles" | "minSalary" | "currency" | "employmentTypes" | "remoteOnly" | "geographies" | "excludedCompanies" | "excludedIndustries" | "stackFilter" | "applyHoursStart" | "applyHoursEnd" | "applyTimezone" | "maxDailyApplies" | "autoApply" | "scrapeSchedule" | "createdAt", ExtArgs["result"]["searchProfile"]>
+export type SearchProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "isActive" | "jobTitles" | "minSalary" | "currency" | "employmentTypes" | "remoteOnly" | "geographies" | "excludedCompanies" | "excludedIndustries" | "stackFilter" | "applyHoursStart" | "applyHoursEnd" | "applyTimezone" | "maxDailyApplies" | "autoApply" | "scrapeSchedule" | "source" | "createdAt", ExtArgs["result"]["searchProfile"]>
 export type SearchProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancyScores?: boolean | Prisma.SearchProfile$vacancyScoresArgs<ExtArgs>
@@ -1418,6 +1459,7 @@ export type $SearchProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     maxDailyApplies: number
     autoApply: boolean
     scrapeSchedule: string
+    source: string
     createdAt: Date
   }, ExtArgs["result"]["searchProfile"]>
   composites: {}
@@ -1864,6 +1906,7 @@ export interface SearchProfileFieldRefs {
   readonly maxDailyApplies: Prisma.FieldRef<"SearchProfile", 'Int'>
   readonly autoApply: Prisma.FieldRef<"SearchProfile", 'Boolean'>
   readonly scrapeSchedule: Prisma.FieldRef<"SearchProfile", 'String'>
+  readonly source: Prisma.FieldRef<"SearchProfile", 'String'>
   readonly createdAt: Prisma.FieldRef<"SearchProfile", 'DateTime'>
 }
     

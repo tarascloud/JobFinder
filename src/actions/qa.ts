@@ -95,11 +95,15 @@ export async function answerQuestion(id: number, answer: string) {
 
     if (!answer.trim()) return { error: "Answer cannot be empty" };
 
+    // If editing an AI-created answer, mark as ai_edited
+    const sourceUpdate = existing.source === "ai" ? { source: "ai_edited" as const } : {};
+
     const qaPair = await prisma.qaPair.update({
       where: { id },
       data: {
         answer: answer.trim(),
         answeredAt: new Date(),
+        ...sourceUpdate,
       },
     });
 

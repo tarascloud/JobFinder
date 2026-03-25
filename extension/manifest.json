@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "JobFinder - Save Job",
+  "version": "1.0.0",
+  "description": "Save any job listing to your JobFinder account with one click",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": { "48": "icon-48.png", "128": "icon-128.png" }
+  },
+  "icons": { "48": "icon-48.png", "128": "icon-128.png" },
+  "content_scripts": [{
+    "matches": ["*://*.linkedin.com/jobs/*", "*://*.indeed.com/*", "*://*.glassdoor.com/*", "*://*.wellfound.com/*", "*://*.remoteok.com/*", "*://*.weworkremotely.com/*"],
+    "js": ["content.js"]
+  }]
+}

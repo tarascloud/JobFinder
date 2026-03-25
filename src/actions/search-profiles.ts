@@ -89,6 +89,9 @@ export async function updateSearchProfile(id: number, data: Partial<SearchProfil
     });
     if (!existing) return { error: "Search profile not found" };
 
+    // If editing an AI-created profile, mark as ai_edited
+    const sourceUpdate = existing.source === "ai" ? { source: "ai_edited" } : {};
+
     const profile = await prisma.searchProfile.update({
       where: { id },
       data: {
@@ -108,6 +111,7 @@ export async function updateSearchProfile(id: number, data: Partial<SearchProfil
         ...(data.maxDailyApplies !== undefined && { maxDailyApplies: data.maxDailyApplies }),
         ...(data.autoApply !== undefined && { autoApply: data.autoApply }),
         ...(data.scrapeSchedule !== undefined && { scrapeSchedule: data.scrapeSchedule }),
+        ...sourceUpdate,
       },
     });
 

@@ -1,71 +1,145 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { MessageSquare, CheckCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import { MessageSquare, CheckCircle, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import AiFeedbackButtons from "@/components/shared/ai-feedback-buttons";
+import { LanguageSelector } from "@/components/shared/translate-button";
+import {
+  getPendingQuestions,
+  getAnsweredQuestions,
+  answerQuestion,
+} from "@/actions/qa";
+import { getQATranslation } from "@/actions/translations";
 
-interface Question {
-  id: string;
+interface QaPairData {
+  id: number;
   question: string;
-  answer: string;
+  answer: string | null;
   timesUsed: number;
+  category: string | null;
+  source: string;
+  sourceVacancy?: {
+    id: number;
+    title: string;
+    company: string | null;
+    platform: string;
+  } | null;
 }
 
-const initialPending: Question[] = [
-  { id: "1", question: "Why do you want to work at our company?", answer: "", timesUsed: 0 },
-  { id: "2", question: "Describe a challenging project you led.", answer: "", timesUsed: 0 },
-  { id: "3", question: "What is your experience with microservices?", answer: "", timesUsed: 0 },
-];
-
-const initialAnswered: Question[] = [
-  {
-    id: "4",
-    question: "Tell me about yourself.",
-    answer:
-      "I'm a senior frontend engineer with 8+ years of experience building scalable web applications. I specialize in React, TypeScript, and modern frontend architecture.",
-    timesUsed: 12,
-  },
-  {
-    id: "5",
-    question: "What are your salary expectations?",
-    answer:
-      "Based on my experience and the market, I'm targeting 140-180k EUR depending on the total compensation package and company stage.",
-    timesUsed: 8,
-  },
-  {
-    id: "6",
-    question: "Why are you looking for a new role?",
-    answer:
-      "I'm seeking a role where I can have greater technical impact and work on products that push the boundaries of web technology.",
-    timesUsed: 6,
-  },
-];
+// Cache for translated Q&A pairs: qaId -> { lang -> { question, answer } }
+type TranslationCache = Record<number, Record<string, { question: string; answer: string }>>;
 
 export default function QAPage() {
   const t = useTranslations("qa");
   const tCommon = useTranslations("common");
-  const [pending, setPending] = useState(initialPending);
-  const [answered, setAnswered] = useState(initialAnswered);
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const locale = useLocale();
 
-  function handleSaveAnswer(id: string) {
+  const [pending, setPending] = useState<QaPairData[]>([]);
+  const [answered, setAnswered] = useState<QaPairData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [drafts, setDrafts] = useState<Record<number, string>>({});
+  const [savingId, setSavingId] = useState<number | null>(null);
+
+  // Translation state
+  const [qaLangs, setQaLangs] = useState<Record<number, string>>({});
+  const [qaTranslations, setQaTranslations] = useState<TranslationCache>({});
+  const [translatingId, setTranslatingId] = useState<number | null>(null);
+
+  function getDisplayLang(qaId: number): string {
+    return qaLangs[qaId] || locale;
+  }
+
+  async function handleLangSwitch(qa: QaPairData, lang: string) {
+    setQaLangs((prev) => ({ ...prev, [qa.id]: lang }));
+
+    // If switching to English (original), no translation needed
+    if (lang === "en") return;
+
+    // Check cache
+    if (qaTranslations[qa.id]?.[lang]) return;
+
+    // Translate lazily
+    setTranslatingId(qa.id);
+    try {
+      const result = await getQATranslation(
+        qa.question,
+        qa.answer || "",
+        lang,
+        "en"
+      );
+      setQaTranslations((prev) => ({
+        ...prev,
+        [qa.id]: { ...prev[qa.id], [lang]: result },
+      }));
+    } finally {
+      setTranslatingId(null);
+    }
+  }
+
+  function getDisplayText(qa: QaPairData): { question: string; answer: string | null } {
+    const lang = getDisplayLang(qa.id);
+    if (lang === "en") return { question: qa.question, answer: qa.answer };
+    const cached = qaTranslations[qa.id]?.[lang];
+    if (cached) return { question: cached.question, answer: cached.answer || qa.answer };
+    return { question: qa.question, answer: qa.answer };
+  }
+
+  async function loadData() {
+    setLoading(true);
+    try {
+      const [pendingResult, answeredResult] = await Promise.all([
+        getPendingQuestions(),
+        getAnsweredQuestions(),
+      ]);
+
+      if (Array.isArray(pendingResult)) {
+        setPending(pendingResult as QaPairData[]);
+      }
+      if (answeredResult && "questions" in answeredResult) {
+        setAnswered(answeredResult.questions as QaPairData[]);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function handleSaveAnswer(id: number) {
     const answer = drafts[id];
     if (!answer?.trim()) return;
 
-    const question = pending.find((q) => q.id === id);
-    if (!question) return;
+    setSavingId(id);
+    try {
+      const result = await answerQuestion(id, answer);
+      if (result && !("error" in result)) {
+        await loadData();
+        setDrafts((d) => {
+          const copy = { ...d };
+          delete copy[id];
+          return copy;
+        });
+      }
+    } finally {
+      setSavingId(null);
+    }
+  }
 
-    setPending(pending.filter((q) => q.id !== id));
-    setAnswered([{ ...question, answer, timesUsed: 0 }, ...answered]);
-    setDrafts((d) => {
-      const copy = { ...d };
-      delete copy[id];
-      return copy;
-    });
+  if (loading) {
+    return (
+      <div className="space-y-8 max-w-3xl">
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -93,7 +167,27 @@ export default function QAPage() {
             {pending.map((q) => (
               <Card key={q.id}>
                 <CardContent className="p-5 space-y-3">
-                  <p className="font-medium text-foreground">{q.question}</p>
+                  <div className="flex items-start gap-2">
+                    <p className="font-medium text-foreground flex-1">{q.question}</p>
+                    {q.source === "ai" && (
+                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 flex items-center gap-0.5 shrink-0 bg-purple-500/15 text-purple-400 border-purple-500/30">
+                        <Sparkles className="h-3 w-3" />
+                        {tCommon("source_ai")}
+                      </Badge>
+                    )}
+                    {q.source === "ai_edited" && (
+                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 flex items-center gap-0.5 shrink-0 bg-blue-500/15 text-blue-400 border-blue-500/30">
+                        <Sparkles className="h-3 w-3" />
+                        {tCommon("source_ai_edited")}
+                      </Badge>
+                    )}
+                  </div>
+                  {q.sourceVacancy && (
+                    <p className="text-xs text-muted-foreground">
+                      From: {q.sourceVacancy.title}
+                      {q.sourceVacancy.company && ` @ ${q.sourceVacancy.company}`}
+                    </p>
+                  )}
                   <textarea
                     value={drafts[q.id] || ""}
                     onChange={(e) =>
@@ -107,8 +201,9 @@ export default function QAPage() {
                     <Button
                       size="sm"
                       onClick={() => handleSaveAnswer(q.id)}
-                      disabled={!drafts[q.id]?.trim()}
+                      disabled={!drafts[q.id]?.trim() || savingId === q.id}
                     >
+                      {savingId === q.id && <Loader2 className="h-3 w-3 animate-spin mr-1" />}
                       {tCommon("save")}
                     </Button>
                   </div>
@@ -137,24 +232,53 @@ export default function QAPage() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {answered.map((q) => (
-              <Card key={q.id}>
-                <CardContent className="p-5 space-y-2">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="font-medium text-foreground">{q.question}</p>
-                    <Badge color="default">{t("times_used", { count: q.timesUsed })}</Badge>
-                  </div>
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">{q.answer}</p>
-                    <AiFeedbackButtons
-                      field="qa.answer"
-                      content={q.answer}
-                      context={q.question}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {answered.map((q) => {
+              const display = getDisplayText(q);
+              const displayLang = getDisplayLang(q.id);
+              return (
+                <Card key={q.id}>
+                  <CardContent className="p-5 space-y-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-2 flex-1">
+                        <p className="font-medium text-foreground">{display.question}</p>
+                        {(q.source === "ai" || q.source === "ai_edited") && (
+                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 flex items-center gap-0.5 shrink-0">
+                            <Sparkles className="h-3 w-3" />
+                            AI
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <LanguageSelector
+                          activeLang={displayLang}
+                          onSelect={(lang) => handleLangSwitch(q, lang)}
+                          isLoading={translatingId === q.id}
+                          availableTranslations={[
+                            "en",
+                            ...(qaTranslations[q.id] ? Object.keys(qaTranslations[q.id]) : []),
+                          ]}
+                        />
+                        <Badge color="default">{t("times_used", { count: q.timesUsed })}</Badge>
+                      </div>
+                    </div>
+                    {q.sourceVacancy && (
+                      <p className="text-xs text-muted-foreground">
+                        From: {q.sourceVacancy.title}
+                        {q.sourceVacancy.company && ` @ ${q.sourceVacancy.company}`}
+                      </p>
+                    )}
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm text-muted-foreground leading-relaxed flex-1">{display.answer}</p>
+                      <AiFeedbackButtons
+                        field="qa.answer"
+                        content={q.answer || ""}
+                        context={q.question}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </section>

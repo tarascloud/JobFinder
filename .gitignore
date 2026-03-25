@@ -13,3 +13,7 @@ public/serwist-*.js.map
 
 # Apply screenshots
 public/screenshots/
+
+# Chrome extension build artifacts
+extension/*.crx
+extension/*.pem

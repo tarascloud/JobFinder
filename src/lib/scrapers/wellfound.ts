@@ -1,4 +1,5 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
+import { getRandomUserAgent } from "@/lib/proxy";
 
 const API_URL = "https://wellfound.com/api/search";
 const SCRAPE_URL = "https://wellfound.com/role/remote";
@@ -81,8 +82,7 @@ async function fetchViaApi(query: string): Promise<WellfoundJob[]> {
   try {
     const res = await fetch(url, {
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "User-Agent": getRandomUserAgent(),
         Accept: "application/json, text/plain, */*",
         "Accept-Language": "en-US,en;q=0.9",
       },
@@ -147,8 +147,7 @@ async function fetchViaHtml(role: string): Promise<WellfoundJob[]> {
   try {
     const res = await fetch(url, {
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "User-Agent": getRandomUserAgent(),
         Accept:
           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",

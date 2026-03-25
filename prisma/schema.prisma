@@ -14,6 +14,9 @@ model User {
   image     String?
   googleId  String?  @unique @map("google_id")
   role      String   @default("user")
+  preferredLocale String @default("en") @map("preferred_locale")
+  preferredSkin   String @default("taras") @map("preferred_skin")
+  preferredTheme  String @default("dark") @map("preferred_theme")
   createdAt DateTime @default(now()) @map("created_at")
 
   profile          UserProfile?
@@ -38,22 +41,24 @@ model GuestInvite {
 }
 
 model UserProfile {
-  userId             Int      @id
-  headline           String?
-  summary            String?
-  yearsExperience    Int?
-  skills             String[]
-  languages          String[]
-  portfolioUrls      String[]
-  resumeUrl          String?
-  resumeText         String?
-  salaryMin          Int?
-  salaryCurrency     String?
-  preferredLocations String[]
-  preferredRemoteType String?
-  employmentTypes    String[]
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  userId              Int      @id @map("user_id")
+  headline            String?
+  summary             String?
+  yearsExperience     Int?     @map("years_experience")
+  skills              String[]
+  languages           String[]
+  portfolioUrls       String[] @map("portfolio_urls")
+  resumeUrl           String?  @map("resume_url")
+  resumeText          String?  @map("resume_text")
+  analysisStatus      String   @default("idle") @map("analysis_status")
+  analysisResult      String?  @map("analysis_result")
+  salaryMin           Int?     @map("salary_min")
+  salaryCurrency      String?  @map("salary_currency")
+  preferredLocations  String[] @map("preferred_locations")
+  preferredRemoteType String?  @map("preferred_remote_type")
+  employmentTypes     String[] @map("employment_types")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -61,26 +66,27 @@ model UserProfile {
 }
 
 model SearchProfile {
-  id                Int      @id @default(autoincrement())
-  userId            Int
-  name              String
-  isActive          Boolean  @default(true)
-  jobTitles         String[]
-  minSalary         Int?
-  currency          String?
-  employmentTypes   String[]
-  remoteOnly        Boolean  @default(true)
-  geographies       String[]
-  excludedCompanies String[]
-  excludedIndustries String[]
-  stackFilter       String[]
-  applyHoursStart   Int      @default(18)
-  applyHoursEnd     Int      @default(22)
-  applyTimezone     String   @default("Europe/Madrid")
-  maxDailyApplies   Int      @default(20)
-  autoApply         Boolean  @default(false)
-  scrapeSchedule    String   @default("daily")
-  createdAt         DateTime @default(now())
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @map("user_id")
+  name               String
+  isActive           Boolean  @default(true) @map("is_active")
+  jobTitles          String[] @map("job_titles")
+  minSalary          Int?     @map("min_salary")
+  currency           String?
+  employmentTypes    String[] @map("employment_types")
+  remoteOnly         Boolean  @default(true) @map("remote_only")
+  geographies        String[]
+  excludedCompanies  String[] @map("excluded_companies")
+  excludedIndustries String[] @map("excluded_industries")
+  stackFilter        String[] @map("stack_filter")
+  applyHoursStart    Int      @default(18) @map("apply_hours_start")
+  applyHoursEnd      Int      @default(22) @map("apply_hours_end")
+  applyTimezone      String   @default("Europe/Madrid") @map("apply_timezone")
+  maxDailyApplies    Int      @default(20) @map("max_daily_applies")
+  autoApply          Boolean  @default(false) @map("auto_apply")
+  scrapeSchedule     String   @default("daily") @map("scrape_schedule")
+  source             String   @default("manual")
+  createdAt          DateTime @default(now()) @map("created_at")
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   vacancyScores VacancyScore[]
@@ -93,24 +99,24 @@ model SearchProfile {
 model Vacancy {
   id             Int       @id @default(autoincrement())
   platform       String
-  externalId     String
+  externalId     String    @map("external_id")
   url            String
   title          String
   company        String?
   location       String?
-  salaryText     String?
-  salaryMin      Int?
-  salaryMax      Int?
-  salaryCurrency String?
+  salaryText     String?   @map("salary_text")
+  salaryMin      Int?      @map("salary_min")
+  salaryMax      Int?      @map("salary_max")
+  salaryCurrency String?   @map("salary_currency")
   salaryMinEur   Int?      @map("salary_min_eur")
   salaryMaxEur   Int?      @map("salary_max_eur")
-  remoteType     String?
-  employmentType String?
+  remoteType     String?   @map("remote_type")
+  employmentType String?   @map("employment_type")
   description    String    @db.Text
   language       String?
-  postedAt       DateTime?
-  scrapedAt      DateTime  @default(now())
-  rawHtml        String?   @db.Text
+  postedAt       DateTime? @map("posted_at")
+  scrapedAt      DateTime  @default(now()) @map("scraped_at")
+  rawHtml        String?   @db.Text @map("raw_html")
   isDuplicateOf  Int?      @map("is_duplicate_of")
   tagStack       String[]  @default([]) @map("tag_stack")
   tagLevel       String?   @map("tag_level")
@@ -130,16 +136,16 @@ model Vacancy {
 
 model VacancyScore {
   id              Int      @id @default(autoincrement())
-  vacancyId       Int
-  userId          Int
-  searchProfileId Int
-  matchScore      Int
-  salaryFit       Boolean?
-  remoteFit       Boolean?
+  vacancyId       Int      @map("vacancy_id")
+  userId          Int      @map("user_id")
+  searchProfileId Int      @map("search_profile_id")
+  matchScore      Int      @map("match_score")
+  salaryFit       Boolean? @map("salary_fit")
+  remoteFit       Boolean? @map("remote_fit")
   notes           String?
   dismissed       Boolean  @default(false)
-  scoredAt        DateTime @default(now())
-  scoredBy        String?
+  scoredAt        DateTime @default(now()) @map("scored_at")
+  scoredBy        String?  @map("scored_by")
 
   vacancy       Vacancy       @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -152,16 +158,16 @@ model VacancyScore {
 
 model Application {
   id              Int       @id @default(autoincrement())
-  userId          Int
-  vacancyId       Int
-  searchProfileId Int
+  userId          Int       @map("user_id")
+  vacancyId       Int       @map("vacancy_id")
+  searchProfileId Int       @map("search_profile_id")
   status          String    @default("queued")
-  coverLetter     String?   @db.Text
+  coverLetter     String?   @db.Text @map("cover_letter")
   interviewPrep   String?   @db.Text @map("interview_prep")
-  appliedAt       DateTime?
-  screenshotPath  String?
-  applyLog        String?   @db.Text
-  createdAt       DateTime  @default(now())
+  appliedAt       DateTime? @map("applied_at")
+  screenshotPath  String?   @map("screenshot_path")
+  applyLog        String?   @db.Text @map("apply_log")
+  createdAt       DateTime  @default(now()) @map("created_at")
 
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   vacancy       Vacancy       @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
@@ -174,13 +180,14 @@ model Application {
 
 model QaPair {
   id              Int       @id @default(autoincrement())
-  userId          Int
+  userId          Int       @map("user_id")
   question        String
   answer          String?
-  sourceVacancyId Int?
-  answeredAt      DateTime?
-  timesUsed       Int       @default(0)
+  sourceVacancyId Int?      @map("source_vacancy_id")
+  answeredAt      DateTime? @map("answered_at")
+  timesUsed       Int       @default(0) @map("times_used")
   category        String?
+  source          String    @default("manual") // "manual", "ai", "ai_edited"
 
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   sourceVacancy Vacancy? @relation(fields: [sourceVacancyId], references: [id], onDelete: SetNull)
@@ -191,13 +198,13 @@ model QaPair {
 
 model PlatformAccount {
   id                Int       @id @default(autoincrement())
-  userId            Int
+  userId            Int       @map("user_id")
   platform          String
-  authType          String    @default("password")
+  authType          String    @default("password") @map("auth_type")
   email             String?
-  passwordEncrypted String?
-  sessionData       String?   @db.Text
-  lastLogin         DateTime?
+  passwordEncrypted String?   @map("password_encrypted")
+  sessionData       String?   @db.Text @map("session_data")
+  lastLogin         DateTime? @map("last_login")
   status            String    @default("active")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

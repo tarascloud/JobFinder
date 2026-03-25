@@ -45,6 +45,8 @@ export type UserProfileMinAggregateOutputType = {
   yearsExperience: number | null
   resumeUrl: string | null
   resumeText: string | null
+  analysisStatus: string | null
+  analysisResult: string | null
   salaryMin: number | null
   salaryCurrency: string | null
   preferredRemoteType: string | null
@@ -59,6 +61,8 @@ export type UserProfileMaxAggregateOutputType = {
   yearsExperience: number | null
   resumeUrl: string | null
   resumeText: string | null
+  analysisStatus: string | null
+  analysisResult: string | null
   salaryMin: number | null
   salaryCurrency: string | null
   preferredRemoteType: string | null
@@ -76,6 +80,8 @@ export type UserProfileCountAggregateOutputType = {
   portfolioUrls: number
   resumeUrl: number
   resumeText: number
+  analysisStatus: number
+  analysisResult: number
   salaryMin: number
   salaryCurrency: number
   preferredLocations: number
@@ -106,6 +112,8 @@ export type UserProfileMinAggregateInputType = {
   yearsExperience?: true
   resumeUrl?: true
   resumeText?: true
+  analysisStatus?: true
+  analysisResult?: true
   salaryMin?: true
   salaryCurrency?: true
   preferredRemoteType?: true
@@ -120,6 +128,8 @@ export type UserProfileMaxAggregateInputType = {
   yearsExperience?: true
   resumeUrl?: true
   resumeText?: true
+  analysisStatus?: true
+  analysisResult?: true
   salaryMin?: true
   salaryCurrency?: true
   preferredRemoteType?: true
@@ -137,6 +147,8 @@ export type UserProfileCountAggregateInputType = {
   portfolioUrls?: true
   resumeUrl?: true
   resumeText?: true
+  analysisStatus?: true
+  analysisResult?: true
   salaryMin?: true
   salaryCurrency?: true
   preferredLocations?: true
@@ -243,6 +255,8 @@ export type UserProfileGroupByOutputType = {
   portfolioUrls: string[]
   resumeUrl: string | null
   resumeText: string | null
+  analysisStatus: string
+  analysisResult: string | null
   salaryMin: number | null
   salaryCurrency: string | null
   preferredLocations: string[]
@@ -285,6 +299,8 @@ export type UserProfileWhereInput = {
   portfolioUrls?: Prisma.StringNullableListFilter<"UserProfile">
   resumeUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   resumeText?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  analysisStatus?: Prisma.StringFilter<"UserProfile"> | string
+  analysisResult?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   salaryMin?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   salaryCurrency?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   preferredLocations?: Prisma.StringNullableListFilter<"UserProfile">
@@ -305,6 +321,8 @@ export type UserProfileOrderByWithRelationInput = {
   portfolioUrls?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeText?: Prisma.SortOrderInput | Prisma.SortOrder
+  analysisStatus?: Prisma.SortOrder
+  analysisResult?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryMin?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
   preferredLocations?: Prisma.SortOrder
@@ -328,6 +346,8 @@ export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
   portfolioUrls?: Prisma.StringNullableListFilter<"UserProfile">
   resumeUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   resumeText?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  analysisStatus?: Prisma.StringFilter<"UserProfile"> | string
+  analysisResult?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   salaryMin?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   salaryCurrency?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   preferredLocations?: Prisma.StringNullableListFilter<"UserProfile">
@@ -348,6 +368,8 @@ export type UserProfileOrderByWithAggregationInput = {
   portfolioUrls?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeText?: Prisma.SortOrderInput | Prisma.SortOrder
+  analysisStatus?: Prisma.SortOrder
+  analysisResult?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryMin?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
   preferredLocations?: Prisma.SortOrder
@@ -375,6 +397,8 @@ export type UserProfileScalarWhereWithAggregatesInput = {
   portfolioUrls?: Prisma.StringNullableListFilter<"UserProfile">
   resumeUrl?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   resumeText?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  analysisStatus?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
+  analysisResult?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   salaryMin?: Prisma.IntNullableWithAggregatesFilter<"UserProfile"> | number | null
   salaryCurrency?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   preferredLocations?: Prisma.StringNullableListFilter<"UserProfile">
@@ -393,6 +417,8 @@ export type UserProfileCreateInput = {
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
   resumeText?: string | null
+  analysisStatus?: string
+  analysisResult?: string | null
   salaryMin?: number | null
   salaryCurrency?: string | null
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
@@ -413,6 +439,8 @@ export type UserProfileUncheckedCreateInput = {
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
   resumeText?: string | null
+  analysisStatus?: string
+  analysisResult?: string | null
   salaryMin?: number | null
   salaryCurrency?: string | null
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
@@ -431,6 +459,8 @@ export type UserProfileUpdateInput = {
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
@@ -451,6 +481,8 @@ export type UserProfileUncheckedUpdateInput = {
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
@@ -470,6 +502,8 @@ export type UserProfileCreateManyInput = {
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
   resumeText?: string | null
+  analysisStatus?: string
+  analysisResult?: string | null
   salaryMin?: number | null
   salaryCurrency?: string | null
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
@@ -488,6 +522,8 @@ export type UserProfileUpdateManyMutationInput = {
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
@@ -507,6 +543,8 @@ export type UserProfileUncheckedUpdateManyInput = {
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
@@ -539,6 +577,8 @@ export type UserProfileCountOrderByAggregateInput = {
   portfolioUrls?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
   resumeText?: Prisma.SortOrder
+  analysisStatus?: Prisma.SortOrder
+  analysisResult?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   preferredLocations?: Prisma.SortOrder
@@ -561,6 +601,8 @@ export type UserProfileMaxOrderByAggregateInput = {
   yearsExperience?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
   resumeText?: Prisma.SortOrder
+  analysisStatus?: Prisma.SortOrder
+  analysisResult?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   preferredRemoteType?: Prisma.SortOrder
@@ -575,6 +617,8 @@ export type UserProfileMinOrderByAggregateInput = {
   yearsExperience?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
   resumeText?: Prisma.SortOrder
+  analysisStatus?: Prisma.SortOrder
+  analysisResult?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   preferredRemoteType?: Prisma.SortOrder
@@ -682,6 +726,8 @@ export type UserProfileCreateWithoutUserInput = {
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
   resumeText?: string | null
+  analysisStatus?: string
+  analysisResult?: string | null
   salaryMin?: number | null
   salaryCurrency?: string | null
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
@@ -700,6 +746,8 @@ export type UserProfileUncheckedCreateWithoutUserInput = {
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
   resumeText?: string | null
+  analysisStatus?: string
+  analysisResult?: string | null
   salaryMin?: number | null
   salaryCurrency?: string | null
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
@@ -734,6 +782,8 @@ export type UserProfileUpdateWithoutUserInput = {
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
@@ -752,6 +802,8 @@ export type UserProfileUncheckedUpdateWithoutUserInput = {
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
@@ -773,6 +825,8 @@ export type UserProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   portfolioUrls?: boolean
   resumeUrl?: boolean
   resumeText?: boolean
+  analysisStatus?: boolean
+  analysisResult?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   preferredLocations?: boolean
@@ -793,6 +847,8 @@ export type UserProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   portfolioUrls?: boolean
   resumeUrl?: boolean
   resumeText?: boolean
+  analysisStatus?: boolean
+  analysisResult?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   preferredLocations?: boolean
@@ -813,6 +869,8 @@ export type UserProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   portfolioUrls?: boolean
   resumeUrl?: boolean
   resumeText?: boolean
+  analysisStatus?: boolean
+  analysisResult?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   preferredLocations?: boolean
@@ -833,6 +891,8 @@ export type UserProfileSelectScalar = {
   portfolioUrls?: boolean
   resumeUrl?: boolean
   resumeText?: boolean
+  analysisStatus?: boolean
+  analysisResult?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   preferredLocations?: boolean
@@ -842,7 +902,7 @@ export type UserProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "headline" | "summary" | "yearsExperience" | "skills" | "languages" | "portfolioUrls" | "resumeUrl" | "resumeText" | "salaryMin" | "salaryCurrency" | "preferredLocations" | "preferredRemoteType" | "employmentTypes" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
+export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "headline" | "summary" | "yearsExperience" | "skills" | "languages" | "portfolioUrls" | "resumeUrl" | "resumeText" | "analysisStatus" | "analysisResult" | "salaryMin" | "salaryCurrency" | "preferredLocations" | "preferredRemoteType" | "employmentTypes" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
 export type UserProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -868,6 +928,8 @@ export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.Interna
     portfolioUrls: string[]
     resumeUrl: string | null
     resumeText: string | null
+    analysisStatus: string
+    analysisResult: string | null
     salaryMin: number | null
     salaryCurrency: string | null
     preferredLocations: string[]
@@ -1308,6 +1370,8 @@ export interface UserProfileFieldRefs {
   readonly portfolioUrls: Prisma.FieldRef<"UserProfile", 'String[]'>
   readonly resumeUrl: Prisma.FieldRef<"UserProfile", 'String'>
   readonly resumeText: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly analysisStatus: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly analysisResult: Prisma.FieldRef<"UserProfile", 'String'>
   readonly salaryMin: Prisma.FieldRef<"UserProfile", 'Int'>
   readonly salaryCurrency: Prisma.FieldRef<"UserProfile", 'String'>
   readonly preferredLocations: Prisma.FieldRef<"UserProfile", 'String[]'>

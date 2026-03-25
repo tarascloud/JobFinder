@@ -52,6 +52,7 @@ interface SearchProfile {
   maxDailyApplies: number;
   autoApply: boolean;
   isActive: boolean;
+  source: string;
   createdAt: Date | string;
 }
 
@@ -276,7 +277,21 @@ export default function SearchesPage() {
             <Card key={profile.id} className="hover:border-border transition-colors">
               <CardContent className="p-5 space-y-3">
                 <div className="flex items-start justify-between">
-                  <h3 className="font-semibold text-foreground">{profile.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-foreground">{profile.name}</h3>
+                    {profile.source === "ai" && (
+                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 flex items-center gap-0.5 bg-purple-500/15 text-purple-400 border-purple-500/30">
+                        <Sparkles className="h-3 w-3" />
+                        {tCommon("source_ai")}
+                      </Badge>
+                    )}
+                    {profile.source === "ai_edited" && (
+                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 flex items-center gap-0.5 bg-blue-500/15 text-blue-400 border-blue-500/30">
+                        <Sparkles className="h-3 w-3" />
+                        {tCommon("source_ai_edited")}
+                      </Badge>
+                    )}
+                  </div>
                   <div className="flex items-center gap-1">
                     <button
                       className="text-muted-foreground hover:text-foreground cursor-pointer p-1"

@@ -1,4 +1,5 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
+import { getRandomUserAgent } from "@/lib/proxy";
 
 const API_URL = "https://remoteok.com/api";
 
@@ -74,7 +75,7 @@ export async function scrape(
 
   const res = await fetch(API_URL, {
     headers: {
-      "User-Agent": "JobFinder/1.0 (job search aggregator)",
+      "User-Agent": getRandomUserAgent(),
     },
   });
 

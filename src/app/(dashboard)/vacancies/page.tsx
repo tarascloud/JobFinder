@@ -152,6 +152,9 @@ export default function VacanciesPage() {
   const [scrapePhase, setScrapePhase] = useState<string | null>(null);
   const [scrapeSummary, setScrapeSummary] = useState<{ totalNew: number; totalScraped: number } | null>(null);
 
+  // Rate limit state
+  const [rateLimitRetry, setRateLimitRetry] = useState<number | null>(null);
+
   // Batch selection state
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [batchScoring, setBatchScoring] = useState(false);
@@ -247,6 +250,7 @@ export default function VacanciesPage() {
     setScrapeProgress([]);
     setScrapePhase(null);
     setScrapeSummary(null);
+    setRateLimitRetry(null);
 
     try {
       const response = await fetch("/api/scrape-stream", {
@@ -254,6 +258,13 @@ export default function VacanciesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ searchProfileId: selectedProfileId }),
       });
+
+      if (response.status === 429) {
+        const data = await response.json();
+        const retryAfter = data.retryAfter ?? 60;
+        setRateLimitRetry(retryAfter);
+        return;
+      }
 
       if (!response.ok || !response.body) {
         // Fallback to non-streaming
@@ -455,6 +466,13 @@ export default function VacanciesPage() {
           </Button>
         </div>
       </div>
+
+      {/* Rate Limit Warning */}
+      {rateLimitRetry !== null && (
+        <div className="rounded-lg border border-yellow-500/50 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-700 dark:text-yellow-400">
+          {t("rate_limited", { minutes: Math.ceil(rateLimitRetry / 60) })}
+        </div>
+      )}
 
       {/* Scrape Status Bar */}
       {scrapeStatus && (

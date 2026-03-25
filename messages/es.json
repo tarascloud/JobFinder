@@ -11,7 +11,10 @@
     "next": "Siguiente",
     "search": "Buscar",
     "filter": "Filtrar",
-    "no_data": "Aún no hay datos"
+    "no_data": "Aún no hay datos",
+    "source_ai": "Generado por IA",
+    "source_manual": "Manual",
+    "source_ai_edited": "IA editado"
   },
   "login": {
     "title": "JobFinder",
@@ -80,7 +83,11 @@
     "accept_all": "Aceptar todo",
     "dismiss": "Descartar",
     "new_search_profiles": "{count} nuevos perfiles de búsqueda sugeridos",
-    "new_qa_pairs": "{count} nuevos pares de preguntas y respuestas generados"
+    "new_qa_pairs": "{count} nuevos pares de preguntas y respuestas generados",
+    "upload_complete": "Subida completada!",
+    "upload_complete_analyzing": "Subida completada. La IA analiza en segundo plano...",
+    "bg_analyzing": "La IA está analizando tu currículum en segundo plano...",
+    "bg_analyzing_desc": "Puedes navegar a otra página — guardaremos los resultados cuando estén listos."
   },
   "searches": {
     "title": "Perfiles de búsqueda",
@@ -169,7 +176,8 @@
     "all_levels": "Todos los niveles",
     "all_industries": "Todas las industrias",
     "all_stack": "Todas las tecnologias",
-    "tags": "Etiquetas"
+    "tags": "Etiquetas",
+    "rate_limited": "Limite de solicitudes alcanzado. Intenta de nuevo en {minutes} minutos."
   },
   "applications": {
     "title": "Solicitudes",
@@ -294,14 +302,24 @@
     "queued_count": "{count} vacantes añadidas a la cola"
   },
   "onboarding": {
-    "step_resume": "Currículum",
+    "step_upload": "Subir",
+    "step_analysis": "Análisis",
     "step_review": "Revisión",
+    "step_recommendations": "Recomendaciones",
+    "step_improve": "Mejorar",
     "step_ready": "Listo",
+    "select_ai_model": "Modelo de IA",
+    "configure_ai": "Configurar en Ajustes",
     "upload_title": "Sube tu currículum",
     "upload_description": "Sube un PDF o pega una URL. La IA generará tu perfil, estrategias de búsqueda y preguntas de entrevista.",
     "analyze_button": "Analizar con IA",
     "analyzing_title": "La IA está analizando tu currículum...",
     "analyzing_description": "Generando perfil, estrategias de búsqueda y pares de preguntas y respuestas",
+    "analyzing_extracting": "Extrayendo habilidades y experiencia...",
+    "analyzing_profile": "Generando perfil profesional...",
+    "analyzing_searches": "Creando estrategias de búsqueda...",
+    "analyzing_qa": "Construyendo pares de preguntas y respuestas...",
+    "analysis_error": "El análisis falló. Inténtalo de nuevo.",
     "skip_manual": "Omitir y rellenar manualmente",
     "review_title": "Revisa los datos generados",
     "review_description": "Todo fue generado desde tu currículum. Revisa y edita en las pestañas antes de guardar.",
@@ -312,6 +330,23 @@
     "add_search": "Añadir perfil de búsqueda",
     "add_qa": "Añadir pregunta",
     "no_qa_generated": "No se generaron preguntas. Añade las tuyas o vuelve a analizar tu currículum.",
+    "recommendations_title": "Sugerencias de mejora del currículum",
+    "recommendations_desc": "La IA analizó tu perfil y sugiere estas mejoras",
+    "recommendations_loading": "Generando sugerencias de mejora...",
+    "apply_suggestions": "Aplicar sugerencias",
+    "apply_all": "Aplicar todo",
+    "skip_improvements": "Omitir mejoras",
+    "improve_title": "Revisar mejoras",
+    "improve_desc": "Compara tu perfil antes y después de las mejoras",
+    "before": "Antes",
+    "after": "Después",
+    "accept_improvements": "Aceptar mejoras",
+    "reject_improvements": "Mantener original",
+    "applying_improvements": "Aplicando mejoras...",
+    "priority_high": "Alta prioridad",
+    "priority_medium": "Media",
+    "priority_low": "Sería bueno",
+    "no_recommendations": "¡Tu perfil se ve genial! No se necesitan mejoras.",
     "ready_title": "¡Todo listo!",
     "ready_description": "JobFinder está configurado. ¡Empieza a buscar trabajo!",
     "start_button": "Empezar a buscar",
@@ -344,7 +379,24 @@
     "field_profile_summary": "Resumen del perfil",
     "field_profile_skills": "Habilidades del perfil",
     "field_cover_letter": "Carta de presentacion",
-    "field_qa_answer": "Respuesta Q&A"
+    "field_qa_answer": "Respuesta Q&A",
+    "field_search": "Perfil de busqueda",
+    "field_profile_languages": "Idiomas",
+    "field_profile_preferredLocations": "Ubicaciones preferidas",
+    "field_profile_employmentTypes": "Tipos de empleo",
+    "field_profile_portfolioUrls": "URLs del portafolio",
+    "field_profile_yearsExperience": "Anos de experiencia",
+    "field_profile_salaryMin": "Salario minimo",
+    "field_profile_salaryCurrency": "Moneda del salario",
+    "field_profile_preferredRemoteType": "Preferencia remota"
+  },
+  "ai_edit_tracking": {
+    "edited": "Editado",
+    "kept": "Mantenido",
+    "total_fields": "Campos generados por IA",
+    "accepted_as_is": "Aceptados sin cambios",
+    "user_edited": "Editados por usuario",
+    "edit_rate": "Tasa de edicion"
   },
   "about": {
     "back_to_login": "Volver al inicio",
@@ -439,6 +491,20 @@
     "add_to_calendar": "Agregar al calendario",
     "google_calendar": "Google Calendar",
     "download_ics": "Descargar .ics"
+  },
+  "translations": {
+    "translate_to": "Traducir a {language}",
+    "original": "Original",
+    "translated": "Traducido",
+    "translating": "Traduciendo...",
+    "show_english": "Mostrar en inglés",
+    "show_translated": "Mostrar traducción",
+    "ai_content_lang": "Contenido IA en inglés",
+    "ui_language": "Interfaz: {language}",
+    "translate_description": "Traducir a {language}",
+    "en": "inglés",
+    "uk": "ucraniano",
+    "es": "español"
   },
   "emails": {
     "title": "Respuestas por correo",

@@ -4,6 +4,12 @@ import { prisma } from "@/lib/db";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
+/** Persistent data directory — survives Docker rebuilds via volume mount */
+const DATA_RESUMES_DIR = path.join(
+  process.env.DATA_DIR || "/app/data",
+  "resumes"
+);
+
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
@@ -40,17 +46,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const resumesDir = path.join(process.cwd(), "public", "resumes");
-    await mkdir(resumesDir, { recursive: true });
+    await mkdir(DATA_RESUMES_DIR, { recursive: true });
 
     const timestamp = Date.now();
     const filename = `${user.id}-${timestamp}.pdf`;
-    const filepath = path.join(resumesDir, filename);
+    const filepath = path.join(DATA_RESUMES_DIR, filename);
 
     const bytes = await file.arrayBuffer();
     await writeFile(filepath, Buffer.from(bytes));
 
-    const url = `/resumes/${filename}`;
+    // Serve via API route (not public/ — that's baked into Docker image at build)
+    const url = `/api/resumes/${filename}`;
 
     return NextResponse.json({ url });
   } catch (e) {

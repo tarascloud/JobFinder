@@ -41,6 +41,9 @@ export type UserMinAggregateOutputType = {
   image: string | null
   googleId: string | null
   role: string | null
+  preferredLocale: string | null
+  preferredSkin: string | null
+  preferredTheme: string | null
   createdAt: Date | null
 }
 
@@ -51,6 +54,9 @@ export type UserMaxAggregateOutputType = {
   image: string | null
   googleId: string | null
   role: string | null
+  preferredLocale: string | null
+  preferredSkin: string | null
+  preferredTheme: string | null
   createdAt: Date | null
 }
 
@@ -61,6 +67,9 @@ export type UserCountAggregateOutputType = {
   image: number
   googleId: number
   role: number
+  preferredLocale: number
+  preferredSkin: number
+  preferredTheme: number
   createdAt: number
   _all: number
 }
@@ -81,6 +90,9 @@ export type UserMinAggregateInputType = {
   image?: true
   googleId?: true
   role?: true
+  preferredLocale?: true
+  preferredSkin?: true
+  preferredTheme?: true
   createdAt?: true
 }
 
@@ -91,6 +103,9 @@ export type UserMaxAggregateInputType = {
   image?: true
   googleId?: true
   role?: true
+  preferredLocale?: true
+  preferredSkin?: true
+  preferredTheme?: true
   createdAt?: true
 }
 
@@ -101,6 +116,9 @@ export type UserCountAggregateInputType = {
   image?: true
   googleId?: true
   role?: true
+  preferredLocale?: true
+  preferredSkin?: true
+  preferredTheme?: true
   createdAt?: true
   _all?: true
 }
@@ -198,6 +216,9 @@ export type UserGroupByOutputType = {
   image: string | null
   googleId: string | null
   role: string
+  preferredLocale: string
+  preferredSkin: string
+  preferredTheme: string
   createdAt: Date
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -231,6 +252,9 @@ export type UserWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   googleId?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
+  preferredLocale?: Prisma.StringFilter<"User"> | string
+  preferredSkin?: Prisma.StringFilter<"User"> | string
+  preferredTheme?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   searchProfiles?: Prisma.SearchProfileListRelationFilter
@@ -250,6 +274,9 @@ export type UserOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  preferredLocale?: Prisma.SortOrder
+  preferredSkin?: Prisma.SortOrder
+  preferredTheme?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   profile?: Prisma.UserProfileOrderByWithRelationInput
   searchProfiles?: Prisma.SearchProfileOrderByRelationAggregateInput
@@ -272,6 +299,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
+  preferredLocale?: Prisma.StringFilter<"User"> | string
+  preferredSkin?: Prisma.StringFilter<"User"> | string
+  preferredTheme?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   searchProfiles?: Prisma.SearchProfileListRelationFilter
@@ -291,6 +321,9 @@ export type UserOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  preferredLocale?: Prisma.SortOrder
+  preferredSkin?: Prisma.SortOrder
+  preferredTheme?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -309,6 +342,9 @@ export type UserScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
+  preferredLocale?: Prisma.StringWithAggregatesFilter<"User"> | string
+  preferredSkin?: Prisma.StringWithAggregatesFilter<"User"> | string
+  preferredTheme?: Prisma.StringWithAggregatesFilter<"User"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
@@ -318,6 +354,9 @@ export type UserCreateInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -337,6 +376,9 @@ export type UserUncheckedCreateInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -355,6 +397,9 @@ export type UserUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -374,6 +419,9 @@ export type UserUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -393,6 +441,9 @@ export type UserCreateManyInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
 }
 
@@ -402,6 +453,9 @@ export type UserUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -412,6 +466,9 @@ export type UserUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -422,6 +479,9 @@ export type UserCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  preferredLocale?: Prisma.SortOrder
+  preferredSkin?: Prisma.SortOrder
+  preferredTheme?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -436,6 +496,9 @@ export type UserMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  preferredLocale?: Prisma.SortOrder
+  preferredSkin?: Prisma.SortOrder
+  preferredTheme?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -446,6 +509,9 @@ export type UserMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  preferredLocale?: Prisma.SortOrder
+  preferredSkin?: Prisma.SortOrder
+  preferredTheme?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -610,6 +676,9 @@ export type UserCreateWithoutProfileInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -628,6 +697,9 @@ export type UserUncheckedCreateWithoutProfileInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -661,6 +733,9 @@ export type UserUpdateWithoutProfileInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -679,6 +754,9 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -696,6 +774,9 @@ export type UserCreateWithoutSearchProfilesInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -714,6 +795,9 @@ export type UserUncheckedCreateWithoutSearchProfilesInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -747,6 +831,9 @@ export type UserUpdateWithoutSearchProfilesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -765,6 +852,9 @@ export type UserUncheckedUpdateWithoutSearchProfilesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -782,6 +872,9 @@ export type UserCreateWithoutVacancyScoresInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -800,6 +893,9 @@ export type UserUncheckedCreateWithoutVacancyScoresInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -833,6 +929,9 @@ export type UserUpdateWithoutVacancyScoresInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -851,6 +950,9 @@ export type UserUncheckedUpdateWithoutVacancyScoresInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -868,6 +970,9 @@ export type UserCreateWithoutApplicationsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -886,6 +991,9 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -919,6 +1027,9 @@ export type UserUpdateWithoutApplicationsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -937,6 +1048,9 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -954,6 +1068,9 @@ export type UserCreateWithoutQaPairsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -972,6 +1089,9 @@ export type UserUncheckedCreateWithoutQaPairsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1005,6 +1125,9 @@ export type UserUpdateWithoutQaPairsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1023,6 +1146,9 @@ export type UserUncheckedUpdateWithoutQaPairsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1040,6 +1166,9 @@ export type UserCreateWithoutPlatformAccountsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1058,6 +1187,9 @@ export type UserUncheckedCreateWithoutPlatformAccountsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1091,6 +1223,9 @@ export type UserUpdateWithoutPlatformAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1109,6 +1244,9 @@ export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1126,6 +1264,9 @@ export type UserCreateWithoutAiFeedbackInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1144,6 +1285,9 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1177,6 +1321,9 @@ export type UserUpdateWithoutAiFeedbackInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1195,6 +1342,9 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1212,6 +1362,9 @@ export type UserCreateWithoutAiSettingsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1230,6 +1383,9 @@ export type UserUncheckedCreateWithoutAiSettingsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1263,6 +1419,9 @@ export type UserUpdateWithoutAiSettingsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1281,6 +1440,9 @@ export type UserUncheckedUpdateWithoutAiSettingsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1298,6 +1460,9 @@ export type UserCreateWithoutNotificationsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1316,6 +1481,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   image?: string | null
   googleId?: string | null
   role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1349,6 +1517,9 @@ export type UserUpdateWithoutNotificationsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1367,6 +1538,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1470,6 +1644,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   image?: boolean
   googleId?: boolean
   role?: boolean
+  preferredLocale?: boolean
+  preferredSkin?: boolean
+  preferredTheme?: boolean
   createdAt?: boolean
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   searchProfiles?: boolean | Prisma.User$searchProfilesArgs<ExtArgs>
@@ -1490,6 +1667,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   googleId?: boolean
   role?: boolean
+  preferredLocale?: boolean
+  preferredSkin?: boolean
+  preferredTheme?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1500,6 +1680,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   googleId?: boolean
   role?: boolean
+  preferredLocale?: boolean
+  preferredSkin?: boolean
+  preferredTheme?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1510,10 +1693,13 @@ export type UserSelectScalar = {
   image?: boolean
   googleId?: boolean
   role?: boolean
+  preferredLocale?: boolean
+  preferredSkin?: boolean
+  preferredTheme?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "role" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "role" | "preferredLocale" | "preferredSkin" | "preferredTheme" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   searchProfiles?: boolean | Prisma.User$searchProfilesArgs<ExtArgs>
@@ -1549,6 +1735,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     image: string | null
     googleId: string | null
     role: string
+    preferredLocale: string
+    preferredSkin: string
+    preferredTheme: string
     createdAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -1988,6 +2177,9 @@ export interface UserFieldRefs {
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly googleId: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'String'>
+  readonly preferredLocale: Prisma.FieldRef<"User", 'String'>
+  readonly preferredSkin: Prisma.FieldRef<"User", 'String'>
+  readonly preferredTheme: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     

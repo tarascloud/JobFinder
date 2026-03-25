@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -21,6 +21,7 @@ import {
   X,
   Plus,
   Minus,
+  Languages,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +32,7 @@ import { queueVacancyForApply } from "@/actions/apply-queue";
 import { generateCoverLetterAction } from "@/actions/scoring";
 import { researchCompany, getCachedCompanyResearch } from "@/actions/company-research";
 import { tailorResume } from "@/actions/resume-tailor";
+import { getTranslation } from "@/actions/translations";
 
 const statusColors: Record<string, "yellow" | "blue" | "green" | "purple" | "indigo" | "red"> = {
   queued: "yellow",
@@ -91,6 +93,8 @@ export default function VacancyDetailPage() {
 
   const tResearch = useTranslations("company_research");
   const tTailor = useTranslations("resume_tailor");
+  const tTranslations = useTranslations("translations");
+  const locale = useLocale();
 
   const [vacancy, setVacancy] = useState<VacancyDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +102,49 @@ export default function VacancyDetailPage() {
   const [isQueuing, setIsQueuing] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  // Description translation state
+  const [translatedDescription, setTranslatedDescription] = useState<string | null>(null);
+  const [isTranslatingDesc, setIsTranslatingDesc] = useState(false);
+  const [showTranslatedDesc, setShowTranslatedDesc] = useState(false);
+
+  // Cover letter translation state
+  const [translatedCoverLetter, setTranslatedCoverLetter] = useState<string | null>(null);
+  const [isTranslatingCL, setIsTranslatingCL] = useState(false);
+  const [showTranslatedCL, setShowTranslatedCL] = useState(false);
+
+  async function handleTranslateDescription() {
+    if (translatedDescription) {
+      setShowTranslatedDesc(!showTranslatedDesc);
+      return;
+    }
+    if (!vacancy) return;
+    setIsTranslatingDesc(true);
+    try {
+      const fromLang = vacancy.language || "en";
+      const result = await getTranslation(vacancy.description, locale, fromLang);
+      setTranslatedDescription(result);
+      setShowTranslatedDesc(true);
+    } finally {
+      setIsTranslatingDesc(false);
+    }
+  }
+
+  async function handleTranslateCoverLetter() {
+    if (translatedCoverLetter) {
+      setShowTranslatedCL(!showTranslatedCL);
+      return;
+    }
+    if (!coverLetter) return;
+    setIsTranslatingCL(true);
+    try {
+      const result = await getTranslation(coverLetter, locale, "en");
+      setTranslatedCoverLetter(result);
+      setShowTranslatedCL(true);
+    } finally {
+      setIsTranslatingCL(false);
+    }
+  }
   const [companyData, setCompanyData] = useState<{
     description: string;
     industry: string;
@@ -301,9 +348,35 @@ export default function VacancyDetailPage() {
           {/* Description */}
           <Card>
             <CardContent className="p-6">
+              {locale !== (vacancy.language || "en") && (
+                <div className="flex items-center justify-end mb-3">
+                  <button
+                    onClick={handleTranslateDescription}
+                    disabled={isTranslatingDesc}
+                    className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
+                  >
+                    {isTranslatingDesc ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Languages className="h-3 w-3" />
+                    )}
+                    {isTranslatingDesc
+                      ? tTranslations("translating")
+                      : showTranslatedDesc
+                      ? tTranslations("show_english")
+                      : tTranslations("translate_to", {
+                          language: tTranslations(locale as "en" | "uk" | "es"),
+                        })}
+                  </button>
+                </div>
+              )}
               <div
                 className="prose prose-invert prose-sm max-w-none text-foreground/80"
-                dangerouslySetInnerHTML={{ __html: vacancy.description }}
+                dangerouslySetInnerHTML={{
+                  __html: showTranslatedDesc && translatedDescription
+                    ? translatedDescription
+                    : vacancy.description,
+                }}
               />
             </CardContent>
           </Card>
@@ -396,15 +469,38 @@ export default function VacancyDetailPage() {
           {/* Cover Letter */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm">{tq("cover_letter")}</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm">{tq("cover_letter")}</CardTitle>
+                {coverLetter && locale !== "en" && (
+                  <button
+                    onClick={handleTranslateCoverLetter}
+                    disabled={isTranslatingCL}
+                    className="inline-flex items-center gap-1 text-[10px] text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
+                  >
+                    {isTranslatingCL ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Languages className="h-3 w-3" />
+                    )}
+                    {showTranslatedCL
+                      ? tTranslations("show_english")
+                      : tTranslations("show_translated")}
+                  </button>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               <Textarea
-                value={coverLetter}
-                onChange={(e) => setCoverLetter(e.target.value)}
+                value={showTranslatedCL && translatedCoverLetter ? translatedCoverLetter : coverLetter}
+                onChange={(e) => {
+                  setCoverLetter(e.target.value);
+                  setTranslatedCoverLetter(null);
+                  setShowTranslatedCL(false);
+                }}
                 rows={10}
                 placeholder={tq("generating_cover_letter")}
                 className="mb-3"
+                readOnly={showTranslatedCL}
               />
               <Button
                 variant="secondary"

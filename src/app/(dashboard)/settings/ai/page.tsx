@@ -8,7 +8,7 @@ import { Select, SelectOption } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Bot, CheckCircle2, XCircle, Loader2, ThumbsUp, ThumbsDown, Brain } from "lucide-react";
+import { Bot, CheckCircle2, XCircle, Loader2, ThumbsUp, ThumbsDown, Brain, Sparkles, Pencil, CheckCircle } from "lucide-react";
 import SettingsTabs from "../settings-tabs";
 import {
   getAISettings,
@@ -17,6 +17,7 @@ import {
   type AIProvider,
 } from "@/actions/ai-settings";
 import { getAiFeedbackStats, getRecentFeedback } from "@/actions/ai-feedback";
+import { getEditTrackingStats } from "@/actions/ai-edit-tracking";
 
 const PROVIDERS: { value: AIProvider; key: string }[] = [
   { value: "ollama", key: "ollama" },
@@ -27,8 +28,15 @@ const PROVIDERS: { value: AIProvider; key: string }[] = [
 export default function AISettingsPage() {
   const t = useTranslations("ai_settings");
   const tf = useTranslations("ai_feedback");
+  const te = useTranslations("ai_edit_tracking");
   const tCommon = useTranslations("common");
 
+  const [editStats, setEditStats] = useState<{
+    totalFields: number;
+    acceptedAsIs: number;
+    edited: number;
+    editRate: number;
+  } | null>(null);
   const [feedbackStats, setFeedbackStats] = useState<{
     totalLikes: number;
     totalDislikes: number;
@@ -55,10 +63,11 @@ export default function AISettingsPage() {
   });
 
   const load = useCallback(async () => {
-    const [settings, statsResult, recentResult] = await Promise.all([
+    const [settings, statsResult, recentResult, editStatsResult] = await Promise.all([
       getAISettings(),
       getAiFeedbackStats(),
       getRecentFeedback(10),
+      getEditTrackingStats(),
     ]);
     setProvider(settings.provider);
     setOllamaUrl(settings.ollamaUrl);
@@ -71,6 +80,9 @@ export default function AISettingsPage() {
     }
     if ("feedback" in recentResult) {
       setRecentFeedback(recentResult.feedback as typeof recentFeedback);
+    }
+    if ("totalFields" in editStatsResult) {
+      setEditStats(editStatsResult as { totalFields: number; acceptedAsIs: number; edited: number; editRate: number });
     }
   }, []);
 
@@ -295,6 +307,40 @@ export default function AISettingsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* AI Edit Tracking Stats */}
+      {editStats && editStats.totalFields > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Sparkles className="h-8 w-8 text-primary mx-auto mb-2" />
+              <p className="text-2xl font-bold">{editStats.totalFields}</p>
+              <p className="text-sm text-muted-foreground">{te("total_fields")}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <CheckCircle className="h-8 w-8 text-green-400 mx-auto mb-2" />
+              <p className="text-2xl font-bold">{editStats.acceptedAsIs}</p>
+              <p className="text-sm text-muted-foreground">{te("accepted_as_is")}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Pencil className="h-8 w-8 text-amber-400 mx-auto mb-2" />
+              <p className="text-2xl font-bold">{editStats.edited}</p>
+              <p className="text-sm text-muted-foreground">{te("user_edited")}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Brain className="h-8 w-8 text-purple-400 mx-auto mb-2" />
+              <p className="text-2xl font-bold">{editStats.editRate}%</p>
+              <p className="text-sm text-muted-foreground">{te("edit_rate")}</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {feedbackStats && feedbackStats.byField.length > 0 && (
         <Card>

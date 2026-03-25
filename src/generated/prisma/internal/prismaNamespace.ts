@@ -1499,6 +1499,9 @@ export const UserScalarFieldEnum = {
   image: 'image',
   googleId: 'googleId',
   role: 'role',
+  preferredLocale: 'preferredLocale',
+  preferredSkin: 'preferredSkin',
+  preferredTheme: 'preferredTheme',
   createdAt: 'createdAt'
 } as const
 
@@ -1524,6 +1527,8 @@ export const UserProfileScalarFieldEnum = {
   portfolioUrls: 'portfolioUrls',
   resumeUrl: 'resumeUrl',
   resumeText: 'resumeText',
+  analysisStatus: 'analysisStatus',
+  analysisResult: 'analysisResult',
   salaryMin: 'salaryMin',
   salaryCurrency: 'salaryCurrency',
   preferredLocations: 'preferredLocations',
@@ -1556,6 +1561,7 @@ export const SearchProfileScalarFieldEnum = {
   maxDailyApplies: 'maxDailyApplies',
   autoApply: 'autoApply',
   scrapeSchedule: 'scrapeSchedule',
+  source: 'source',
   createdAt: 'createdAt'
 } as const
 
@@ -1635,7 +1641,8 @@ export const QaPairScalarFieldEnum = {
   sourceVacancyId: 'sourceVacancyId',
   answeredAt: 'answeredAt',
   timesUsed: 'timesUsed',
-  category: 'category'
+  category: 'category',
+  source: 'source'
 } as const
 
 export type QaPairScalarFieldEnum = (typeof QaPairScalarFieldEnum)[keyof typeof QaPairScalarFieldEnum]

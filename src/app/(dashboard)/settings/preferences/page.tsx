@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectOption } from "@/components/ui/select";
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Settings2 } from "lucide-react";
 import SettingsTabs from "../settings-tabs";
+import { getUserPreferences, updatePreference } from "@/actions/preferences";
 
 const SKINS = [
   { value: "default", key: "skin_default" },
@@ -37,6 +39,7 @@ function setCookie(name: string, value: string, days = 365) {
 export default function PreferencesPage() {
   const t = useTranslations("preferences");
   const tCommon = useTranslations("common");
+  const router = useRouter();
 
   const [skin, setSkin] = useState("default");
   const [language, setLanguage] = useState("en");
@@ -44,10 +47,18 @@ export default function PreferencesPage() {
   const [applyHoursStart, setApplyHoursStart] = useState(18);
   const [applyHoursEnd, setApplyHoursEnd] = useState(22);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    setSkin(getCookie("jf-skin") || "default");
-    setLanguage(getCookie("NEXT_LOCALE") || "en");
+    // Load from DB first, fall back to cookies
+    getUserPreferences().then((prefs) => {
+      setSkin(prefs.skin);
+      setLanguage(prefs.locale);
+    }).catch(() => {
+      setSkin(getCookie("jf-skin") || "default");
+      setLanguage(getCookie("locale") || "en");
+    });
+
     setTelegramEnabled(getCookie("jf-telegram") === "1");
     const start = getCookie("jf-apply-start");
     const end = getCookie("jf-apply-end");
@@ -55,9 +66,16 @@ export default function PreferencesPage() {
     if (end) setApplyHoursEnd(Number(end));
   }, []);
 
-  function handleSave() {
-    setCookie("jf-skin", skin);
-    setCookie("NEXT_LOCALE", language);
+  async function handleSave() {
+    setSaving(true);
+
+    // Save to DB + cookies in parallel
+    const dbUpdates = Promise.all([
+      updatePreference("skin", skin),
+      updatePreference("locale", language),
+    ]);
+
+    // Also set cookies directly for non-DB settings
     setCookie("jf-telegram", telegramEnabled ? "1" : "0");
     setCookie("jf-apply-start", String(applyHoursStart));
     setCookie("jf-apply-end", String(applyHoursEnd));
@@ -70,8 +88,13 @@ export default function PreferencesPage() {
       html.setAttribute("data-skin", skin);
     }
 
+    await dbUpdates;
+    setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+
+    // Refresh to apply locale change via SSR
+    router.refresh();
   }
 
   return (
@@ -134,7 +157,7 @@ export default function PreferencesPage() {
                 onChange={(e) => setApplyHoursStart(Number(e.target.value))}
                 className="w-20"
               />
-              <span className="text-muted-foreground">—</span>
+              <span className="text-muted-foreground">--</span>
               <Input
                 type="number"
                 min={0}
@@ -147,7 +170,9 @@ export default function PreferencesPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button onClick={handleSave}>{tCommon("save")}</Button>
+            <Button onClick={handleSave} disabled={saving}>
+              {saving ? "..." : tCommon("save")}
+            </Button>
             {saved && (
               <span className="text-sm text-green-400">{t("saved")}</span>
             )}

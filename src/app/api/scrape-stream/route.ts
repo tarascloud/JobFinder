@@ -6,6 +6,7 @@ import type { ScrapedVacancy, SearchCriteria } from "@/lib/scrapers/types";
 import { findDuplicate } from "@/lib/dedup";
 import { computeEurSalary } from "@/lib/salary";
 import { tagVacancy } from "@/lib/ai/tagger";
+import { checkRateLimit } from "@/lib/rate-limiter";
 
 // Re-export scrapers list for sequential streaming
 const PLATFORMS = [
@@ -31,6 +32,24 @@ export async function POST(request: NextRequest) {
       status: 401,
       headers: { "Content-Type": "application/json" },
     });
+  }
+
+  // Rate limit: max 3 scrapes per hour per user
+  const rateCheck = checkRateLimit(user.id, "scrape", 3);
+  if (!rateCheck.allowed) {
+    return new Response(
+      JSON.stringify({
+        error: "Rate limit exceeded",
+        retryAfter: rateCheck.retryAfter,
+      }),
+      {
+        status: 429,
+        headers: {
+          "Content-Type": "application/json",
+          "Retry-After": String(rateCheck.retryAfter),
+        },
+      }
+    );
   }
 
   let body: { searchProfileId?: number };

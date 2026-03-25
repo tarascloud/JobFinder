@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
+import { restorePreferencesFromDB } from "@/actions/preferences";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,8 +22,12 @@ export const metadata: Metadata = {
     title: "JobFinder",
   },
   icons: {
-    icon: "/favicon.svg",
-    apple: "/icon-192.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
   },
 };
 
@@ -39,10 +44,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Restore preferences from DB if cookies are missing (e.g. cache cleared).
+  // Returns DB prefs so we can use them for theme default below.
+  const dbPrefs = await restorePreferencesFromDB();
+
   const locale = await getLocale();
   const messages = await getMessages();
   const cookieStore = await cookies();
   const skin = cookieStore.get("jf-skin")?.value || "taras";
+
+  // Use DB theme as defaultTheme so when localStorage is cleared,
+  // next-themes falls back to the user's saved preference instead of "dark".
+  const defaultTheme = dbPrefs?.theme || "dark";
 
   return (
     <html lang={locale} suppressHydrationWarning {...(skin !== "default" ? { "data-skin": skin } : {})}>
@@ -51,7 +64,7 @@ export default async function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme={defaultTheme}
           enableSystem
           disableTransitionOnChange
         >

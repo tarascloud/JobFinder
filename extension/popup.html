@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><style>
+  body { width: 320px; font-family: system-ui; background: #26282b; color: #fff; padding: 16px; }
+  h1 { font-size: 16px; color: #ffd600; margin: 0 0 12px; }
+  input { width: 100%; padding: 8px; border: 1px solid #353940; background: #2b2d30; color: #fff; border-radius: 6px; margin-bottom: 8px; box-sizing: border-box; }
+  button { width: 100%; padding: 10px; background: #ffd600; color: #26282b; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+  button:hover { background: #ffc700; }
+  .status { font-size: 12px; color: #9a9ea6; margin-top: 8px; }
+  .saved { color: #34d399; }
+  .error { color: #f87171; }
+</style></head>
+<body>
+  <h1>🔍 JobFinder</h1>
+  <div id="login-section">
+    <input id="server" type="text" placeholder="https://jobfinder.taras.cloud" value="https://jobfinder.taras.cloud"/>
+    <input id="token" type="password" placeholder="API Token (from Settings)"/>
+    <button id="save-config">Save Config</button>
+  </div>
+  <div id="job-section" style="display:none">
+    <p id="job-title" style="font-weight:bold;"></p>
+    <p id="job-company" style="color:#9a9ea6;font-size:13px;"></p>
+    <button id="save-job">Save to JobFinder</button>
+    <div id="status" class="status"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

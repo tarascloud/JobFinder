@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import {
   Upload,
@@ -13,20 +13,32 @@ import {
   Sparkles,
   Check,
   RotateCcw,
+  AlertCircle,
+  Lightbulb,
+  ThumbsUp,
+  ThumbsDown,
+  GitCompare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  analyzeResume,
   updateProfile,
   type AnalyzedProfile,
   type AnalyzedSearchProfile,
   type AnalyzedQaPair,
+  getAnalysisStatus,
+  clearAnalysisStatus,
 } from "@/actions/profile";
 import { createSearchProfile } from "@/actions/search-profiles";
 import AiFeedbackButtons from "@/components/shared/ai-feedback-buttons";
+import { submitAiFeedback } from "@/actions/ai-feedback";
+import {
+  generateResumeRecommendationsForCurrentUser,
+  applyRecommendationsForCurrentUser,
+  type ResumeRecommendation,
+} from "@/actions/resume-recommendations";
 
 const LANGUAGE_OPTIONS = [
   "English",
@@ -84,21 +96,33 @@ interface ReanalysisResult {
   qaPairs: AnalyzedQaPair[];
 }
 
+type AnalysisPhase = "idle" | "uploading" | "upload_done" | "analyzing" | "done" | "error";
+
 export default function ProfilePage() {
   const t = useTranslations("profile");
   const tCommon = useTranslations("common");
 
   // Resume upload state
   const [isDragging, setIsDragging] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisPhase, setAnalysisPhase] = useState<AnalysisPhase>("idle");
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Reanalysis diff state
   const [reanalysisResult, setReanalysisResult] = useState<ReanalysisResult | null>(null);
   const [acceptedChanges, setAcceptedChanges] = useState<Set<string>>(new Set());
+
+  // Recommendations state (shown after re-analysis)
+  const tOnboarding = useTranslations("onboarding");
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [recommendations, setRecommendations] = useState<ResumeRecommendation[]>([]);
+  const [recFeedback, setRecFeedback] = useState<Record<string, "like" | "dislike">>({});
+  const [loadingRecs, setLoadingRecs] = useState(false);
+  const [applyingRecs, setApplyingRecs] = useState(false);
+  const [improvedProfile, setImprovedProfile] = useState<AnalyzedProfile | null>(null);
+  const [showImprovePanel, setShowImprovePanel] = useState(false);
 
   // Profile state
   const [headline, setHeadline] = useState("Senior Frontend Engineer");
@@ -129,13 +153,111 @@ export default function ProfilePage() {
   const [newLanguage, setNewLanguage] = useState("");
   const [newLanguageLevel, setNewLanguageLevel] = useState<LanguageLevel>("Professional");
 
+  // Check for in-progress analysis on mount (user navigated away and came back)
+  useEffect(() => {
+    checkExistingAnalysis();
+    return () => stopPolling();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Block navigation only during file upload
+  useEffect(() => {
+    if (analysisPhase !== "uploading") return;
+
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [analysisPhase]);
+
+  async function checkExistingAnalysis() {
+    try {
+      const status = await getAnalysisStatus();
+      if (status.status === "analyzing") {
+        setAnalysisPhase("analyzing");
+        startPolling();
+      } else if (status.status === "done" && status.result) {
+        setReanalysisResult(status.result);
+        setAcceptedChanges(new Set());
+        setAnalysisPhase("done");
+        setUploadedFile("resume.pdf");
+        // Clear the status so it doesn't show again on next visit
+        await clearAnalysisStatus();
+      } else if (status.status === "error") {
+        setAnalyzeError(status.error || "Analysis failed");
+        setAnalysisPhase("error");
+        await clearAnalysisStatus();
+      }
+    } catch {
+      // ignore — first visit or no profile yet
+    }
+  }
+
+  function startPolling() {
+    stopPolling();
+    pollingRef.current = setInterval(async () => {
+      try {
+        const status = await getAnalysisStatus();
+        if (status.status === "done" && status.result) {
+          stopPolling();
+          setReanalysisResult(status.result);
+          setAcceptedChanges(new Set());
+          setAnalysisPhase("done");
+          await clearAnalysisStatus();
+        } else if (status.status === "error") {
+          stopPolling();
+          setAnalyzeError(status.error || "Analysis failed");
+          setAnalysisPhase("error");
+          await clearAnalysisStatus();
+        }
+      } catch {
+        // continue polling
+      }
+    }, 3000);
+  }
+
+  function stopPolling() {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+  }
+
+  async function triggerBackgroundAnalysis(url: string) {
+    setAnalysisPhase("analyzing");
+    setAnalyzeError(null);
+
+    try {
+      const response = await fetch("/api/analyze-resume", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resumeUrl: url }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setAnalyzeError(data.error || "Failed to start analysis");
+        setAnalysisPhase("error");
+        return;
+      }
+
+      // Start polling for results
+      startPolling();
+    } catch {
+      setAnalyzeError("Failed to start analysis");
+      setAnalysisPhase("error");
+    }
+  }
+
   async function handleFileUpload(file: File) {
     if (file.type !== "application/pdf") {
       setAnalyzeError(t("pdf_only"));
       return;
     }
 
-    setIsUploading(true);
+    setAnalysisPhase("uploading");
     setAnalyzeError(null);
     setReanalysisResult(null);
 
@@ -152,48 +274,28 @@ export default function ProfilePage() {
 
       if (!response.ok) {
         setAnalyzeError(data.error || "Upload failed");
-        setIsUploading(false);
+        setAnalysisPhase("error");
         return;
       }
 
       setUploadedFile(file.name);
       setResumeUrl(data.url);
-      setIsUploading(false);
+      setAnalysisPhase("upload_done");
 
-      await runAnalysis(data.url);
+      // Automatically trigger background analysis
+      await triggerBackgroundAnalysis(data.url);
     } catch {
       setAnalyzeError("Upload failed");
-      setIsUploading(false);
-    }
-  }
-
-  async function runAnalysis(url: string) {
-    setIsAnalyzing(true);
-    setAnalyzeError(null);
-
-    try {
-      const result = await analyzeResume(url);
-
-      if ("error" in result) {
-        setAnalyzeError(result.error);
-        setIsAnalyzing(false);
-        return;
-      }
-
-      // Show diff instead of auto-applying
-      setReanalysisResult(result);
-      setAcceptedChanges(new Set());
-      setIsAnalyzing(false);
-    } catch {
-      setAnalyzeError("Analysis failed");
-      setIsAnalyzing(false);
+      setAnalysisPhase("error");
     }
   }
 
   async function handleUrlAnalyze() {
     if (!resumeUrlInput.trim()) return;
-    setResumeUrl(resumeUrlInput.trim());
-    await runAnalysis(resumeUrlInput.trim());
+    const url = resumeUrlInput.trim();
+    setResumeUrl(url);
+    setReanalysisResult(null);
+    await triggerBackgroundAnalysis(url);
   }
 
   function acceptChange(field: string) {
@@ -254,6 +356,82 @@ export default function ProfilePage() {
   function dismissReanalysis() {
     setReanalysisResult(null);
     setAcceptedChanges(new Set());
+  }
+
+  // --- Recommendations ---
+  async function loadProfileRecommendations() {
+    setShowRecommendations(true);
+    setLoadingRecs(true);
+    setRecommendations([]);
+    setRecFeedback({});
+    try {
+      const result = await generateResumeRecommendationsForCurrentUser();
+      if ("error" in result) {
+        setAnalyzeError(result.error);
+      } else {
+        setRecommendations(result.recommendations);
+      }
+    } catch {
+      setAnalyzeError("Failed to load recommendations");
+    } finally {
+      setLoadingRecs(false);
+    }
+  }
+
+  function handleProfileRecFeedback(recId: string, rating: "like" | "dislike") {
+    setRecFeedback((prev) => ({ ...prev, [recId]: rating }));
+    const rec = recommendations.find((r) => r.id === recId);
+    if (rec) {
+      submitAiFeedback({
+        field: "resume_recommendation",
+        context: rec.category,
+        content: rec.title + ": " + rec.description,
+        rating,
+      });
+    }
+  }
+
+  async function handleApplyProfileSuggestions() {
+    const acceptedIds = recommendations
+      .filter((r) => recFeedback[r.id] !== "dislike")
+      .map((r) => r.id);
+
+    if (acceptedIds.length === 0) {
+      setShowRecommendations(false);
+      return;
+    }
+
+    setApplyingRecs(true);
+    try {
+      const result = await applyRecommendationsForCurrentUser(acceptedIds);
+      if ("error" in result) {
+        setAnalyzeError(result.error);
+        setApplyingRecs(false);
+        return;
+      }
+      setImprovedProfile(result.updatedProfile);
+      setShowImprovePanel(true);
+      setShowRecommendations(false);
+      setApplyingRecs(false);
+    } catch {
+      setAnalyzeError("Failed to apply recommendations");
+      setApplyingRecs(false);
+    }
+  }
+
+  function acceptProfileImprovements() {
+    if (!improvedProfile) return;
+    setHeadline(improvedProfile.headline);
+    setSummary(improvedProfile.summary);
+    setYearsOfExperience(improvedProfile.yearsExperience != null ? String(improvedProfile.yearsExperience) : "");
+    setSkills(improvedProfile.skills);
+    setShowImprovePanel(false);
+    setImprovedProfile(null);
+  }
+
+  function dismissProfileImprovements() {
+    setShowImprovePanel(false);
+    setImprovedProfile(null);
   }
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -369,6 +547,17 @@ export default function ProfilePage() {
     <div className="space-y-6 max-w-3xl">
       <h1 className="text-2xl font-bold">{t("title")}</h1>
 
+      {/* Background analysis banner — persists across navigation */}
+      {analysisPhase === "analyzing" && (
+        <div className="flex items-center gap-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
+          <Loader2 className="h-5 w-5 text-amber-400 animate-spin shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-amber-300">{t("bg_analyzing")}</p>
+            <p className="text-xs text-muted-foreground">{t("bg_analyzing_desc")}</p>
+          </div>
+        </div>
+      )}
+
       {/* Resume Upload */}
       <Card>
         <CardHeader>
@@ -390,9 +579,9 @@ export default function ProfilePage() {
               ${
                 isDragging
                   ? "border-primary bg-primary/10"
-                  : isAnalyzing
+                  : analysisPhase === "analyzing"
                     ? "border-amber-500/50 bg-amber-500/5"
-                    : uploadedFile && !analyzeError
+                    : (uploadedFile && analysisPhase !== "error")
                       ? "border-green-500/50 bg-green-500/5"
                       : "border-border hover:border-primary/40 hover:bg-muted/50"
               }
@@ -406,22 +595,22 @@ export default function ProfilePage() {
               className="hidden"
             />
 
-            {isUploading ? (
+            {analysisPhase === "uploading" ? (
               <div className="flex flex-col items-center gap-3">
                 <Loader2 className="h-10 w-10 text-primary animate-spin" />
                 <p className="text-sm text-foreground/80">{t("uploading")}</p>
               </div>
-            ) : isAnalyzing ? (
-              <div className="flex flex-col items-center gap-3">
-                <Loader2 className="h-10 w-10 text-amber-400 animate-spin" />
-                <p className="text-sm text-amber-300 font-medium">{t("ai_analyzing")}</p>
-                <p className="text-xs text-muted-foreground">{t("ai_analyzing_desc")}</p>
-              </div>
-            ) : uploadedFile && !analyzeError ? (
+            ) : uploadedFile && analysisPhase !== "error" ? (
               <div className="flex flex-col items-center gap-3">
                 <CheckCircle className="h-10 w-10 text-green-400" />
                 <p className="text-sm text-green-300 font-medium">{uploadedFile}</p>
-                <p className="text-xs text-muted-foreground">{t("analysis_complete")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {analysisPhase === "analyzing"
+                    ? t("upload_complete_analyzing")
+                    : analysisPhase === "done"
+                      ? t("analysis_complete")
+                      : t("upload_complete")}
+                </p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3">
@@ -435,7 +624,10 @@ export default function ProfilePage() {
           </div>
 
           {analyzeError && (
-            <p className="text-sm text-red-400">{analyzeError}</p>
+            <div className="flex items-center gap-2 text-sm text-red-400">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <p>{analyzeError}</p>
+            </div>
           )}
 
           {/* URL input */}
@@ -458,9 +650,9 @@ export default function ProfilePage() {
               variant="outline"
               size="md"
               onClick={handleUrlAnalyze}
-              disabled={!resumeUrlInput.trim() || isAnalyzing}
+              disabled={!resumeUrlInput.trim() || analysisPhase === "analyzing"}
             >
-              {isAnalyzing ? (
+              {analysisPhase === "analyzing" ? (
                 <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
               ) : (
                 <Upload className="h-4 w-4 mr-1.5" />
@@ -554,6 +746,166 @@ export default function ProfilePage() {
               <Button variant="outline" size="sm" onClick={dismissReanalysis}>
                 <RotateCcw className="h-4 w-4 mr-1" />
                 {t("dismiss")}
+              </Button>
+              <Button variant="outline" size="sm" onClick={loadProfileRecommendations}>
+                <Lightbulb className="h-4 w-4 mr-1" />
+                {tOnboarding("recommendations_title")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* AI Recommendations Panel */}
+      {showRecommendations && (
+        <Card className="border-amber-500/40">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-amber-300">
+              <Lightbulb className="h-5 w-5" />
+              {tOnboarding("recommendations_title")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">{tOnboarding("recommendations_desc")}</p>
+
+            {loadingRecs ? (
+              <div className="text-center py-4">
+                <Loader2 className="h-6 w-6 text-primary animate-spin mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">{tOnboarding("recommendations_loading")}</p>
+              </div>
+            ) : recommendations.length === 0 ? (
+              <div className="text-center py-4">
+                <Check className="h-6 w-6 text-green-400 mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">{tOnboarding("no_recommendations")}</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recommendations.map((rec) => (
+                  <div
+                    key={rec.id}
+                    className={`p-3 rounded-lg border border-border space-y-2 transition-opacity ${
+                      recFeedback[rec.id] === "dislike" ? "opacity-50" : ""
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="text-sm font-medium">{rec.title}</h4>
+                          <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs ${
+                            rec.priority === "high" ? "bg-red-900/40 border-red-700/40 text-red-300"
+                              : rec.priority === "medium" ? "bg-amber-900/40 border-amber-700/40 text-amber-300"
+                              : "bg-blue-900/40 border-blue-700/40 text-blue-300"
+                          }`}>
+                            {rec.priority === "high" ? tOnboarding("priority_high")
+                              : rec.priority === "medium" ? tOnboarding("priority_medium")
+                              : tOnboarding("priority_low")}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{rec.description}</p>
+                        {rec.currentText && rec.suggestedText && (
+                          <div className="mt-2 space-y-1">
+                            <div className="rounded bg-red-950/30 border border-red-900/30 px-2 py-1">
+                              <p className="text-xs text-red-300/70 line-through">{rec.currentText}</p>
+                            </div>
+                            <div className="rounded bg-green-950/30 border border-green-900/30 px-2 py-1">
+                              <p className="text-xs text-green-300">{rec.suggestedText}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex gap-1 shrink-0">
+                        <button
+                          onClick={() => handleProfileRecFeedback(rec.id, "like")}
+                          className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+                            recFeedback[rec.id] === "like"
+                              ? "bg-green-900/40 text-green-400"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <ThumbsUp className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleProfileRecFeedback(rec.id, "dislike")}
+                          className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+                            recFeedback[rec.id] === "dislike"
+                              ? "bg-red-900/40 text-red-400"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <ThumbsDown className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {recommendations.length > 0 && (
+              <div className="flex gap-2">
+                <Button size="sm" onClick={handleApplyProfileSuggestions} disabled={applyingRecs}>
+                  {applyingRecs ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                      {tOnboarding("applying_improvements")}
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-1" />
+                      {tOnboarding("apply_suggestions")}
+                    </>
+                  )}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setShowRecommendations(false)}>
+                  {tOnboarding("skip_improvements")}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Improvement Before/After Panel */}
+      {showImprovePanel && improvedProfile && (
+        <Card className="border-green-500/40">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-300">
+              <GitCompare className="h-5 w-5" />
+              {tOnboarding("improve_title")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">{tOnboarding("improve_desc")}</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="p-3 rounded-lg border border-red-900/30 space-y-2">
+                <h4 className="text-xs font-medium text-red-300 uppercase">{tOnboarding("before")}</h4>
+                <p className="text-sm"><span className="text-muted-foreground">{t("headline")}:</span> {headline}</p>
+                <p className="text-sm text-muted-foreground line-clamp-3">{summary}</p>
+              </div>
+              <div className="p-3 rounded-lg border border-green-900/30 space-y-2">
+                <h4 className="text-xs font-medium text-green-300 uppercase">{tOnboarding("after")}</h4>
+                <p className="text-sm">
+                  <span className="text-muted-foreground">{t("headline")}:</span>{" "}
+                  <span className={improvedProfile.headline !== headline ? "bg-green-900/30 px-1 rounded" : ""}>
+                    {improvedProfile.headline}
+                  </span>
+                </p>
+                <p className={`text-sm text-muted-foreground line-clamp-3 ${
+                  improvedProfile.summary !== summary ? "bg-green-900/30 px-1 rounded" : ""
+                }`}>
+                  {improvedProfile.summary}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button size="sm" onClick={acceptProfileImprovements}>
+                <Check className="h-4 w-4 mr-1" />
+                {tOnboarding("accept_improvements")}
+              </Button>
+              <Button variant="outline" size="sm" onClick={dismissProfileImprovements}>
+                {tOnboarding("reject_improvements")}
               </Button>
             </div>
           </CardContent>
