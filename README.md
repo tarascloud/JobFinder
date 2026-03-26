@@ -2,6 +2,9 @@
 
 AI-powered job search automation. Find, score, and apply to remote jobs automatically.
 
+**Live Demo:** [jobfinder.taras.cloud](https://jobfinder.taras.cloud)
+**About & Features:** [jobfinder.taras.cloud/about](https://jobfinder.taras.cloud/about) — full product overview with feature descriptions, supported platforms, and tech stack.
+
 ## Features
 - Multi-user SaaS with Google OAuth
 - AI resume analysis -> auto-generate profile
