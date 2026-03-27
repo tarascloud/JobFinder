@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import {
   Briefcase,
-  ChevronLeft,
-  ChevronRight,
   Loader2,
   CheckSquare,
   Square,
@@ -25,17 +23,17 @@ import {
   batchDismissVacancies,
 } from "@/actions/vacancies";
 import type { Vacancy } from "./types";
-import { VacancyRow } from "./vacancy-row";
+import { VacancyCard } from "./vacancy-card";
 
 interface VacancyListProps {
   vacancies: Vacancy[];
   loading: boolean;
-  page: number;
-  totalPages: number;
+  loadingMore: boolean;
+  hasMore: boolean;
   queuingId: number | null;
   canQueue: boolean;
   selectedProfileId: number | null;
-  onPageChange: (page: number) => void;
+  onLoadMore: () => void;
   onQuickQueue: (id: number, e: React.MouseEvent) => void;
   onDataChanged: () => void;
 }
@@ -43,12 +41,12 @@ interface VacancyListProps {
 export function VacancyList({
   vacancies,
   loading,
-  page,
-  totalPages,
+  loadingMore,
+  hasMore,
   queuingId,
   canQueue,
   selectedProfileId,
-  onPageChange,
+  onLoadMore,
   onQuickQueue,
   onDataChanged,
 }: VacancyListProps) {
@@ -61,39 +59,51 @@ export function VacancyList({
   const [batchQueuing, setBatchQueuing] = useState(false);
   const [batchDismissing, setBatchDismissing] = useState(false);
 
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
   const hasSelection = selectedIds.size > 0;
   const allSelected = vacancies.length > 0 && selectedIds.size === vacancies.length;
   const someSelected = selectedIds.size > 0 && selectedIds.size < vacancies.length;
   const batchBusy = batchScoring || batchQueuing || batchDismissing;
 
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading && !loadingMore) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0, rootMargin: "200px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loading, loadingMore, onLoadMore]);
+
   const toggleExpand = (id: number) => {
     setExpandedId((prev) => (prev === id ? null : id));
   };
 
-  const toggleSelect = (id: number, e: React.MouseEvent) => {
+  const toggleSelect = useCallback((id: number, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
-  };
+  }, []);
 
   const toggleSelectAll = () => {
-    if (allSelected) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(vacancies.map((v) => v.id)));
-    }
+    if (allSelected) setSelectedIds(new Set());
+    else setSelectedIds(new Set(vacancies.map((v) => v.id)));
   };
 
-  const clearSelection = () => {
-    setSelectedIds(new Set());
-  };
+  const clearSelection = () => setSelectedIds(new Set());
 
   const handleBatchScore = async () => {
     if (!selectedProfileId || selectedIds.size === 0) return;
@@ -128,23 +138,20 @@ export function VacancyList({
     }
   };
 
-  // Clear selection when vacancies change (data reload)
-  // This is handled by parent calling onDataChanged which triggers loadVacancies
-
   if (loading) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <Card key={i}>
             <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                <Skeleton className="h-10 w-10 rounded-lg" />
+              <div className="flex items-start gap-3">
+                <Skeleton className="h-9 w-9 rounded-lg" />
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-4 w-3/5" />
                   <Skeleton className="h-3 w-2/5" />
+                  <Skeleton className="h-3 w-1/3" />
                 </div>
-                <Skeleton className="h-6 w-16" />
-                <Skeleton className="h-6 w-12" />
+                <Skeleton className="h-6 w-12 rounded-full" />
               </div>
             </CardContent>
           </Card>
@@ -167,70 +174,68 @@ export function VacancyList({
 
   return (
     <>
-      <div className="space-y-2">
-        {/* Header row */}
-        <div className="hidden md:grid grid-cols-[auto_1fr] gap-2 items-center">
-          <button
-            onClick={toggleSelectAll}
-            className="flex items-center justify-center w-8 h-8 text-muted-foreground hover:text-foreground transition-colors"
-            title={t("select_all")}
-          >
-            {allSelected ? (
-              <CheckSquare className="h-4 w-4 text-primary" />
-            ) : someSelected ? (
-              <MinusSquare className="h-4 w-4 text-primary" />
-            ) : (
-              <Square className="h-4 w-4" />
-            )}
-          </button>
-          <div className="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            <div className="col-span-4">{t("title")}</div>
-            <div className="col-span-2">{t("platform")}</div>
-            <div className="col-span-1 text-center">{t("status")}</div>
-            <div className="col-span-2">{t("location")}</div>
-            <div className="col-span-1 text-center">{t("score")}</div>
-            <div className="col-span-2 text-center">{t("posted")}</div>
-          </div>
-        </div>
+      {/* Select all toggle (desktop) */}
+      <div className="hidden md:flex items-center gap-2 px-1">
+        <button
+          onClick={toggleSelectAll}
+          className="flex items-center justify-center w-7 h-7 text-muted-foreground hover:text-foreground transition-colors"
+          title={t("select_all")}
+        >
+          {allSelected ? (
+            <CheckSquare className="h-4 w-4 text-primary" />
+          ) : someSelected ? (
+            <MinusSquare className="h-4 w-4 text-primary" />
+          ) : (
+            <Square className="h-4 w-4" />
+          )}
+        </button>
+        <span className="text-xs text-muted-foreground">{t("select_all")}</span>
+      </div>
 
+      {/* Vacancy cards */}
+      <div className="space-y-2">
         {vacancies.map((v) => (
-          <VacancyRow
-            key={v.id}
-            vacancy={v}
-            isExpanded={expandedId === v.id}
-            isSelected={selectedIds.has(v.id)}
-            queuingId={queuingId}
-            canQueue={canQueue}
-            onToggleExpand={toggleExpand}
-            onToggleSelect={toggleSelect}
-            onQuickQueue={onQuickQueue}
-          />
+          <div key={v.id} className="flex items-start gap-2">
+            {/* Checkbox (desktop) */}
+            <button
+              onClick={(e) => toggleSelect(v.id, e)}
+              className="hidden md:flex items-center justify-center w-7 h-7 mt-4 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            >
+              {selectedIds.has(v.id) ? (
+                <CheckSquare className="h-4 w-4 text-primary" />
+              ) : (
+                <Square className="h-4 w-4" />
+              )}
+            </button>
+            <div className="flex-1 min-w-0">
+              <VacancyCard
+                vacancy={v}
+                isExpanded={expandedId === v.id}
+                queuingId={queuingId}
+                canQueue={canQueue}
+                onToggleExpand={toggleExpand}
+                onQuickQueue={onQuickQueue}
+              />
+            </div>
+          </div>
         ))}
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={page <= 1}
-            onClick={() => onPageChange(page - 1)}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            {t("page_of", { page, total: totalPages })}
-          </span>
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={page >= totalPages}
-            onClick={() => onPageChange(page + 1)}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+      {/* Sentinel for infinite scroll */}
+      <div ref={sentinelRef} className="h-4" />
+
+      {/* Loading more spinner */}
+      {loadingMore && (
+        <div className="flex items-center justify-center py-6">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
+      )}
+
+      {/* End of list */}
+      {!hasMore && vacancies.length > 0 && (
+        <p className="text-center text-xs text-muted-foreground py-4">
+          {t("no_more_vacancies")}
+        </p>
       )}
 
       {/* Floating Batch Action Bar */}

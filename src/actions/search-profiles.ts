@@ -40,6 +40,9 @@ interface SearchProfileData {
   excludedCompanies?: string[];
   excludedIndustries?: string[];
   stackFilter?: string[];
+  skills?: string[];
+  preferredPlatforms?: string[];
+  excludedKeywords?: string[];
   applyHoursStart?: number;
   applyHoursEnd?: number;
   applyTimezone?: string;
@@ -51,6 +54,14 @@ interface SearchProfileData {
 export async function createSearchProfile(data: SearchProfileData) {
   try {
     const user = await requireUser();
+
+    // Enforce max 3 profiles per user
+    const existingCount = await prisma.searchProfile.count({
+      where: { userId: user.id },
+    });
+    if (existingCount >= 3) {
+      return { error: "Maximum 3 search profiles allowed" };
+    }
 
     const profile = await prisma.searchProfile.create({
       data: {
@@ -65,6 +76,9 @@ export async function createSearchProfile(data: SearchProfileData) {
         excludedCompanies: data.excludedCompanies ?? [],
         excludedIndustries: data.excludedIndustries ?? [],
         stackFilter: data.stackFilter ?? [],
+        skills: data.skills ?? [],
+        preferredPlatforms: data.preferredPlatforms ?? [],
+        excludedKeywords: data.excludedKeywords ?? [],
         applyHoursStart: data.applyHoursStart ?? 18,
         applyHoursEnd: data.applyHoursEnd ?? 22,
         applyTimezone: data.applyTimezone ?? "Europe/Madrid",
@@ -106,6 +120,9 @@ export async function updateSearchProfile(id: number, data: Partial<SearchProfil
         ...(data.excludedCompanies !== undefined && { excludedCompanies: data.excludedCompanies }),
         ...(data.excludedIndustries !== undefined && { excludedIndustries: data.excludedIndustries }),
         ...(data.stackFilter !== undefined && { stackFilter: data.stackFilter }),
+        ...(data.skills !== undefined && { skills: data.skills }),
+        ...(data.preferredPlatforms !== undefined && { preferredPlatforms: data.preferredPlatforms }),
+        ...(data.excludedKeywords !== undefined && { excludedKeywords: data.excludedKeywords }),
         ...(data.applyHoursStart !== undefined && { applyHoursStart: data.applyHoursStart }),
         ...(data.applyHoursEnd !== undefined && { applyHoursEnd: data.applyHoursEnd }),
         ...(data.applyTimezone !== undefined && { applyTimezone: data.applyTimezone }),

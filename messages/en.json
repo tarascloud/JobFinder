@@ -162,7 +162,13 @@
       "warning": "When enabled, high-scoring vacancies (≥70) will be applied to automatically during your apply window.",
       "enabled": "Auto-apply is ON",
       "disabled": "Auto-apply is OFF"
-    }
+    },
+    "skills": "Skills",
+    "preferred_platforms": "Preferred Platforms",
+    "preferred_platforms_hint": "If none selected, all platforms will be searched",
+    "excluded_keywords": "Exclude Keywords",
+    "max_profiles_reached": "You've reached the maximum of 3 search profiles",
+    "info_block": "You can create up to 3 search profiles. Each profile defines a different job search — e.g., 'Backend Engineer in Spain' and 'DevOps Remote'."
   },
   "vacancies": {
     "title": "Vacancies",
@@ -219,7 +225,16 @@
     "tags": "Tags",
     "rate_limited": "Rate limit reached. Try again in {minutes} minutes.",
     "score_hint": "After scraping, press 'Score All' to analyze vacancies with AI",
-    "personal_account_tooltip": "Applied with personal account — track responses manually"
+    "personal_account_tooltip": "Applied with personal account — track responses manually",
+    "mark_all_read": "Mark all as read",
+    "no_more_vacancies": "No more vacancies to show",
+    "swipe_dismiss": "Dismiss",
+    "swipe_save": "Save",
+    "swipe_empty": "Pull down to refresh or adjust your filters",
+    "swipe_left_hint": "Dismiss",
+    "swipe_right_hint": "Save",
+    "show_details": "Show details",
+    "hide_details": "Hide details"
   },
   "applications": {
     "title": "Applications",
@@ -360,6 +375,7 @@
     "title": "Preferences",
     "skin": "Theme Skin",
     "skin_default": "Default",
+    "skin_aurora": "Aurora",
     "skin_taras": "Taras",
     "skin_neon": "Neon",
     "language": "Language",

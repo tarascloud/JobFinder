@@ -28,6 +28,7 @@ import { NotificationBell } from "@/components/shared/notification-bell";
 import { signOut } from "next-auth/react";
 import { exitDemoMode } from "@/actions/demo";
 import { getUnreadEmailCount } from "@/actions/emails";
+import { getNewVacanciesCount } from "@/actions/vacancies";
 
 const navItems = [
   { href: "/profile", key: "profile", icon: User },
@@ -56,6 +57,7 @@ export default function DashboardShell({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadEmailCount, setUnreadEmailCount] = useState(0);
+  const [newVacanciesCount, setNewVacanciesCount] = useState(0);
   const t = useTranslations("nav");
 
   useEffect(() => {
@@ -64,6 +66,9 @@ export default function DashboardShell({
         .then((data) => {
           if ("count" in data && typeof data.count === "number") setUnreadEmailCount(data.count);
         })
+        .catch(() => {});
+      getNewVacanciesCount()
+        .then((count) => setNewVacanciesCount(count))
         .catch(() => {});
     }
   }, [isDemo, pathname]);
@@ -111,6 +116,11 @@ export default function DashboardShell({
           >
             <Icon className="h-5 w-5 shrink-0" />
             {t(key)}
+            {key === "vacancies" && newVacanciesCount > 0 && (
+              <Badge variant="destructive" className="ml-auto text-[10px] px-1.5 py-0">
+                {newVacanciesCount}
+              </Badge>
+            )}
             {key === "emails" && unreadEmailCount > 0 && (
               <Badge variant="destructive" className="ml-auto text-[10px] px-1.5 py-0">
                 {unreadEmailCount}

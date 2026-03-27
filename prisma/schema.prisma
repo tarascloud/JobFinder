@@ -31,6 +31,8 @@ model User {
   aiSettings       UserAISettings?
   notifications    Notification[]
   companyResearch  CompanyResearch[]
+  userVacancies    UserVacancy[]
+  lastVacanciesSeenAt DateTime? @map("last_vacancies_seen_at")
 
   @@map("users")
 }
@@ -109,11 +111,16 @@ model SearchProfile {
   autoApply          Boolean  @default(false) @map("auto_apply")
   scrapeSchedule     String   @default("daily") @map("scrape_schedule")
   source             String   @default("manual")
+  skills             String[] @default([])
+  preferredPlatforms String[] @default([]) @map("preferred_platforms")
+  excludedKeywords   String[] @default([]) @map("excluded_keywords")
+  lastScrapedAt      DateTime? @map("last_scraped_at")
   createdAt          DateTime @default(now()) @map("created_at")
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   vacancyScores VacancyScore[]
   applications  Application[]
+  userVacancies UserVacancy[]
 
   @@index([userId])
   @@map("search_profiles")
@@ -149,12 +156,17 @@ model Vacancy {
   duplicateOf   Vacancy?  @relation("VacancyDuplicates", fields: [isDuplicateOf], references: [id], onDelete: SetNull)
   duplicates    Vacancy[] @relation("VacancyDuplicates")
 
+  isArchived    Boolean   @default(false) @map("is_archived")
+  archivedAt    DateTime? @map("archived_at")
+
   vacancyScores VacancyScore[]
   applications  Application[]
   qaPairs       QaPair[]
+  userVacancies UserVacancy[]
 
   @@unique([platform, externalId])
   @@index([isDuplicateOf])
+  @@index([isArchived, scrapedAt])
   @@map("vacancies")
 }
 
@@ -338,4 +350,31 @@ model AdminEmail {
   @@index([createdAt])
   @@index([category])
   @@map("admin_emails")
+}
+
+model UserVacancy {
+  id              Int       @id @default(autoincrement())
+  userId          Int       @map("user_id")
+  vacancyId       Int       @map("vacancy_id")
+  searchProfileId Int?      @map("search_profile_id")
+  score           Int       @default(0)
+  salaryFit       Boolean?  @map("salary_fit")
+  remoteFit       Boolean?  @map("remote_fit")
+  scoreNotes      String?   @map("score_notes")
+  scoredAt        DateTime? @map("scored_at")
+  scoredBy        String?   @map("scored_by")
+  seen            Boolean   @default(false)
+  dismissed       Boolean   @default(false)
+  savedAt         DateTime? @map("saved_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  user          User           @relation(fields: [userId], references: [id])
+  vacancy       Vacancy        @relation(fields: [vacancyId], references: [id])
+  searchProfile SearchProfile? @relation(fields: [searchProfileId], references: [id])
+
+  @@unique([userId, vacancyId])
+  @@index([userId, seen])
+  @@index([userId, score])
+  @@index([vacancyId])
+  @@map("user_vacancies")
 }

@@ -3,6 +3,7 @@ import type { ScrapedVacancy } from "@/lib/scrapers/types";
 import { findDuplicate } from "@/lib/dedup";
 import { computeEurSalary } from "@/lib/salary";
 import { tagVacancy } from "@/lib/ai/tagger";
+import { matchUsersToVacancy } from "@/lib/match-users";
 
 export interface ExistingVacancyForDedup {
   id: number;
@@ -129,6 +130,16 @@ export async function saveVacancy(
       scoredBy: "scraper",
     },
   });
+
+  // Match other users whose SearchProfiles match this vacancy
+  try {
+    await matchUsersToVacancy(created.id, vacancy, userId);
+  } catch (err) {
+    console.error(
+      `[save-vacancy] matchUsersToVacancy error for vacancy ${created.id}:`,
+      err instanceof Error ? err.message : err
+    );
+  }
 
   return { result: "new", vacancyId: created.id };
 }

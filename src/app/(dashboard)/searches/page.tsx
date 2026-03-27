@@ -13,6 +13,8 @@ import {
   Sparkles,
   Loader2,
   Zap,
+  X,
+  Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -36,6 +38,7 @@ import {
   generateSearchFromProfile,
 } from "@/actions/search-profiles";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ALL_PLATFORMS } from "@/lib/platforms";
 
 interface SearchProfile {
   id: number;
@@ -47,6 +50,9 @@ interface SearchProfile {
   remoteOnly: boolean;
   geographies: string[];
   excludedCompanies: string[];
+  skills: string[];
+  preferredPlatforms: string[];
+  excludedKeywords: string[];
   applyHoursStart: number;
   applyHoursEnd: number;
   maxDailyApplies: number;
@@ -75,7 +81,10 @@ interface FormData {
   employmentTypes: string[];
   remoteOnly: boolean;
   geographies: string;
-  excludedCompanies: string;
+  excludedCompanies: string[];
+  skills: string[];
+  preferredPlatforms: string[];
+  excludedKeywords: string[];
   applyHoursStart: string;
   applyHoursEnd: string;
   maxDailyApplies: string;
@@ -90,7 +99,10 @@ const emptyForm: FormData = {
   employmentTypes: ["full_time"],
   remoteOnly: true,
   geographies: "",
-  excludedCompanies: "",
+  excludedCompanies: [],
+  skills: [],
+  preferredPlatforms: [],
+  excludedKeywords: [],
   applyHoursStart: "18",
   applyHoursEnd: "22",
   maxDailyApplies: "20",
@@ -106,7 +118,10 @@ function profileToForm(p: SearchProfile): FormData {
     employmentTypes: p.employmentTypes,
     remoteOnly: p.remoteOnly,
     geographies: p.geographies.join(", "),
-    excludedCompanies: p.excludedCompanies.join(", "),
+    excludedCompanies: p.excludedCompanies ?? [],
+    skills: p.skills ?? [],
+    preferredPlatforms: p.preferredPlatforms ?? [],
+    excludedKeywords: p.excludedKeywords ?? [],
     applyHoursStart: p.applyHoursStart.toString(),
     applyHoursEnd: p.applyHoursEnd.toString(),
     maxDailyApplies: p.maxDailyApplies.toString(),
@@ -121,6 +136,66 @@ function splitComma(s: string): string[] {
     .filter(Boolean);
 }
 
+function TagInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string[];
+  onChange: (tags: string[]) => void;
+  placeholder?: string;
+}) {
+  const [input, setInput] = useState("");
+
+  const addTag = (tag: string) => {
+    const trimmed = tag.trim();
+    if (trimmed && !value.includes(trimmed)) {
+      onChange([...value, trimmed]);
+    }
+    setInput("");
+  };
+
+  const removeTag = (tag: string) => {
+    onChange(value.filter((t) => t !== tag));
+  };
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-1.5 mb-1.5">
+        {value.map((tag) => (
+          <span
+            key={tag}
+            className="inline-flex items-center gap-1 rounded-full bg-primary/15 border border-primary/40 text-primary px-2.5 py-0.5 text-sm"
+          >
+            {tag}
+            <button
+              type="button"
+              onClick={() => removeTag(tag)}
+              className="text-primary/60 hover:text-primary cursor-pointer"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </span>
+        ))}
+      </div>
+      <Input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addTag(input);
+          }
+        }}
+        placeholder={placeholder}
+      />
+      <p className="text-xs text-muted-foreground mt-1">
+        Press Enter to add
+      </p>
+    </div>
+  );
+}
+
 export default function SearchesPage() {
   const t = useTranslations("searches");
   const tCommon = useTranslations("common");
@@ -133,6 +208,10 @@ export default function SearchesPage() {
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const MAX_PROFILES = 3;
+  const hasReachedMax = profiles.length >= MAX_PROFILES;
 
   const loadProfiles = async () => {
     setLoading(true);
@@ -153,12 +232,14 @@ export default function SearchesPage() {
   const openCreate = () => {
     setEditingId(null);
     setForm(emptyForm);
+    setError(null);
     setDialogOpen(true);
   };
 
   const openEdit = (p: SearchProfile) => {
     setEditingId(p.id);
     setForm(profileToForm(p));
+    setError(null);
     setDialogOpen(true);
   };
 
@@ -173,7 +254,10 @@ export default function SearchesPage() {
         employmentTypes: form.employmentTypes,
         remoteOnly: form.remoteOnly,
         geographies: splitComma(form.geographies),
-        excludedCompanies: splitComma(form.excludedCompanies),
+        excludedCompanies: form.excludedCompanies,
+        skills: form.skills,
+        preferredPlatforms: form.preferredPlatforms,
+        excludedKeywords: form.excludedKeywords,
         applyHoursStart: Number(form.applyHoursStart) || 18,
         applyHoursEnd: Number(form.applyHoursEnd) || 22,
         maxDailyApplies: Number(form.maxDailyApplies) || 20,
@@ -181,12 +265,21 @@ export default function SearchesPage() {
       };
 
       if (editingId) {
-        await updateSearchProfile(editingId, data);
+        const result = await updateSearchProfile(editingId, data);
+        if (result && "error" in result) {
+          setError(result.error);
+          return;
+        }
       } else {
-        await createSearchProfile(data);
+        const result = await createSearchProfile(data);
+        if (result && "error" in result) {
+          setError(result.error);
+          return;
+        }
       }
 
       setDialogOpen(false);
+      setError(null);
       await loadProfiles();
     } finally {
       setSaving(false);
@@ -220,7 +313,10 @@ export default function SearchesPage() {
         employmentTypes: result.employmentTypes,
         remoteOnly: result.remoteOnly,
         geographies: result.geographies.join(", "),
-        excludedCompanies: "",
+        excludedCompanies: [],
+        skills: [],
+        preferredPlatforms: [],
+        excludedKeywords: [],
         applyHoursStart: "18",
         applyHoursEnd: "22",
         maxDailyApplies: "20",
@@ -239,9 +335,16 @@ export default function SearchesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <Button onClick={openCreate}>
-          <Plus className="h-4 w-4 mr-1.5" /> {t("create")}
-        </Button>
+        <div className="relative group">
+          <Button onClick={openCreate} disabled={hasReachedMax}>
+            <Plus className="h-4 w-4 mr-1.5" /> {t("create")}
+          </Button>
+          {hasReachedMax && (
+            <div className="absolute right-0 top-full mt-1 z-10 hidden group-hover:block whitespace-nowrap rounded-md bg-popover border border-border px-3 py-1.5 text-sm text-muted-foreground shadow-md">
+              {t("max_profiles_reached")}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Loading */}
@@ -371,6 +474,12 @@ export default function SearchesPage() {
         </div>
       )}
 
+      {/* Info block */}
+      <div className="flex items-start gap-2 text-sm text-muted-foreground">
+        <Info className="h-4 w-4 shrink-0 mt-0.5" />
+        <p>{t("info_block")}</p>
+      </div>
+
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto">
@@ -448,6 +557,15 @@ export default function SearchesPage() {
             </div>
 
             <div>
+              <Label>{t("skills")}</Label>
+              <TagInput
+                value={form.skills}
+                onChange={(tags) => setForm((prev) => ({ ...prev, skills: tags }))}
+                placeholder="React, TypeScript, Node.js"
+              />
+            </div>
+
+            <div>
               <Label>{t("employment_types")}</Label>
               <div className="flex flex-wrap gap-2 mt-1.5">
                 {EMPLOYMENT_TYPE_OPTIONS.map((type) => {
@@ -489,6 +607,41 @@ export default function SearchesPage() {
               />
             </div>
 
+            <div>
+              <Label>{t("preferred_platforms")}</Label>
+              <p className="text-xs text-muted-foreground mb-1.5">{t("preferred_platforms_hint")}</p>
+              <div className="flex flex-wrap gap-2">
+                {ALL_PLATFORMS.map((platform) => {
+                  const isSelected = form.preferredPlatforms.includes(platform);
+                  return (
+                    <button
+                      key={platform}
+                      type="button"
+                      onClick={() => {
+                        setForm((prev) => ({
+                          ...prev,
+                          preferredPlatforms: isSelected
+                            ? prev.preferredPlatforms.filter((p) => p !== platform)
+                            : [...prev.preferredPlatforms, platform],
+                        }));
+                      }}
+                      className={`
+                        inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium
+                        border cursor-pointer transition-colors
+                        ${
+                          isSelected
+                            ? "bg-primary/15 border-primary/40 text-primary"
+                            : "bg-muted border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                        }
+                      `}
+                    >
+                      {platform}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label className="flex items-center gap-1.5">
@@ -509,10 +662,19 @@ export default function SearchesPage() {
 
             <div>
               <Label>{t("excluded_companies")}</Label>
-              <Input
+              <TagInput
                 value={form.excludedCompanies}
-                onChange={(e) => updateForm("excludedCompanies", e.target.value)}
+                onChange={(tags) => setForm((prev) => ({ ...prev, excludedCompanies: tags }))}
                 placeholder="Acme Corp, Evil Inc"
+              />
+            </div>
+
+            <div>
+              <Label>{t("excluded_keywords")}</Label>
+              <TagInput
+                value={form.excludedKeywords}
+                onChange={(tags) => setForm((prev) => ({ ...prev, excludedKeywords: tags }))}
+                placeholder="senior, manager, lead"
               />
             </div>
 
@@ -548,8 +710,14 @@ export default function SearchesPage() {
             </div>
           </div>
 
+          {error && (
+            <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">
+              {error}
+            </p>
+          )}
+
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setDialogOpen(false)}>
+            <Button variant="ghost" onClick={() => { setDialogOpen(false); setError(null); }}>
               {tCommon("cancel")}
             </Button>
             <Button onClick={handleSave} disabled={saving || !form.name.trim()}>

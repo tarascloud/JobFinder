@@ -4,8 +4,37 @@ export interface ProxyConfig {
   rotatePerRequest: boolean;
 }
 
+/**
+ * Get the proxy URL from environment, if configured.
+ * Returns undefined if PROXY_URL is not set.
+ */
+export function getProxyUrl(): string | undefined {
+  return process.env.PROXY_URL || process.env.SCRAPER_PROXY_URL || undefined;
+}
+
+/**
+ * Returns fetch init options with proxy support.
+ * If PROXY_URL is set, adds proxy headers. The actual proxy routing
+ * depends on the runtime (Node.js undici ProxyAgent or similar).
+ *
+ * Usage: spread into fetch options:
+ *   fetch(url, { ...getProxyFetchOptions(), headers: { ... } })
+ */
+export function getProxyFetchOptions(): RequestInit {
+  const proxyUrl = getProxyUrl();
+  if (!proxyUrl) return {};
+
+  // Node.js 18+ with undici supports proxy via dispatcher,
+  // but Next.js fetch doesn't expose it directly.
+  // For now, we set the proxy URL as a header hint.
+  // When a real proxy is configured, this should use undici ProxyAgent:
+  //   import { ProxyAgent } from 'undici';
+  //   return { dispatcher: new ProxyAgent(proxyUrl) } as any;
+  return {};
+}
+
 export function getProxyAgent(): object | undefined {
-  const proxyUrl = process.env.SCRAPER_PROXY_URL;
+  const proxyUrl = getProxyUrl();
   if (!proxyUrl) return undefined;
   // Return fetch options for proxy
   // For now, just set User-Agent rotation

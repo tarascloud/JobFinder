@@ -1,7 +1,5 @@
 # JobFinder
 
-[![GitHub](https://img.shields.io/github/license/tarascloud/JobFinder)](https://github.com/tarascloud/JobFinder)
-
 AI-powered job search automation. Find, score, and apply to remote jobs automatically.
 
 ## Features

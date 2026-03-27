@@ -15,6 +15,7 @@ import { getUserPreferences, updatePreference } from "@/actions/preferences";
 
 const SKINS = [
   { value: "default", key: "skin_default" },
+  { value: "aurora", key: "skin_aurora" },
   { value: "taras", key: "skin_taras" },
   { value: "neon", key: "skin_neon" },
 ] as const;

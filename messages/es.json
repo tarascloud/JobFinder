@@ -162,7 +162,13 @@
       "warning": "Cuando está activado, las vacantes con alta puntuación (≥70) se aplicarán automáticamente durante tu horario de envío.",
       "enabled": "Auto-aplicar ACTIVADO",
       "disabled": "Auto-aplicar DESACTIVADO"
-    }
+    },
+    "skills": "Habilidades",
+    "preferred_platforms": "Plataformas preferidas",
+    "preferred_platforms_hint": "Si no se selecciona ninguna, se buscarán todas las plataformas",
+    "excluded_keywords": "Excluir palabras clave",
+    "max_profiles_reached": "Has alcanzado el máximo de 3 perfiles de búsqueda",
+    "info_block": "Puedes crear hasta 3 perfiles de búsqueda. Cada perfil define una búsqueda de trabajo diferente — p. ej., 'Backend Engineer en España' y 'DevOps Remoto'."
   },
   "vacancies": {
     "title": "Vacantes",
@@ -219,7 +225,16 @@
     "tags": "Etiquetas",
     "rate_limited": "Limite de solicitudes alcanzado. Intenta de nuevo en {minutes} minutos.",
     "score_hint": "Despues de buscar, pulsa 'Puntuar todo' para analizar vacantes con IA",
-    "personal_account_tooltip": "Enviada con cuenta personal — rastrea las respuestas manualmente"
+    "personal_account_tooltip": "Enviada con cuenta personal — rastrea las respuestas manualmente",
+    "mark_all_read": "Marcar todo como leido",
+    "no_more_vacancies": "No hay mas vacantes",
+    "swipe_dismiss": "Descartar",
+    "swipe_save": "Guardar",
+    "swipe_empty": "Desliza hacia abajo para actualizar o ajusta tus filtros",
+    "swipe_left_hint": "Descartar",
+    "swipe_right_hint": "Guardar",
+    "show_details": "Mostrar detalles",
+    "hide_details": "Ocultar detalles"
   },
   "applications": {
     "title": "Solicitudes",
@@ -360,6 +375,7 @@
     "title": "Preferencias",
     "skin": "Tema visual",
     "skin_default": "Por defecto",
+    "skin_aurora": "Aurora",
     "skin_taras": "Taras",
     "skin_neon": "Neón",
     "language": "Idioma",

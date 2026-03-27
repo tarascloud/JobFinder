@@ -12,11 +12,13 @@ interface VacancyFilters {
   minScore?: number;
   status?: string;
   searchProfileId?: number;
+  searchProfileIds?: number[];
   tagLevel?: string;
   tagIndustry?: string;
   tagStack?: string;
   page?: number;
   limit?: number;
+  cursor?: number;
 }
 
 export async function getVacancies(filters?: VacancyFilters) {
@@ -25,24 +27,31 @@ export async function getVacancies(filters?: VacancyFilters) {
 
     const page = filters?.page ?? 1;
     const limit = Math.min(filters?.limit || 20, 100);
-    const skip = (page - 1) * limit;
+    const skip = filters?.cursor ? 0 : (page - 1) * limit;
 
-    // Build the where clause
-    // When searchProfileId or minScore is set, filter by vacancyScores
-    const hasScoreFilter = !!(filters?.searchProfileId || filters?.minScore);
-
-    const scoreWhere: Prisma.VacancyScoreWhereInput = {
+    // Build UserVacancy where clause — only show scored vacancies (JF-V5.4)
+    const uvWhere: Prisma.UserVacancyWhereInput = {
       userId: user.id,
+      dismissed: false,
+      // Hide unscored: score=0 AND scoredAt IS NULL
+      NOT: {
+        AND: [
+          { score: 0 },
+          { scoredAt: null },
+        ],
+      },
       ...(filters?.searchProfileId && { searchProfileId: filters.searchProfileId }),
-      ...(filters?.minScore && { matchScore: { gte: filters.minScore } }),
+      ...(filters?.searchProfileIds && filters.searchProfileIds.length > 0 && {
+        searchProfileId: { in: filters.searchProfileIds },
+      }),
+      ...(filters?.minScore && { score: { gte: filters.minScore } }),
+      ...(filters?.cursor && { id: { lt: filters.cursor } }),
     };
 
+    // Build vacancy-level filters
     const vacancyWhere: Prisma.VacancyWhereInput = {
       ...(filters?.platforms && filters.platforms.length > 0 && { platform: { in: filters.platforms } }),
       ...(filters?.platform && !filters?.platforms && { platform: filters.platform }),
-      // Only require vacancyScores when filtering by profile or minScore
-      // Otherwise show ALL vacancies (including unscored ones)
-      ...(hasScoreFilter && { vacancyScores: { some: scoreWhere } }),
       ...(filters?.status && {
         applications: {
           some: { userId: user.id, status: filters.status },
@@ -53,59 +62,71 @@ export async function getVacancies(filters?: VacancyFilters) {
       ...(filters?.tagStack && { tagStack: { has: filters.tagStack } }),
     };
 
-    const [vacancies, total] = await Promise.all([
-      prisma.vacancy.findMany({
-        where: vacancyWhere,
+    // Combine: filter UserVacancy with nested vacancy conditions
+    const combinedWhere: Prisma.UserVacancyWhereInput = {
+      ...uvWhere,
+      vacancy: vacancyWhere,
+    };
+
+    const [userVacancies, total] = await Promise.all([
+      prisma.userVacancy.findMany({
+        where: combinedWhere,
         include: {
-          vacancyScores: {
-            where: { userId: user.id },
-            orderBy: { matchScore: "desc" },
-            take: 1,
-          },
-          applications: {
-            where: { userId: user.id },
-            take: 1,
+          vacancy: {
+            include: {
+              applications: {
+                where: { userId: user.id },
+                take: 1,
+              },
+            },
           },
         },
-        orderBy: { scrapedAt: "desc" },
+        orderBy: { score: "desc" },
         skip,
         take: limit,
       }),
-      prisma.vacancy.count({ where: vacancyWhere }),
+      prisma.userVacancy.count({ where: combinedWhere }),
     ]);
 
     return {
-      vacancies: vacancies.map((v) => ({
-        id: v.id,
-        platform: v.platform,
-        url: v.url,
-        title: v.title,
-        company: v.company,
-        location: v.location,
-        description: v.description,
-        salaryText: v.salaryText,
-        salaryMin: v.salaryMin,
-        salaryMax: v.salaryMax,
-        salaryCurrency: v.salaryCurrency,
-        salaryMinEur: v.salaryMinEur,
-        salaryMaxEur: v.salaryMaxEur,
-        remoteType: v.remoteType,
-        employmentType: v.employmentType,
-        postedAt: v.postedAt,
-        scrapedAt: v.scrapedAt,
-        matchScore: v.vacancyScores[0]?.matchScore ?? null,
-        matchNotes: v.vacancyScores[0]?.notes ?? null,
-        salaryFit: v.vacancyScores[0]?.salaryFit ?? null,
-        remoteFit: v.vacancyScores[0]?.remoteFit ?? null,
-        dismissed: v.vacancyScores[0]?.dismissed ?? false,
-        applicationId: v.applications[0]?.id ?? null,
-        applicationStatus: v.applications[0]?.status ?? null,
-        appliedWithPersonalAccount: v.applications[0]?.appliedWithPersonalAccount ?? false,
-        tagStack: v.tagStack,
-        tagLevel: v.tagLevel,
-        tagIndustry: v.tagIndustry,
-        tagTeamSize: v.tagTeamSize,
-      })),
+      vacancies: userVacancies.map((uv) => {
+        const v = uv.vacancy;
+        return {
+          id: v.id,
+          userVacancyId: uv.id,
+          platform: v.platform,
+          url: v.url,
+          title: v.title,
+          company: v.company,
+          location: v.location,
+          description: v.description,
+          salaryText: v.salaryText,
+          salaryMin: v.salaryMin,
+          salaryMax: v.salaryMax,
+          salaryCurrency: v.salaryCurrency,
+          salaryMinEur: v.salaryMinEur,
+          salaryMaxEur: v.salaryMaxEur,
+          remoteType: v.remoteType,
+          employmentType: v.employmentType,
+          postedAt: v.postedAt,
+          scrapedAt: v.scrapedAt,
+          matchScore: uv.score,
+          matchNotes: uv.scoreNotes,
+          salaryFit: uv.salaryFit,
+          remoteFit: uv.remoteFit,
+          dismissed: uv.dismissed,
+          seen: uv.seen,
+          savedAt: uv.savedAt,
+          scoredAt: uv.scoredAt,
+          applicationId: v.applications[0]?.id ?? null,
+          applicationStatus: v.applications[0]?.status ?? null,
+          appliedWithPersonalAccount: v.applications[0]?.appliedWithPersonalAccount ?? false,
+          tagStack: v.tagStack,
+          tagLevel: v.tagLevel,
+          tagIndustry: v.tagIndustry,
+          tagTeamSize: v.tagTeamSize,
+        };
+      }),
       total,
       page,
       limit,
@@ -123,6 +144,10 @@ export async function getVacancyDetail(id: number) {
     const vacancy = await prisma.vacancy.findUnique({
       where: { id },
       include: {
+        userVacancies: {
+          where: { userId: user.id },
+          include: { searchProfile: { select: { id: true, name: true } } },
+        },
         vacancyScores: {
           where: { userId: user.id },
           include: { searchProfile: { select: { id: true, name: true } } },
@@ -139,6 +164,8 @@ export async function getVacancyDetail(id: number) {
     });
 
     if (!vacancy) return { error: "Vacancy not found" };
+
+    const uv = vacancy.userVacancies[0];
 
     return {
       id: vacancy.id,
@@ -158,6 +185,10 @@ export async function getVacancyDetail(id: number) {
       language: vacancy.language,
       postedAt: vacancy.postedAt,
       scrapedAt: vacancy.scrapedAt,
+      matchScore: uv?.score ?? vacancy.vacancyScores[0]?.matchScore ?? null,
+      matchNotes: uv?.scoreNotes ?? vacancy.vacancyScores[0]?.notes ?? null,
+      seen: uv?.seen ?? true,
+      dismissed: uv?.dismissed ?? false,
       scores: vacancy.vacancyScores.map((s) => ({
         id: s.id,
         matchScore: s.matchScore,
@@ -181,7 +212,12 @@ export async function getVacancyStats() {
     const user = await requireUser();
 
     const [total, withApplication, byStatus] = await Promise.all([
-      prisma.vacancyScore.count({ where: { userId: user.id } }),
+      prisma.userVacancy.count({
+        where: {
+          userId: user.id,
+          NOT: { AND: [{ score: 0 }, { scoredAt: null }] },
+        },
+      }),
       prisma.application.count({ where: { userId: user.id } }),
       prisma.application.groupBy({
         by: ["status"],
@@ -228,7 +264,6 @@ export async function batchScoreVacancies(
     });
     if (!userProfile) return { scored: 0, errors: 0, error: "Please create your profile first" };
 
-    // Get vacancies that haven't been scored for this search profile yet
     const vacancies = await prisma.vacancy.findMany({
       where: {
         id: { in: ids },
@@ -283,6 +318,33 @@ export async function batchScoreVacancies(
           },
         });
 
+        // Also update UserVacancy
+        await prisma.userVacancy.upsert({
+          where: {
+            userId_vacancyId: { userId: user.id, vacancyId: vacancy.id },
+          },
+          update: {
+            score: result.matchScore,
+            salaryFit: result.salaryFit,
+            remoteFit: result.remoteFit,
+            scoreNotes: result.notes,
+            scoredAt: new Date(),
+            scoredBy: "gemini-2.0-flash",
+            searchProfileId,
+          },
+          create: {
+            userId: user.id,
+            vacancyId: vacancy.id,
+            searchProfileId,
+            score: result.matchScore,
+            salaryFit: result.salaryFit,
+            remoteFit: result.remoteFit,
+            scoreNotes: result.notes,
+            scoredAt: new Date(),
+            scoredBy: "gemini-2.0-flash",
+          },
+        });
+
         scored++;
       } catch {
         errors++;
@@ -312,7 +374,6 @@ export async function batchQueueVacancies(
     });
     if (!userProfile) return { queued: 0, errors: 0, error: "Please create your profile first" };
 
-    // Get vacancies that don't have an application yet
     const vacancies = await prisma.vacancy.findMany({
       where: {
         id: { in: ids },
@@ -364,6 +425,12 @@ export async function batchQueueVacancies(
           },
         });
 
+        // Mark as saved in UserVacancy
+        await prisma.userVacancy.updateMany({
+          where: { userId: user.id, vacancyId: vacancy.id },
+          data: { savedAt: new Date() },
+        });
+
         queued++;
       } catch {
         errors++;
@@ -382,7 +449,17 @@ export async function batchDismissVacancies(
   try {
     const user = await requireUser();
 
-    const result = await prisma.vacancyScore.updateMany({
+    // Update UserVacancy records
+    const result = await prisma.userVacancy.updateMany({
+      where: {
+        userId: user.id,
+        vacancyId: { in: ids },
+      },
+      data: { dismissed: true },
+    });
+
+    // Also update legacy VacancyScore records
+    await prisma.vacancyScore.updateMany({
       where: {
         userId: user.id,
         vacancyId: { in: ids },
@@ -393,5 +470,75 @@ export async function batchDismissVacancies(
     return { dismissed: result.count };
   } catch (e) {
     return { dismissed: 0, error: e instanceof Error ? e.message : "Failed to dismiss vacancies" };
+  }
+}
+
+export async function getNewVacanciesCount(): Promise<number> {
+  try {
+    const user = await requireUser();
+    return prisma.userVacancy.count({
+      where: {
+        userId: user.id,
+        seen: false,
+        NOT: { AND: [{ score: 0 }, { scoredAt: null }] },
+      },
+    });
+  } catch {
+    return 0;
+  }
+}
+
+export async function markVacanciesAsSeen(searchProfileId?: number): Promise<{ success: boolean; marked?: number; error?: string }> {
+  try {
+    const user = await requireUser();
+
+    const [, result] = await Promise.all([
+      prisma.user.update({
+        where: { id: user.id },
+        data: { lastVacanciesSeenAt: new Date() },
+      }),
+      prisma.userVacancy.updateMany({
+        where: {
+          userId: user.id,
+          seen: false,
+          ...(searchProfileId && { searchProfileId }),
+        },
+        data: { seen: true },
+      }),
+    ]);
+
+    return { success: true, marked: result.count };
+  } catch (e) {
+    return { success: false, error: e instanceof Error ? e.message : "Failed to mark vacancies as seen" };
+  }
+}
+
+export async function saveVacancy(vacancyId: number) {
+  try {
+    const user = await requireUser();
+
+    await prisma.userVacancy.updateMany({
+      where: { userId: user.id, vacancyId },
+      data: { savedAt: new Date() },
+    });
+
+    return { success: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to save vacancy" };
+  }
+}
+
+export async function dismissVacancy(vacancyId: number) {
+  try {
+    const user = await requireUser();
+
+    await prisma.userVacancy.updateMany({
+      where: { userId: user.id, vacancyId },
+      data: { dismissed: true },
+    });
+
+    return { success: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to dismiss vacancy" };
   }
 }
