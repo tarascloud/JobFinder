@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFile, stat } from "fs/promises";
 import path from "path";
+import { auth } from "@/lib/auth";
 
 /** Persistent data directory — matches upload-resume route */
 const DATA_RESUMES_DIR = path.join(
@@ -13,6 +14,11 @@ export async function GET(
   { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { filename } = await params;
 
     // Sanitize: only allow alphanumeric, dash, dot, underscore

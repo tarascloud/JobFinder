@@ -4,8 +4,9 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { testOllamaConnection } from "@/lib/ai/ollama";
 import { testGroqConnection } from "@/lib/ai/groq";
+import { encrypt, decryptGraceful } from "@/lib/encryption";
 
-export type AIProvider = "ollama" | "gemini" | "groq";
+export type AIProvider = "ollama" | "gemini" | "groq" | "jf_groq";
 
 export interface AISettingsData {
   provider: AIProvider;
@@ -34,7 +35,7 @@ export async function getAISettings(): Promise<AISettingsData> {
 
     if (!settings) {
       return {
-        provider: process.env.GEMINI_API_KEY ? "gemini" : "ollama",
+        provider: process.env.JF_GROQ_API_KEY ? "jf_groq" : process.env.GEMINI_API_KEY ? "gemini" : "ollama",
         ollamaUrl: process.env.OLLAMA_URL || "http://ollama:11434",
         ollamaModel: process.env.OLLAMA_MODEL || "qwen2.5:14b-instruct-q4_K_M",
         geminiApiKey: null,
@@ -76,27 +77,40 @@ export async function updateAISettings(data: {
       where: { userId: user.id },
     });
 
-    const geminiApiKey =
+    const rawGeminiKey =
       data.geminiApiKey === "••••••••"
         ? existing?.geminiApiKey ?? null
         : data.geminiApiKey ?? null;
-    const groqApiKey =
+    const rawGroqKey =
       data.groqApiKey === "••••••••"
         ? existing?.groqApiKey ?? null
         : data.groqApiKey ?? null;
+
+    // Encrypt API keys before storing
+    // If the value is already encrypted (kept from existing), don't re-encrypt
+    const geminiApiKey = rawGeminiKey && rawGeminiKey !== existing?.geminiApiKey
+      ? encrypt(rawGeminiKey)
+      : rawGeminiKey;
+    const groqApiKey = rawGroqKey && rawGroqKey !== existing?.groqApiKey
+      ? encrypt(rawGroqKey)
+      : rawGroqKey;
+
+    // Auto-switch: if user adds Gemini key but provider is still ollama, switch to gemini
+    let provider = data.provider;
+    if (geminiApiKey && provider === "ollama") provider = "gemini";
 
     await prisma.userAISettings.upsert({
       where: { userId: user.id },
       create: {
         userId: user.id,
-        provider: data.provider,
+        provider,
         ollamaUrl: data.ollamaUrl,
         ollamaModel: data.ollamaModel,
         geminiApiKey,
         groqApiKey,
       },
       update: {
-        provider: data.provider,
+        provider,
         ollamaUrl: data.ollamaUrl,
         ollamaModel: data.ollamaModel,
         geminiApiKey,
@@ -133,7 +147,9 @@ export async function testAIConnection(
           const settings = await prisma.userAISettings.findUnique({
             where: { userId: user.id },
           });
-          key = settings?.geminiApiKey ?? undefined;
+          key = settings?.geminiApiKey
+            ? decryptGraceful(settings.geminiApiKey)
+            : undefined;
         }
         const actualKey = key || process.env.GEMINI_API_KEY;
         if (!actualKey) return { success: false, error: "No Gemini API key" };
@@ -152,9 +168,11 @@ export async function testAIConnection(
           const settings = await prisma.userAISettings.findUnique({
             where: { userId: user.id },
           });
-          key = settings?.groqApiKey ?? undefined;
+          key = settings?.groqApiKey
+            ? decryptGraceful(settings.groqApiKey)
+            : undefined;
         }
-        const actualKey = key || process.env.GROQ_API_KEY;
+        const actualKey = key || process.env.JF_GROQ_API_KEY || process.env.GROQ_API_KEY;
         const ok = await testGroqConnection(actualKey);
         return ok
           ? { success: true }

@@ -27,16 +27,31 @@ export function isWithinApplyWindow(
 
 /**
  * Count applications with status 'applied' and appliedAt = today for this user + search profile.
+ * Uses the user's timezone (from SearchProfile.applyTimezone) to determine "today".
  */
 export async function getDailyApplyCount(
   userId: number,
-  searchProfileId: number
+  searchProfileId: number,
+  timezone: string = "UTC"
 ): Promise<number> {
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  // Get current date string in the user's timezone (YYYY-MM-DD)
+  const now = new Date();
+  const dateFormatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const todayStr = dateFormatter.format(now); // e.g. "2026-03-26"
 
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
+  // Build start/end of day in the user's timezone
+  // Parse as local date in that timezone by constructing an ISO-like string
+  const todayStart = new Date(
+    new Date(`${todayStr}T00:00:00`).toLocaleString("en-US", { timeZone: timezone })
+  );
+  const todayEnd = new Date(
+    new Date(`${todayStr}T23:59:59.999`).toLocaleString("en-US", { timeZone: timezone })
+  );
 
   return prisma.application.count({
     where: {
@@ -57,8 +72,9 @@ export async function getDailyApplyCount(
 export async function canApplyMore(
   userId: number,
   searchProfileId: number,
-  maxDaily: number
+  maxDaily: number,
+  timezone: string = "UTC"
 ): Promise<boolean> {
-  const count = await getDailyApplyCount(userId, searchProfileId);
+  const count = await getDailyApplyCount(userId, searchProfileId, timezone);
   return count < maxDaily;
 }

@@ -397,7 +397,8 @@ export const ModelName = {
   UserAISettings: 'UserAISettings',
   Notification: 'Notification',
   CompanyResearch: 'CompanyResearch',
-  EmailResponse: 'EmailResponse'
+  EmailResponse: 'EmailResponse',
+  AdminEmail: 'AdminEmail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "guestInvite" | "userProfile" | "searchProfile" | "vacancy" | "vacancyScore" | "application" | "qaPair" | "platformAccount" | "aiFeedback" | "userAISettings" | "notification" | "companyResearch" | "emailResponse"
+    modelProps: "user" | "guestInvite" | "userProfile" | "searchProfile" | "vacancy" | "vacancyScore" | "application" | "qaPair" | "platformAccount" | "aiFeedback" | "userAISettings" | "notification" | "companyResearch" | "emailResponse" | "adminEmail"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1453,6 +1454,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdminEmail: {
+      payload: Prisma.$AdminEmailPayload<ExtArgs>
+      fields: Prisma.AdminEmailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminEmailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminEmailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminEmailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminEmailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>
+        }
+        findMany: {
+          args: Prisma.AdminEmailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>[]
+        }
+        create: {
+          args: Prisma.AdminEmailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>
+        }
+        createMany: {
+          args: Prisma.AdminEmailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminEmailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminEmailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>
+        }
+        update: {
+          args: Prisma.AdminEmailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminEmailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminEmailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminEmailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminEmailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminEmailPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminEmailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdminEmail>
+        }
+        groupBy: {
+          args: Prisma.AdminEmailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminEmailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminEmailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminEmailCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1498,10 +1573,12 @@ export const UserScalarFieldEnum = {
   name: 'name',
   image: 'image',
   googleId: 'googleId',
+  jfEmail: 'jfEmail',
   role: 'role',
   preferredLocale: 'preferredLocale',
   preferredSkin: 'preferredSkin',
   preferredTheme: 'preferredTheme',
+  applicationLimit: 'applicationLimit',
   createdAt: 'createdAt'
 } as const
 
@@ -1526,6 +1603,7 @@ export const UserProfileScalarFieldEnum = {
   languages: 'languages',
   portfolioUrls: 'portfolioUrls',
   resumeUrl: 'resumeUrl',
+  resumeFilename: 'resumeFilename',
   resumeText: 'resumeText',
   analysisStatus: 'analysisStatus',
   analysisResult: 'analysisResult',
@@ -1534,6 +1612,24 @@ export const UserProfileScalarFieldEnum = {
   preferredLocations: 'preferredLocations',
   preferredRemoteType: 'preferredRemoteType',
   employmentTypes: 'employmentTypes',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  phone: 'phone',
+  location: 'location',
+  education: 'education',
+  educationField: 'educationField',
+  educationSchool: 'educationSchool',
+  educationHistory: 'educationHistory',
+  currentCompany: 'currentCompany',
+  currentTitle: 'currentTitle',
+  experience: 'experience',
+  certifications: 'certifications',
+  noticePeriod: 'noticePeriod',
+  visaRequired: 'visaRequired',
+  workAuthorization: 'workAuthorization',
+  linkedinUrl: 'linkedinUrl',
+  githubUrl: 'githubUrl',
+  portfolioUrl: 'portfolioUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1623,10 +1719,14 @@ export const ApplicationScalarFieldEnum = {
   searchProfileId: 'searchProfileId',
   status: 'status',
   coverLetter: 'coverLetter',
+  coverLetterVariant: 'coverLetterVariant',
   interviewPrep: 'interviewPrep',
   appliedAt: 'appliedAt',
+  failedAt: 'failedAt',
+  errorMessage: 'errorMessage',
   screenshotPath: 'screenshotPath',
   applyLog: 'applyLog',
+  appliedWithPersonalAccount: 'appliedWithPersonalAccount',
   createdAt: 'createdAt'
 } as const
 
@@ -1707,6 +1807,7 @@ export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[k
 export const CompanyResearchScalarFieldEnum = {
   id: 'id',
   companyName: 'companyName',
+  userId: 'userId',
   data: 'data',
   createdAt: 'createdAt'
 } as const
@@ -1721,12 +1822,34 @@ export const EmailResponseScalarFieldEnum = {
   fromEmail: 'fromEmail',
   subject: 'subject',
   body: 'body',
+  bodyText: 'bodyText',
+  bodyHtml: 'bodyHtml',
+  messageId: 'messageId',
   responseType: 'responseType',
   matched: 'matched',
+  read: 'read',
   receivedAt: 'receivedAt'
 } as const
 
 export type EmailResponseScalarFieldEnum = (typeof EmailResponseScalarFieldEnum)[keyof typeof EmailResponseScalarFieldEnum]
+
+
+export const AdminEmailScalarFieldEnum = {
+  id: 'id',
+  fromEmail: 'fromEmail',
+  toEmail: 'toEmail',
+  subject: 'subject',
+  body: 'body',
+  bodyText: 'bodyText',
+  bodyHtml: 'bodyHtml',
+  messageId: 'messageId',
+  platform: 'platform',
+  category: 'category',
+  read: 'read',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminEmailScalarFieldEnum = (typeof AdminEmailScalarFieldEnum)[keyof typeof AdminEmailScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1930,6 +2053,7 @@ export type GlobalOmitConfig = {
   notification?: Prisma.NotificationOmit
   companyResearch?: Prisma.CompanyResearchOmit
   emailResponse?: Prisma.EmailResponseOmit
+  adminEmail?: Prisma.AdminEmailOmit
 }
 
 /* Types for Logging */

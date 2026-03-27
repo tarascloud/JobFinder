@@ -72,48 +72,79 @@ interface UpdateProfileData {
   languages?: string[];
   portfolioUrls?: string[];
   resumeUrl?: string | null;
+  resumeFilename?: string | null;
   salaryMin?: number | null;
   salaryCurrency?: string | null;
   preferredLocations?: string[];
   preferredRemoteType?: string | null;
   employmentTypes?: string[];
+  // LinkedIn Easy Apply fields
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
+  location?: string | null;
+  education?: string | null;
+  educationField?: string | null;
+  educationSchool?: string | null;
+  educationHistory?: string | null;
+  currentCompany?: string | null;
+  currentTitle?: string | null;
+  experience?: string | null;
+  certifications?: string | null;
+  noticePeriod?: string | null;
+  visaRequired?: boolean;
+  workAuthorization?: string | null;
+  linkedinUrl?: string | null;
+  githubUrl?: string | null;
+  portfolioUrl?: string | null;
 }
 
 export async function updateProfile(data: UpdateProfileData) {
   try {
     const user = await requireUser();
 
+    const profilePayload = {
+        headline: data.headline,
+        summary: data.summary,
+        yearsExperience: data.yearsExperience,
+        skills: data.skills ?? [],
+        languages: data.languages ?? [],
+        portfolioUrls: data.portfolioUrls ?? [],
+        resumeUrl: data.resumeUrl,
+        resumeFilename: data.resumeFilename,
+        salaryMin: data.salaryMin,
+        salaryCurrency: data.salaryCurrency,
+        preferredLocations: data.preferredLocations ?? [],
+        preferredRemoteType: data.preferredRemoteType,
+        employmentTypes: data.employmentTypes ?? [],
+        // LinkedIn Easy Apply fields
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        location: data.location,
+        education: data.education,
+        educationField: data.educationField,
+        educationSchool: data.educationSchool,
+        educationHistory: data.educationHistory,
+        currentCompany: data.currentCompany,
+        currentTitle: data.currentTitle,
+        experience: data.experience,
+        certifications: data.certifications,
+        noticePeriod: data.noticePeriod,
+        visaRequired: data.visaRequired ?? false,
+        workAuthorization: data.workAuthorization,
+        linkedinUrl: data.linkedinUrl,
+        githubUrl: data.githubUrl,
+        portfolioUrl: data.portfolioUrl,
+    };
+
     const profile = await prisma.userProfile.upsert({
       where: { userId: user.id },
       create: {
         userId: user.id,
-        headline: data.headline,
-        summary: data.summary,
-        yearsExperience: data.yearsExperience,
-        skills: data.skills ?? [],
-        languages: data.languages ?? [],
-        portfolioUrls: data.portfolioUrls ?? [],
-        resumeUrl: data.resumeUrl,
-        salaryMin: data.salaryMin,
-        salaryCurrency: data.salaryCurrency,
-        preferredLocations: data.preferredLocations ?? [],
-        preferredRemoteType: data.preferredRemoteType,
-        employmentTypes: data.employmentTypes ?? [],
+        ...profilePayload,
       },
-      update: {
-        headline: data.headline,
-        summary: data.summary,
-        yearsExperience: data.yearsExperience,
-        skills: data.skills ?? [],
-        languages: data.languages ?? [],
-        portfolioUrls: data.portfolioUrls ?? [],
-        resumeUrl: data.resumeUrl,
-        salaryMin: data.salaryMin,
-        salaryCurrency: data.salaryCurrency,
-        preferredLocations: data.preferredLocations ?? [],
-        preferredRemoteType: data.preferredRemoteType,
-        employmentTypes: data.employmentTypes ?? [],
-      },
+      update: profilePayload,
     });
 
     return profile;
@@ -135,6 +166,25 @@ export interface AnalyzedSearchProfile {
 export interface AnalyzedQaPair {
   question: string;
   answer: string;
+  category?: string;
+}
+
+// QA_CATEGORIES moved to @/lib/qa-categories.ts (can't export non-async from "use server")
+
+export interface ExperienceEntry {
+  company: string;
+  title: string;
+  dateFrom: string;
+  dateTo: string;
+  description: string;
+}
+
+export interface EducationEntry {
+  degree: string;
+  field: string;
+  school: string;
+  dateFrom: string;
+  dateTo: string;
 }
 
 export interface AnalyzedProfile {
@@ -149,6 +199,19 @@ export interface AnalyzedProfile {
   preferredLocations: string[];
   preferredRemoteType: string;
   employmentTypes: string[];
+  // Extended fields for auto-apply
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  location?: string;
+  currentTitle?: string;
+  currentCompany?: string;
+  linkedinUrl?: string;
+  githubUrl?: string;
+  portfolioUrl?: string;
+  certifications?: string;
+  experience?: ExperienceEntry[];
+  educationHistory?: EducationEntry[];
 }
 
 export interface ComprehensiveAnalysisResult {
@@ -235,15 +298,27 @@ export async function analyzeResumeForUser(
           }
         }
 
-        // For PDF: extract raw text (binary PDF has some readable text)
-        // Convert to string and strip binary artifacts
-        const raw = buffer.toString("utf-8");
-        // Extract text between PDF stream markers or just get readable ASCII
-        resumeText = raw
-          .replace(/[^\x20-\x7E\n\r\t]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-
+        // Extract text from PDF using pdf-parse, or fallback to raw ASCII
+        const fname = resumeUrl.split("/").pop() || "";
+        if (fname.endsWith(".pdf")) {
+          try {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const pdfParse = require("pdf-parse");
+            const pdfData = await pdfParse(buffer);
+            resumeText = pdfData.text.replace(/\s+/g, " ").trim();
+            console.log("[analyzeResume] PDF parsed, text length:", resumeText.length);
+          } catch (e) {
+            console.warn("[analyzeResume] pdf-parse failed, using raw extract:", e);
+            resumeText = buffer.toString("utf-8")
+              .replace(/[^\x20-\x7E\n\r\t]/g, " ")
+              .replace(/\s+/g, " ")
+              .trim();
+          }
+        } else {
+          // Non-PDF (HTML etc)
+          resumeText = buffer.toString("utf-8");
+          resumeText = stripHtmlToText(resumeText);
+        }
         console.log("[analyzeResume] Local file text length:", resumeText.length);
       } else {
         // Remote URL — fetch via HTTP
@@ -308,21 +383,60 @@ export async function analyzeResumeForUser(
 
     // Split into 3 smaller AI calls for speed (14B model is slow on large prompts)
     const { callAIJSON } = await import("@/lib/ai/provider");
-    const resumeSnippet = resumeText.substring(0, 2000); // shorter for each call
+    const resumeSnippet = resumeText.substring(0, 2000); // shorter for search/QA calls
+    const resumeFullSnippet = resumeText.substring(0, 3500); // longer for profile/skills extraction
 
     // Step 1: Profile extraction (~10-30 sec)
     console.log("[analyzeResume] Step 1: Extracting profile...");
     let profile: AnalyzedProfile;
     try {
       profile = await callAIJSON<AnalyzedProfile>(
-        `Analyze this resume and extract a professional profile. Return ONLY valid JSON, no markdown.
+        `Extract a professional profile from this resume. Return ONLY valid JSON.
 
-RESUME: ${resumeSnippet}
+RESUME TEXT:
+${resumeFullSnippet}
 
-Return JSON: {"headline":"job title","summary":"2-3 sentences","yearsExperience":20,"skills":["skill1","skill2"],"languages":["English (Professional)","Ukrainian (Native)"],"portfolioUrls":[],"salaryMin":150000,"salaryCurrency":"EUR","preferredLocations":["Remote","EU"],"preferredRemoteType":"remote","employmentTypes":["full-time","contract"]}`,
+CRITICAL: The "skills" array MUST contain EVERY technology, tool, framework, methodology, certification, and competency mentioned in the resume. Copy them exactly as written. I expect 40-80 items. Do NOT summarize or generalize — list each one individually.
+
+CRITICAL: The "languages" array MUST contain ALL spoken/written languages mentioned anywhere in the resume with proficiency levels. Extract EVERY language the person knows. Format each as "Language (Level)" where Level is one of: Native, Fluent, Professional, Conversational, Basic. If the resume does not specify a level, infer it from context (e.g. resume written in English = at least Professional). Do NOT skip any language.
+
+Return JSON with this structure:
+{
+  "headline": "exact job title from resume",
+  "summary": "2-3 sentences about key strengths",
+  "firstName": "John",
+  "lastName": "Doe",
+  "phone": "+34 612 345 678",
+  "location": "Madrid, Spain",
+  "currentTitle": "Senior Software Engineer",
+  "currentCompany": "Acme Corp",
+  "linkedinUrl": "https://linkedin.com/in/johndoe",
+  "githubUrl": "https://github.com/johndoe",
+  "portfolioUrl": "https://johndoe.dev",
+  "certifications": "AWS Solutions Architect, PMP, Kubernetes CKA",
+  "yearsExperience": 20,
+  "skills": ["Communication", "Leadership", "Strategic Management", "Agile", "Scrum", "PCI DSS", "GDPR", "Azure", "AWS", "Kubernetes", "Terraform", "Docker", "Python", "SQL", "Bash", "Golang", ".NET", "Java", "Prometheus", "Grafana", "PostgreSQL", "MongoDB", "Redis", "Kafka", "...EVERY skill from resume"],
+  "languages": ["English (Professional)", "Ukrainian (Native)", "Spanish (Professional)", "...EVERY language from resume with level"],
+  "portfolioUrls": [],
+  "salaryMin": 150000,
+  "salaryCurrency": "EUR",
+  "preferredLocations": ["Remote", "EU", "Spain"],
+  "preferredRemoteType": "remote",
+  "employmentTypes": ["full-time", "contract"],
+  "experience": [{"company":"Acme Corp","title":"Senior Engineer","dateFrom":"2020-01","dateTo":"present","description":"Led team of 5..."}],
+  "educationHistory": [{"degree":"Master's","field":"Computer Science","school":"MIT","dateFrom":"2010","dateTo":"2012"}]
+}
+
+CRITICAL: Extract firstName, lastName, phone, location, currentTitle, currentCompany from the resume. Extract ALL work experience entries and ALL education entries. If a field is not found, omit it or use null.`,
         { userId }
       );
-      console.log("[analyzeResume] Profile extracted:", profile?.headline);
+      // Ensure arrays are never null (AI may return null instead of [])
+      profile.skills = profile.skills || [];
+      profile.languages = profile.languages || [];
+      profile.portfolioUrls = profile.portfolioUrls || [];
+      profile.preferredLocations = profile.preferredLocations || [];
+      profile.employmentTypes = profile.employmentTypes || [];
+      console.log("[analyzeResume] Profile extracted:", profile?.headline, "skills:", profile.skills.length, "langs:", profile.languages.length);
     } catch (e) {
       console.error("[analyzeResume] Profile extraction failed:", e);
       profile = {
@@ -342,7 +456,7 @@ Return JSON: {"headline":"job title","summary":"2-3 sentences","yearsExperience"
       const searchResult = await callAIJSON<{ searchProfiles: AnalyzedSearchProfile[] }>(
         `Based on this profile, suggest 2-3 job search strategies for different markets. Return ONLY valid JSON, no markdown.
 
-Profile: ${profile.headline}, ${profile.yearsExperience} years, skills: ${profile.skills.slice(0, 10).join(", ")}
+Profile: ${profile.headline}, ${profile.yearsExperience} years, skills: ${(profile.skills || []).slice(0, 25).join(", ")}
 
 Return JSON: {"searchProfiles":[{"name":"EU Remote","jobTitles":["title1","title2"],"minSalary":150000,"currency":"EUR","geographies":["EU"],"remoteOnly":true,"employmentTypes":["full-time"]}]}`,
         { userId }
@@ -359,16 +473,31 @@ Return JSON: {"searchProfiles":[{"name":"EU Remote","jobTitles":["title1","title
       }];
     }
 
-    // Step 3: Q&A pairs (~10-30 sec)
-    console.log("[analyzeResume] Step 3: Building Q&A pairs...");
+    // Brief pause to avoid Gemini rate limiting between calls
+    await new Promise((r) => setTimeout(r, 2000));
+
+    // Step 3: Q&A pairs (~5-15 sec) — LinkedIn Easy Apply screening questions only
+    console.log("[analyzeResume] Step 3: Building LinkedIn Easy Apply Q&A...");
     let qaPairs: AnalyzedQaPair[];
     try {
+      const topSkills = profile.skills.slice(0, 10).join(", ");
       const qaResult = await callAIJSON<{ qaPairs: AnalyzedQaPair[] }>(
-        `Generate 10 interview Q&A pairs for this candidate. Each answer 2-3 sentences, personalized. Return ONLY valid JSON, no markdown.
+        `Generate 12-15 LinkedIn Easy Apply screening question answers for this candidate. These are the SHORT form fields that appear when applying on LinkedIn.
 
-Candidate: ${profile.headline}, ${profile.yearsExperience} years. Skills: ${profile.skills.slice(0, 8).join(", ")}. Summary: ${profile.summary}
+Candidate: ${profile.headline}, ${profile.yearsExperience} years. Skills: ${topSkills}. Location: ${(profile.preferredLocations || []).join(", ") || "Remote"}. Salary: ${profile.salaryMin ? profile.salaryMin + " " + profile.salaryCurrency : "negotiable"}. Languages: ${(profile.languages || []).join(", ") || "English"}
 
-Return JSON: {"qaPairs":[{"question":"Tell me about yourself","answer":"personalized answer..."}]}`,
+Return ONLY JSON: {"qaPairs":[
+  {"question":"How many years of experience do you have with Kubernetes?","answer":"8","category":"linkedin_apply"},
+  {"question":"What is your expected base salary (annual, EUR)?","answer":"150000","category":"linkedin_apply"},
+  {"question":"Are you authorized to work in the EU?","answer":"Yes","category":"linkedin_apply"}
+]}
+
+RULES:
+- Questions must match EXACTLY what LinkedIn Easy Apply forms ask
+- Answers must be SHORT (1 word or 1 number) — these are form fields, not essays
+- Generate "How many years of experience do you have with [skill]?" for EACH of these skills: ${topSkills}
+- Also include: expected salary, work authorization, visa sponsorship, education level, total work experience, management experience, relocation willingness, language proficiency, remote work comfort
+- Category always "linkedin_apply"`,
         { userId }
       );
       qaPairs = qaResult?.qaPairs || [];

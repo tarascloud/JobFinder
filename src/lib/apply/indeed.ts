@@ -14,8 +14,9 @@ export async function applyIndeed(
   try {
     log.push("Launching browser...");
     browser = await chromium.launch({
+      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined,
       headless: true,
-      args: ["--disable-blink-features=AutomationControlled"],
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-blink-features=AutomationControlled"],
     });
 
     const context = await browser.newContext({
@@ -149,7 +150,20 @@ export async function applyIndeed(
       await handleIndeedResume(page, ctx, log);
 
       // Handle screening questions
-      await handleIndeedQuestions(page, ctx, log, newQuestions);
+      const screeningResult = await handleIndeedQuestions(page, ctx, log, newQuestions);
+
+      // If unanswered questions found, pause and return early
+      if (screeningResult.shouldPause) {
+        log.push(`Pausing — ${screeningResult.newQuestions.length} unanswered question(s) found`);
+        screenshotPath = await takeScreenshot(page, "indeed-paused-qa");
+        return {
+          success: false,
+          paused: true,
+          screenshotPath,
+          newQuestions: newQuestions.length > 0 ? newQuestions : undefined,
+          log,
+        };
+      }
 
       // Check for Submit
       const submitBtn = await page.$(
@@ -251,13 +265,13 @@ async function fillIndeedContactFields(
     }
   }
 
-  // Email
+  // Email — use per-user apply email for tracking recruiter replies
   const emailInput = await page.$('input[name*="email"], input[type="email"]');
   if (emailInput) {
     const currentVal = await emailInput.inputValue();
     if (!currentVal) {
-      await emailInput.fill(ctx.profile.email);
-      log.push("Filled email");
+      await emailInput.fill(ctx.profile.applyEmail);
+      log.push(`Filled email with apply address: ${ctx.profile.applyEmail}`);
     }
   }
 
@@ -314,7 +328,10 @@ async function handleIndeedQuestions(
   ctx: ApplyContext,
   log: string[],
   newQuestions: string[]
-): Promise<void> {
+): Promise<{ shouldPause: boolean; newQuestions: string[] }> {
+  let shouldPause = false;
+  const stepNewQuestions: string[] = [];
+
   // Indeed wraps questions in fieldset or div groups
   const questionGroups = await page.$$(
     'fieldset, [data-testid="question-container"], .ia-Questions-item'
@@ -345,6 +362,8 @@ async function handleIndeedQuestions(
         log.push(`Answered "${questionText}" from Q&A base`);
       } else {
         newQuestions.push(questionText);
+        stepNewQuestions.push(questionText);
+        shouldPause = true;
         log.push(`New question (no answer): "${questionText}"`);
       }
       continue;
@@ -365,6 +384,8 @@ async function handleIndeedQuestions(
         }
       } else {
         newQuestions.push(questionText);
+        stepNewQuestions.push(questionText);
+        shouldPause = true;
         log.push(`New question (number, no answer): "${questionText}"`);
       }
       continue;
@@ -391,9 +412,13 @@ async function handleIndeedQuestions(
         }
         if (!matched) {
           newQuestions.push(questionText);
+          stepNewQuestions.push(questionText);
+          shouldPause = true;
         }
       } else {
         newQuestions.push(questionText);
+        stepNewQuestions.push(questionText);
+        shouldPause = true;
         log.push(`New question (dropdown, no answer): "${questionText}"`);
       }
       continue;
@@ -421,11 +446,17 @@ async function handleIndeedQuestions(
         }
         if (!matched) {
           newQuestions.push(questionText);
+          stepNewQuestions.push(questionText);
+          shouldPause = true;
         }
       } else {
         newQuestions.push(questionText);
+        stepNewQuestions.push(questionText);
+        shouldPause = true;
         log.push(`New question (radio, no answer): "${questionText}"`);
       }
     }
   }
+
+  return { shouldPause, newQuestions: stepNewQuestions };
 }

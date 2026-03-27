@@ -12,8 +12,9 @@ export async function applyGeneric(ctx: ApplyContext): Promise<ApplyResult> {
     log.push(`Opening vacancy page: ${ctx.vacancy.url}`);
 
     browser = await chromium.launch({
+      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined,
       headless: true,
-      args: ["--disable-blink-features=AutomationControlled"],
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-blink-features=AutomationControlled"],
     });
 
     const context = await browser.newContext({

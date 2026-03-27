@@ -47,10 +47,14 @@ export type ApplicationMinAggregateOutputType = {
   searchProfileId: number | null
   status: string | null
   coverLetter: string | null
+  coverLetterVariant: string | null
   interviewPrep: string | null
   appliedAt: Date | null
+  failedAt: Date | null
+  errorMessage: string | null
   screenshotPath: string | null
   applyLog: string | null
+  appliedWithPersonalAccount: boolean | null
   createdAt: Date | null
 }
 
@@ -61,10 +65,14 @@ export type ApplicationMaxAggregateOutputType = {
   searchProfileId: number | null
   status: string | null
   coverLetter: string | null
+  coverLetterVariant: string | null
   interviewPrep: string | null
   appliedAt: Date | null
+  failedAt: Date | null
+  errorMessage: string | null
   screenshotPath: string | null
   applyLog: string | null
+  appliedWithPersonalAccount: boolean | null
   createdAt: Date | null
 }
 
@@ -75,10 +83,14 @@ export type ApplicationCountAggregateOutputType = {
   searchProfileId: number
   status: number
   coverLetter: number
+  coverLetterVariant: number
   interviewPrep: number
   appliedAt: number
+  failedAt: number
+  errorMessage: number
   screenshotPath: number
   applyLog: number
+  appliedWithPersonalAccount: number
   createdAt: number
   _all: number
 }
@@ -105,10 +117,14 @@ export type ApplicationMinAggregateInputType = {
   searchProfileId?: true
   status?: true
   coverLetter?: true
+  coverLetterVariant?: true
   interviewPrep?: true
   appliedAt?: true
+  failedAt?: true
+  errorMessage?: true
   screenshotPath?: true
   applyLog?: true
+  appliedWithPersonalAccount?: true
   createdAt?: true
 }
 
@@ -119,10 +135,14 @@ export type ApplicationMaxAggregateInputType = {
   searchProfileId?: true
   status?: true
   coverLetter?: true
+  coverLetterVariant?: true
   interviewPrep?: true
   appliedAt?: true
+  failedAt?: true
+  errorMessage?: true
   screenshotPath?: true
   applyLog?: true
+  appliedWithPersonalAccount?: true
   createdAt?: true
 }
 
@@ -133,10 +153,14 @@ export type ApplicationCountAggregateInputType = {
   searchProfileId?: true
   status?: true
   coverLetter?: true
+  coverLetterVariant?: true
   interviewPrep?: true
   appliedAt?: true
+  failedAt?: true
+  errorMessage?: true
   screenshotPath?: true
   applyLog?: true
+  appliedWithPersonalAccount?: true
   createdAt?: true
   _all?: true
 }
@@ -234,10 +258,14 @@ export type ApplicationGroupByOutputType = {
   searchProfileId: number
   status: string
   coverLetter: string | null
+  coverLetterVariant: string | null
   interviewPrep: string | null
   appliedAt: Date | null
+  failedAt: Date | null
+  errorMessage: string | null
   screenshotPath: string | null
   applyLog: string | null
+  appliedWithPersonalAccount: boolean
   createdAt: Date
   _count: ApplicationCountAggregateOutputType | null
   _avg: ApplicationAvgAggregateOutputType | null
@@ -271,10 +299,14 @@ export type ApplicationWhereInput = {
   searchProfileId?: Prisma.IntFilter<"Application"> | number
   status?: Prisma.StringFilter<"Application"> | string
   coverLetter?: Prisma.StringNullableFilter<"Application"> | string | null
+  coverLetterVariant?: Prisma.StringNullableFilter<"Application"> | string | null
   interviewPrep?: Prisma.StringNullableFilter<"Application"> | string | null
   appliedAt?: Prisma.DateTimeNullableFilter<"Application"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableFilter<"Application"> | Date | string | null
+  errorMessage?: Prisma.StringNullableFilter<"Application"> | string | null
   screenshotPath?: Prisma.StringNullableFilter<"Application"> | string | null
   applyLog?: Prisma.StringNullableFilter<"Application"> | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFilter<"Application"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vacancy?: Prisma.XOR<Prisma.VacancyScalarRelationFilter, Prisma.VacancyWhereInput>
@@ -288,10 +320,14 @@ export type ApplicationOrderByWithRelationInput = {
   searchProfileId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverLetter?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverLetterVariant?: Prisma.SortOrderInput | Prisma.SortOrder
   interviewPrep?: Prisma.SortOrderInput | Prisma.SortOrder
   appliedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  failedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   screenshotPath?: Prisma.SortOrderInput | Prisma.SortOrder
   applyLog?: Prisma.SortOrderInput | Prisma.SortOrder
+  appliedWithPersonalAccount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   vacancy?: Prisma.VacancyOrderByWithRelationInput
@@ -309,10 +345,14 @@ export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
   searchProfileId?: Prisma.IntFilter<"Application"> | number
   status?: Prisma.StringFilter<"Application"> | string
   coverLetter?: Prisma.StringNullableFilter<"Application"> | string | null
+  coverLetterVariant?: Prisma.StringNullableFilter<"Application"> | string | null
   interviewPrep?: Prisma.StringNullableFilter<"Application"> | string | null
   appliedAt?: Prisma.DateTimeNullableFilter<"Application"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableFilter<"Application"> | Date | string | null
+  errorMessage?: Prisma.StringNullableFilter<"Application"> | string | null
   screenshotPath?: Prisma.StringNullableFilter<"Application"> | string | null
   applyLog?: Prisma.StringNullableFilter<"Application"> | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFilter<"Application"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vacancy?: Prisma.XOR<Prisma.VacancyScalarRelationFilter, Prisma.VacancyWhereInput>
@@ -326,10 +366,14 @@ export type ApplicationOrderByWithAggregationInput = {
   searchProfileId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverLetter?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverLetterVariant?: Prisma.SortOrderInput | Prisma.SortOrder
   interviewPrep?: Prisma.SortOrderInput | Prisma.SortOrder
   appliedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  failedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   screenshotPath?: Prisma.SortOrderInput | Prisma.SortOrder
   applyLog?: Prisma.SortOrderInput | Prisma.SortOrder
+  appliedWithPersonalAccount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ApplicationCountOrderByAggregateInput
   _avg?: Prisma.ApplicationAvgOrderByAggregateInput
@@ -348,20 +392,28 @@ export type ApplicationScalarWhereWithAggregatesInput = {
   searchProfileId?: Prisma.IntWithAggregatesFilter<"Application"> | number
   status?: Prisma.StringWithAggregatesFilter<"Application"> | string
   coverLetter?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
+  coverLetterVariant?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
   interviewPrep?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
   appliedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
+  errorMessage?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
   screenshotPath?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
   applyLog?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
+  appliedWithPersonalAccount?: Prisma.BoolWithAggregatesFilter<"Application"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string
 }
 
 export type ApplicationCreateInput = {
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
   vacancy: Prisma.VacancyCreateNestedOneWithoutApplicationsInput
@@ -375,20 +427,28 @@ export type ApplicationUncheckedCreateInput = {
   searchProfileId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
 export type ApplicationUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
   vacancy?: Prisma.VacancyUpdateOneRequiredWithoutApplicationsNestedInput
@@ -402,10 +462,14 @@ export type ApplicationUncheckedUpdateInput = {
   searchProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -416,20 +480,28 @@ export type ApplicationCreateManyInput = {
   searchProfileId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
 export type ApplicationUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -440,10 +512,14 @@ export type ApplicationUncheckedUpdateManyInput = {
   searchProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -469,10 +545,14 @@ export type ApplicationCountOrderByAggregateInput = {
   searchProfileId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverLetter?: Prisma.SortOrder
+  coverLetterVariant?: Prisma.SortOrder
   interviewPrep?: Prisma.SortOrder
   appliedAt?: Prisma.SortOrder
+  failedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   screenshotPath?: Prisma.SortOrder
   applyLog?: Prisma.SortOrder
+  appliedWithPersonalAccount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -490,10 +570,14 @@ export type ApplicationMaxOrderByAggregateInput = {
   searchProfileId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverLetter?: Prisma.SortOrder
+  coverLetterVariant?: Prisma.SortOrder
   interviewPrep?: Prisma.SortOrder
   appliedAt?: Prisma.SortOrder
+  failedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   screenshotPath?: Prisma.SortOrder
   applyLog?: Prisma.SortOrder
+  appliedWithPersonalAccount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -504,10 +588,14 @@ export type ApplicationMinOrderByAggregateInput = {
   searchProfileId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverLetter?: Prisma.SortOrder
+  coverLetterVariant?: Prisma.SortOrder
   interviewPrep?: Prisma.SortOrder
   appliedAt?: Prisma.SortOrder
+  failedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   screenshotPath?: Prisma.SortOrder
   applyLog?: Prisma.SortOrder
+  appliedWithPersonalAccount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -647,10 +735,14 @@ export type ApplicationUncheckedUpdateManyWithoutVacancyNestedInput = {
 export type ApplicationCreateWithoutUserInput = {
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
   vacancy: Prisma.VacancyCreateNestedOneWithoutApplicationsInput
   searchProfile: Prisma.SearchProfileCreateNestedOneWithoutApplicationsInput
@@ -662,10 +754,14 @@ export type ApplicationUncheckedCreateWithoutUserInput = {
   searchProfileId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
@@ -705,20 +801,28 @@ export type ApplicationScalarWhereInput = {
   searchProfileId?: Prisma.IntFilter<"Application"> | number
   status?: Prisma.StringFilter<"Application"> | string
   coverLetter?: Prisma.StringNullableFilter<"Application"> | string | null
+  coverLetterVariant?: Prisma.StringNullableFilter<"Application"> | string | null
   interviewPrep?: Prisma.StringNullableFilter<"Application"> | string | null
   appliedAt?: Prisma.DateTimeNullableFilter<"Application"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableFilter<"Application"> | Date | string | null
+  errorMessage?: Prisma.StringNullableFilter<"Application"> | string | null
   screenshotPath?: Prisma.StringNullableFilter<"Application"> | string | null
   applyLog?: Prisma.StringNullableFilter<"Application"> | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFilter<"Application"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
 }
 
 export type ApplicationCreateWithoutSearchProfileInput = {
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
   vacancy: Prisma.VacancyCreateNestedOneWithoutApplicationsInput
@@ -730,10 +834,14 @@ export type ApplicationUncheckedCreateWithoutSearchProfileInput = {
   vacancyId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
@@ -766,10 +874,14 @@ export type ApplicationUpdateManyWithWhereWithoutSearchProfileInput = {
 export type ApplicationCreateWithoutVacancyInput = {
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
   searchProfile: Prisma.SearchProfileCreateNestedOneWithoutApplicationsInput
@@ -781,10 +893,14 @@ export type ApplicationUncheckedCreateWithoutVacancyInput = {
   searchProfileId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
@@ -820,20 +936,28 @@ export type ApplicationCreateManyUserInput = {
   searchProfileId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
 export type ApplicationUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancy?: Prisma.VacancyUpdateOneRequiredWithoutApplicationsNestedInput
   searchProfile?: Prisma.SearchProfileUpdateOneRequiredWithoutApplicationsNestedInput
@@ -845,10 +969,14 @@ export type ApplicationUncheckedUpdateWithoutUserInput = {
   searchProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -858,10 +986,14 @@ export type ApplicationUncheckedUpdateManyWithoutUserInput = {
   searchProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -871,20 +1003,28 @@ export type ApplicationCreateManySearchProfileInput = {
   vacancyId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
 export type ApplicationUpdateWithoutSearchProfileInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
   vacancy?: Prisma.VacancyUpdateOneRequiredWithoutApplicationsNestedInput
@@ -896,10 +1036,14 @@ export type ApplicationUncheckedUpdateWithoutSearchProfileInput = {
   vacancyId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -909,10 +1053,14 @@ export type ApplicationUncheckedUpdateManyWithoutSearchProfileInput = {
   vacancyId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -922,20 +1070,28 @@ export type ApplicationCreateManyVacancyInput = {
   searchProfileId: number
   status?: string
   coverLetter?: string | null
+  coverLetterVariant?: string | null
   interviewPrep?: string | null
   appliedAt?: Date | string | null
+  failedAt?: Date | string | null
+  errorMessage?: string | null
   screenshotPath?: string | null
   applyLog?: string | null
+  appliedWithPersonalAccount?: boolean
   createdAt?: Date | string
 }
 
 export type ApplicationUpdateWithoutVacancyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
   searchProfile?: Prisma.SearchProfileUpdateOneRequiredWithoutApplicationsNestedInput
@@ -947,10 +1103,14 @@ export type ApplicationUncheckedUpdateWithoutVacancyInput = {
   searchProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -960,10 +1120,14 @@ export type ApplicationUncheckedUpdateManyWithoutVacancyInput = {
   searchProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   coverLetter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverLetterVariant?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   interviewPrep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenshotPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applyLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appliedWithPersonalAccount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -976,10 +1140,14 @@ export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   searchProfileId?: boolean
   status?: boolean
   coverLetter?: boolean
+  coverLetterVariant?: boolean
   interviewPrep?: boolean
   appliedAt?: boolean
+  failedAt?: boolean
+  errorMessage?: boolean
   screenshotPath?: boolean
   applyLog?: boolean
+  appliedWithPersonalAccount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancy?: boolean | Prisma.VacancyDefaultArgs<ExtArgs>
@@ -993,10 +1161,14 @@ export type ApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   searchProfileId?: boolean
   status?: boolean
   coverLetter?: boolean
+  coverLetterVariant?: boolean
   interviewPrep?: boolean
   appliedAt?: boolean
+  failedAt?: boolean
+  errorMessage?: boolean
   screenshotPath?: boolean
   applyLog?: boolean
+  appliedWithPersonalAccount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancy?: boolean | Prisma.VacancyDefaultArgs<ExtArgs>
@@ -1010,10 +1182,14 @@ export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   searchProfileId?: boolean
   status?: boolean
   coverLetter?: boolean
+  coverLetterVariant?: boolean
   interviewPrep?: boolean
   appliedAt?: boolean
+  failedAt?: boolean
+  errorMessage?: boolean
   screenshotPath?: boolean
   applyLog?: boolean
+  appliedWithPersonalAccount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancy?: boolean | Prisma.VacancyDefaultArgs<ExtArgs>
@@ -1027,14 +1203,18 @@ export type ApplicationSelectScalar = {
   searchProfileId?: boolean
   status?: boolean
   coverLetter?: boolean
+  coverLetterVariant?: boolean
   interviewPrep?: boolean
   appliedAt?: boolean
+  failedAt?: boolean
+  errorMessage?: boolean
   screenshotPath?: boolean
   applyLog?: boolean
+  appliedWithPersonalAccount?: boolean
   createdAt?: boolean
 }
 
-export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "vacancyId" | "searchProfileId" | "status" | "coverLetter" | "interviewPrep" | "appliedAt" | "screenshotPath" | "applyLog" | "createdAt", ExtArgs["result"]["application"]>
+export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "vacancyId" | "searchProfileId" | "status" | "coverLetter" | "coverLetterVariant" | "interviewPrep" | "appliedAt" | "failedAt" | "errorMessage" | "screenshotPath" | "applyLog" | "appliedWithPersonalAccount" | "createdAt", ExtArgs["result"]["application"]>
 export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancy?: boolean | Prisma.VacancyDefaultArgs<ExtArgs>
@@ -1065,10 +1245,14 @@ export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     searchProfileId: number
     status: string
     coverLetter: string | null
+    coverLetterVariant: string | null
     interviewPrep: string | null
     appliedAt: Date | null
+    failedAt: Date | null
+    errorMessage: string | null
     screenshotPath: string | null
     applyLog: string | null
+    appliedWithPersonalAccount: boolean
     createdAt: Date
   }, ExtArgs["result"]["application"]>
   composites: {}
@@ -1502,10 +1686,14 @@ export interface ApplicationFieldRefs {
   readonly searchProfileId: Prisma.FieldRef<"Application", 'Int'>
   readonly status: Prisma.FieldRef<"Application", 'String'>
   readonly coverLetter: Prisma.FieldRef<"Application", 'String'>
+  readonly coverLetterVariant: Prisma.FieldRef<"Application", 'String'>
   readonly interviewPrep: Prisma.FieldRef<"Application", 'String'>
   readonly appliedAt: Prisma.FieldRef<"Application", 'DateTime'>
+  readonly failedAt: Prisma.FieldRef<"Application", 'DateTime'>
+  readonly errorMessage: Prisma.FieldRef<"Application", 'String'>
   readonly screenshotPath: Prisma.FieldRef<"Application", 'String'>
   readonly applyLog: Prisma.FieldRef<"Application", 'String'>
+  readonly appliedWithPersonalAccount: Prisma.FieldRef<"Application", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Application", 'DateTime'>
 }
     

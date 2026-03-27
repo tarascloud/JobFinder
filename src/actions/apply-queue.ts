@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { generateCoverLetter as generateCoverLetterAI } from "@/lib/ai/cover-letter";
+import { executeApply } from "@/actions/apply-executor";
+import type { ApplyResult } from "@/lib/apply";
 
 export async function queueVacancyForApply(
   vacancyId: number,
@@ -40,8 +42,9 @@ export async function queueVacancyForApply(
     // Generate cover letter
     const language = vacancy.language ?? undefined;
     let coverLetter: string | null = null;
+    let coverLetterVariant: string | null = null;
     try {
-      coverLetter = await generateCoverLetterAI(
+      const result = await generateCoverLetterAI(
         {
           title: vacancy.title,
           company: vacancy.company,
@@ -53,8 +56,12 @@ export async function queueVacancyForApply(
           yearsExperience: userProfile.yearsExperience,
           skills: userProfile.skills,
         },
-        language
+        language,
+        undefined,
+        { userId: user.id }
       );
+      coverLetter = result.text;
+      coverLetterVariant = result.variant;
     } catch {
       // Cover letter generation failed, proceed without it
     }
@@ -67,6 +74,7 @@ export async function queueVacancyForApply(
         searchProfileId,
         status: "queued",
         coverLetter,
+        coverLetterVariant,
       },
       include: {
         vacancy: {
@@ -171,6 +179,29 @@ export async function approveWithCoverLetter(
   }
 }
 
+export async function revertToQueued(applicationId: number) {
+  try {
+    const user = await requireUser();
+
+    const existing = await prisma.application.findFirst({
+      where: { id: applicationId, userId: user.id },
+    });
+    if (!existing) return { error: "Application not found" };
+    if (existing.status !== "approved") {
+      return { error: `Cannot revert application with status "${existing.status}"` };
+    }
+
+    const application = await prisma.application.update({
+      where: { id: applicationId },
+      data: { status: "queued" },
+    });
+
+    return { application };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to revert application" };
+  }
+}
+
 export async function rejectFromQueue(applicationId: number) {
   try {
     const user = await requireUser();
@@ -235,8 +266,9 @@ export async function bulkQueueFromSearch(
       const language = vacancy.language ?? undefined;
 
       let coverLetter: string | null = null;
+      let coverLetterVariant: string | null = null;
       try {
-        coverLetter = await generateCoverLetterAI(
+        const result = await generateCoverLetterAI(
           {
             title: vacancy.title,
             company: vacancy.company,
@@ -248,8 +280,12 @@ export async function bulkQueueFromSearch(
             yearsExperience: userProfile.yearsExperience,
             skills: userProfile.skills,
           },
-          language
+          language,
+          undefined,
+          { userId: user.id }
         );
+        coverLetter = result.text;
+        coverLetterVariant = result.variant;
       } catch {
         // Continue without cover letter
       }
@@ -261,6 +297,7 @@ export async function bulkQueueFromSearch(
           searchProfileId,
           status: "queued",
           coverLetter,
+          coverLetterVariant,
         },
       });
 
@@ -270,5 +307,86 @@ export async function bulkQueueFromSearch(
     return { queued };
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Failed to bulk queue" };
+  }
+}
+
+export async function retryAutoApply(applicationId: number): Promise<ApplyResult | { error: string }> {
+  try {
+    const user = await requireUser();
+
+    const existing = await prisma.application.findFirst({
+      where: { id: applicationId, userId: user.id },
+    });
+    if (!existing) return { error: "Application not found" };
+
+    if (existing.status !== "pending_qa" && existing.status !== "failed") {
+      return { error: `Cannot retry application with status "${existing.status}"` };
+    }
+
+    // Reset status to approved so executor can pick it up
+    await prisma.application.update({
+      where: { id: applicationId },
+      data: {
+        status: "approved",
+        errorMessage: null,
+      },
+    });
+
+    const result = await executeApply(applicationId);
+    return result;
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to retry auto apply" };
+  }
+}
+
+export async function markAsManuallyApplied(applicationId: number) {
+  try {
+    const user = await requireUser();
+
+    const existing = await prisma.application.findFirst({
+      where: { id: applicationId, userId: user.id },
+    });
+    if (!existing) return { error: "Application not found" };
+    if (existing.status !== "queued" && existing.status !== "approved") {
+      return { error: `Cannot mark as manually applied with status "${existing.status}"` };
+    }
+
+    const application = await prisma.application.update({
+      where: { id: applicationId },
+      data: {
+        status: "applied_manual",
+        appliedAt: new Date(),
+      },
+    });
+
+    return { application };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to mark as manually applied" };
+  }
+}
+
+export async function triggerAutoApply(applicationId: number): Promise<ApplyResult | { error: string }> {
+  try {
+    const user = await requireUser();
+
+    const existing = await prisma.application.findFirst({
+      where: { id: applicationId, userId: user.id },
+    });
+    if (!existing) return { error: "Application not found" };
+
+    // If queued, first approve it
+    if (existing.status === "queued") {
+      await prisma.application.update({
+        where: { id: applicationId },
+        data: { status: "approved" },
+      });
+    } else if (existing.status !== "approved") {
+      return { error: `Cannot auto-apply with status "${existing.status}"` };
+    }
+
+    const result = await executeApply(applicationId);
+    return result;
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to trigger auto apply" };
   }
 }

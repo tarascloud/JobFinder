@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/about", "/api/auth", "/api/health", "/api/status"];
+const PUBLIC_PATHS = ["/login", "/about", "/api/auth", "/api/health", "/api/status", "/api/admin/emails", "/api/email-response"];
 
 function isPublic(pathname: string): boolean {
   return PUBLIC_PATHS.some(
@@ -22,15 +22,13 @@ function isAsset(pathname: string): boolean {
     pathname.endsWith(".ico") ||
     pathname.endsWith(".json") ||
     pathname.endsWith(".js") ||
-    pathname.endsWith(".css") ||
-    pathname.endsWith(".pdf") ||
-    pathname.startsWith("/resumes/") ||
-    pathname.startsWith("/screenshots/")
+    pathname.endsWith(".css")
   );
 }
 
 async function verifyDemoToken(token: string): Promise<boolean> {
-  const secret = process.env.NEXTAUTH_SECRET || "demo-secret";
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) return false;
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw",

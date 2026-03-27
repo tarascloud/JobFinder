@@ -1,27 +1,12 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
 import { getRandomUserAgent } from "@/lib/proxy";
+import { stripHtml } from "@/lib/html-utils";
+import { delay } from "./utils";
 
 const ALGOLIA_SEARCH_URL =
   "https://hn.algolia.com/api/v1/search_by_date";
 const ALGOLIA_ITEM_URL = "https://hn.algolia.com/api/v1/items";
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<p>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .trim();
-}
 
 interface AlgoliaSearchResult {
   hits: Array<{
@@ -325,7 +310,7 @@ export async function scrape(
       employmentType: null,
       description: parsed.description,
       language: "en",
-      postedAt: null,
+      postedAt: new Date(),
     });
   }
 

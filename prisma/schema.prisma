@@ -13,10 +13,12 @@ model User {
   name      String?
   image     String?
   googleId  String?  @unique @map("google_id")
+  jfEmail   String?  @unique @map("jf_email")
   role      String   @default("user")
   preferredLocale String @default("en") @map("preferred_locale")
   preferredSkin   String @default("taras") @map("preferred_skin")
   preferredTheme  String @default("dark") @map("preferred_theme")
+  applicationLimit Int    @default(10) @map("application_limit")
   createdAt DateTime @default(now()) @map("created_at")
 
   profile          UserProfile?
@@ -28,6 +30,7 @@ model User {
   aiFeedback       AiFeedback[]
   aiSettings       UserAISettings?
   notifications    Notification[]
+  companyResearch  CompanyResearch[]
 
   @@map("users")
 }
@@ -49,6 +52,7 @@ model UserProfile {
   languages           String[]
   portfolioUrls       String[] @map("portfolio_urls")
   resumeUrl           String?  @map("resume_url")
+  resumeFilename      String?  @map("resume_filename")
   resumeText          String?  @map("resume_text")
   analysisStatus      String   @default("idle") @map("analysis_status")
   analysisResult      String?  @map("analysis_result")
@@ -57,6 +61,25 @@ model UserProfile {
   preferredLocations  String[] @map("preferred_locations")
   preferredRemoteType String?  @map("preferred_remote_type")
   employmentTypes     String[] @map("employment_types")
+  // LinkedIn Easy Apply fields
+  firstName           String?  @map("first_name")
+  lastName            String?  @map("last_name")
+  phone               String?
+  location            String?
+  education           String?
+  educationField      String?  @map("education_field")
+  educationSchool     String?  @map("education_school")
+  educationHistory    String?  @db.Text @map("education_history") // JSON array [{degree, field, school, dateFrom, dateTo}]
+  currentCompany      String?  @map("current_company")
+  currentTitle        String?  @map("current_title")
+  experience          String?  @db.Text // JSON array [{company, title, dateFrom, dateTo, description}]
+  certifications      String?  @db.Text // comma-separated or free text
+  noticePeriod        String?  @map("notice_period")
+  visaRequired        Boolean  @default(false) @map("visa_required")
+  workAuthorization   String?  @map("work_authorization")
+  linkedinUrl         String?  @map("linkedin_url")
+  githubUrl           String?  @map("github_url")
+  portfolioUrl        String?  @map("portfolio_url")
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
 
@@ -131,6 +154,7 @@ model Vacancy {
   qaPairs       QaPair[]
 
   @@unique([platform, externalId])
+  @@index([isDuplicateOf])
   @@map("vacancies")
 }
 
@@ -163,10 +187,14 @@ model Application {
   searchProfileId Int       @map("search_profile_id")
   status          String    @default("queued")
   coverLetter     String?   @db.Text @map("cover_letter")
+  coverLetterVariant String? @map("cover_letter_variant")
   interviewPrep   String?   @db.Text @map("interview_prep")
   appliedAt       DateTime? @map("applied_at")
+  failedAt        DateTime? @map("failed_at")
+  errorMessage    String?   @map("error_message")
   screenshotPath  String?   @map("screenshot_path")
   applyLog        String?   @db.Text @map("apply_log")
+  appliedWithPersonalAccount Boolean @default(false) @map("applied_with_personal_account")
   createdAt       DateTime  @default(now()) @map("created_at")
 
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -175,6 +203,8 @@ model Application {
 
   @@unique([userId, vacancyId])
   @@index([userId])
+  @@index([vacancyId])
+  @@index([searchProfileId])
   @@map("applications")
 }
 
@@ -193,6 +223,7 @@ model QaPair {
   sourceVacancy Vacancy? @relation(fields: [sourceVacancyId], references: [id], onDelete: SetNull)
 
   @@index([userId])
+  @@index([sourceVacancyId])
   @@map("qa_pairs")
 }
 
@@ -255,16 +286,20 @@ model Notification {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@index([userId, read])
   @@map("notifications")
 }
 
 model CompanyResearch {
   id          Int      @id @default(autoincrement())
-  companyName String   @unique @map("company_name")
+  companyName String   @map("company_name")
+  userId      Int      @map("user_id")
   data        String   @db.Text
   createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id])
 
+  @@unique([companyName, userId])
   @@map("company_research")
 }
 
@@ -275,9 +310,32 @@ model EmailResponse {
   fromEmail     String   @map("from_email")
   subject       String
   body          String?  @db.Text
+  bodyText      String?  @db.Text @map("body_text")
+  bodyHtml      String?  @db.Text @map("body_html")
+  messageId     String?  @map("message_id")
   responseType  String   @map("response_type") // positive, rejection, interview, info
   matched       Boolean  @default(false)
+  read          Boolean  @default(false)
   receivedAt    DateTime @default(now()) @map("received_at")
 
   @@map("email_responses")
+}
+
+model AdminEmail {
+  id        Int      @id @default(autoincrement())
+  fromEmail String   @map("from_email")
+  toEmail   String   @map("to_email")
+  subject   String
+  body      String   @db.Text
+  bodyText  String?  @db.Text @map("body_text")
+  bodyHtml  String?  @db.Text @map("body_html")
+  messageId String?  @map("message_id")
+  platform  String?
+  category  String   @default("other") // registration, confirmation, notification, other
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([category])
+  @@map("admin_emails")
 }

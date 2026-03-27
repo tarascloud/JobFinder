@@ -1,5 +1,7 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
 import { getRandomUserAgent } from "@/lib/proxy";
+import { stripHtml } from "@/lib/html-utils";
+import { delay, fetchWithTimeout } from "./utils";
 
 const SEARCH_URL =
   "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search";
@@ -7,23 +9,6 @@ const MAX_REQUESTS_PER_SEARCH = 3;
 const DELAY_BETWEEN_REQUESTS_MS = 2000;
 const RESULTS_PER_PAGE = 25;
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 interface LinkedInJob {
   externalId: string;
@@ -123,12 +108,15 @@ function parseJobCards(html: string): LinkedInJob[] {
       ? urlMatch[1].split("?")[0] // Remove tracking params
       : `https://www.linkedin.com/jobs/view/${jobId}`;
 
-    // Extract date
+    // Extract date — try multiple patterns
     const dateMatch = region.match(
       /datetime="([^"]+)"/i
     );
     const dateTextMatch = region.match(
       /job-search-card__listdate[^>]*>([\s\S]*?)<\//i
+    );
+    const timeAgoMatch = region.match(
+      /(\d+)\s*(hour|day|week|month)s?\s*ago/i
     );
 
     let postedAt: Date | null = null;
@@ -136,6 +124,12 @@ function parseJobCards(html: string): LinkedInJob[] {
       postedAt = new Date(dateMatch[1]);
     } else if (dateTextMatch) {
       postedAt = parseRelativeDate(stripHtml(dateTextMatch[1]));
+    } else if (timeAgoMatch) {
+      postedAt = parseRelativeDate(timeAgoMatch[0]);
+    }
+    // Fallback: if no date found, use current time (better than null for sorting)
+    if (!postedAt) {
+      postedAt = new Date();
     }
 
     jobs.push({
@@ -175,7 +169,7 @@ async function searchLinkedIn(
     );
 
     try {
-      const res = await fetch(url, {
+      const res = await fetchWithTimeout(url, {
         headers: {
           "User-Agent": getRandomUserAgent(),
           Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",

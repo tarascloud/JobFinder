@@ -11,6 +11,7 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ["pdf-parse"],
 };
 
 export default withSerwist(withNextIntl(nextConfig));

@@ -1,9 +1,8 @@
 # JobFinder
 
-AI-powered job search automation. Find, score, and apply to remote jobs automatically.
+[![GitHub](https://img.shields.io/github/license/tarascloud/JobFinder)](https://github.com/tarascloud/JobFinder)
 
-**Live Demo:** [jobfinder.taras.cloud](https://jobfinder.taras.cloud)
-**About & Features:** [jobfinder.taras.cloud/about](https://jobfinder.taras.cloud/about) — full product overview with feature descriptions, supported platforms, and tech stack.
+AI-powered job search automation. Find, score, and apply to remote jobs automatically.
 
 ## Features
 - Multi-user SaaS with Google OAuth

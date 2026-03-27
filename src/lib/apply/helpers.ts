@@ -2,7 +2,7 @@ import { type Page } from "playwright";
 import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
 
-const SCREENSHOTS_DIR = join(process.cwd(), "public", "screenshots");
+const SCREENSHOTS_DIR = join(process.env.DATA_DIR || "/app/data", "screenshots");
 
 /**
  * Random delay between min and max milliseconds to mimic human behavior.
@@ -64,7 +64,7 @@ export async function takeScreenshot(
 
   await page.screenshot({ path: fullPath, fullPage: false });
 
-  return `/screenshots/${filename}`;
+  return `/api/screenshots/${filename}`;
 }
 
 /**

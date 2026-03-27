@@ -1,5 +1,7 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
 import { getRandomUserAgent } from "@/lib/proxy";
+import { stripHtml } from "@/lib/html-utils";
+import { matchesTitle } from "./utils";
 
 const RSS_FEEDS = [
   "https://weworkremotely.com/categories/remote-programming-jobs.rss",
@@ -63,24 +65,6 @@ function parseCompanyAndTitle(rawTitle: string): {
   return { company: "Unknown", title: rawTitle.trim() };
 }
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .trim();
-}
-
-function matchesTitle(title: string, jobTitles: string[]): boolean {
-  if (jobTitles.length === 0) return true;
-  const lower = title.toLowerCase();
-  return jobTitles.some((search) => lower.includes(search.toLowerCase()));
-}
 
 function extractExternalId(link: string): string {
   // URL like https://weworkremotely.com/remote-jobs/company-job-title-123

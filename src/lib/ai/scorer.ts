@@ -1,4 +1,4 @@
-import { callGeminiJSON } from "./gemini";
+import { callAIJSON } from "./provider";
 
 export interface VacancyScoreResult {
   matchScore: number; // 0-100
@@ -34,7 +34,8 @@ interface SearchCriteriaInput {
 export async function scoreVacancy(
   vacancy: VacancyInput,
   userProfile: UserProfileInput,
-  searchCriteria: SearchCriteriaInput
+  searchCriteria: SearchCriteriaInput,
+  options?: { userId?: number }
 ): Promise<VacancyScoreResult> {
   const descriptionTruncated = vacancy.description.slice(0, 2000);
 
@@ -54,7 +55,7 @@ Geographies: ${searchCriteria.geographies.join(", ") || "Not specified"}
 
 Return JSON: { "matchScore": 0-100, "salaryFit": true/false, "remoteFit": true/false, "notes": "brief explanation" }`;
 
-  const result = await callGeminiJSON<VacancyScoreResult>(prompt);
+  const result = await callAIJSON<VacancyScoreResult>(prompt, { userId: options?.userId });
 
   return {
     matchScore: Math.max(0, Math.min(100, Math.round(result.matchScore))),

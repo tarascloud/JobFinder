@@ -8,6 +8,16 @@ export function checkRateLimit(
 ): { allowed: boolean; retryAfter?: number } {
   const key = `${userId}:${action}`;
   const now = Date.now();
+
+  // Evict expired entries when the map grows too large
+  if (limits.size > 1000) {
+    for (const [k, v] of limits) {
+      if (now > v.resetAt) {
+        limits.delete(k);
+      }
+    }
+  }
+
   const entry = limits.get(key);
 
   if (!entry || now > entry.resetAt) {

@@ -45,8 +45,12 @@ export type EmailResponseMinAggregateOutputType = {
   fromEmail: string | null
   subject: string | null
   body: string | null
+  bodyText: string | null
+  bodyHtml: string | null
+  messageId: string | null
   responseType: string | null
   matched: boolean | null
+  read: boolean | null
   receivedAt: Date | null
 }
 
@@ -57,8 +61,12 @@ export type EmailResponseMaxAggregateOutputType = {
   fromEmail: string | null
   subject: string | null
   body: string | null
+  bodyText: string | null
+  bodyHtml: string | null
+  messageId: string | null
   responseType: string | null
   matched: boolean | null
+  read: boolean | null
   receivedAt: Date | null
 }
 
@@ -69,8 +77,12 @@ export type EmailResponseCountAggregateOutputType = {
   fromEmail: number
   subject: number
   body: number
+  bodyText: number
+  bodyHtml: number
+  messageId: number
   responseType: number
   matched: number
+  read: number
   receivedAt: number
   _all: number
 }
@@ -95,8 +107,12 @@ export type EmailResponseMinAggregateInputType = {
   fromEmail?: true
   subject?: true
   body?: true
+  bodyText?: true
+  bodyHtml?: true
+  messageId?: true
   responseType?: true
   matched?: true
+  read?: true
   receivedAt?: true
 }
 
@@ -107,8 +123,12 @@ export type EmailResponseMaxAggregateInputType = {
   fromEmail?: true
   subject?: true
   body?: true
+  bodyText?: true
+  bodyHtml?: true
+  messageId?: true
   responseType?: true
   matched?: true
+  read?: true
   receivedAt?: true
 }
 
@@ -119,8 +139,12 @@ export type EmailResponseCountAggregateInputType = {
   fromEmail?: true
   subject?: true
   body?: true
+  bodyText?: true
+  bodyHtml?: true
+  messageId?: true
   responseType?: true
   matched?: true
+  read?: true
   receivedAt?: true
   _all?: true
 }
@@ -218,8 +242,12 @@ export type EmailResponseGroupByOutputType = {
   fromEmail: string
   subject: string
   body: string | null
+  bodyText: string | null
+  bodyHtml: string | null
+  messageId: string | null
   responseType: string
   matched: boolean
+  read: boolean
   receivedAt: Date
   _count: EmailResponseCountAggregateOutputType | null
   _avg: EmailResponseAvgAggregateOutputType | null
@@ -253,8 +281,12 @@ export type EmailResponseWhereInput = {
   fromEmail?: Prisma.StringFilter<"EmailResponse"> | string
   subject?: Prisma.StringFilter<"EmailResponse"> | string
   body?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
+  bodyText?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
+  bodyHtml?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
+  messageId?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
   responseType?: Prisma.StringFilter<"EmailResponse"> | string
   matched?: Prisma.BoolFilter<"EmailResponse"> | boolean
+  read?: Prisma.BoolFilter<"EmailResponse"> | boolean
   receivedAt?: Prisma.DateTimeFilter<"EmailResponse"> | Date | string
 }
 
@@ -265,8 +297,12 @@ export type EmailResponseOrderByWithRelationInput = {
   fromEmail?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrderInput | Prisma.SortOrder
+  bodyText?: Prisma.SortOrderInput | Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageId?: Prisma.SortOrderInput | Prisma.SortOrder
   responseType?: Prisma.SortOrder
   matched?: Prisma.SortOrder
+  read?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
 }
 
@@ -280,8 +316,12 @@ export type EmailResponseWhereUniqueInput = Prisma.AtLeast<{
   fromEmail?: Prisma.StringFilter<"EmailResponse"> | string
   subject?: Prisma.StringFilter<"EmailResponse"> | string
   body?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
+  bodyText?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
+  bodyHtml?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
+  messageId?: Prisma.StringNullableFilter<"EmailResponse"> | string | null
   responseType?: Prisma.StringFilter<"EmailResponse"> | string
   matched?: Prisma.BoolFilter<"EmailResponse"> | boolean
+  read?: Prisma.BoolFilter<"EmailResponse"> | boolean
   receivedAt?: Prisma.DateTimeFilter<"EmailResponse"> | Date | string
 }, "id">
 
@@ -292,8 +332,12 @@ export type EmailResponseOrderByWithAggregationInput = {
   fromEmail?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrderInput | Prisma.SortOrder
+  bodyText?: Prisma.SortOrderInput | Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageId?: Prisma.SortOrderInput | Prisma.SortOrder
   responseType?: Prisma.SortOrder
   matched?: Prisma.SortOrder
+  read?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
   _count?: Prisma.EmailResponseCountOrderByAggregateInput
   _avg?: Prisma.EmailResponseAvgOrderByAggregateInput
@@ -312,8 +356,12 @@ export type EmailResponseScalarWhereWithAggregatesInput = {
   fromEmail?: Prisma.StringWithAggregatesFilter<"EmailResponse"> | string
   subject?: Prisma.StringWithAggregatesFilter<"EmailResponse"> | string
   body?: Prisma.StringNullableWithAggregatesFilter<"EmailResponse"> | string | null
+  bodyText?: Prisma.StringNullableWithAggregatesFilter<"EmailResponse"> | string | null
+  bodyHtml?: Prisma.StringNullableWithAggregatesFilter<"EmailResponse"> | string | null
+  messageId?: Prisma.StringNullableWithAggregatesFilter<"EmailResponse"> | string | null
   responseType?: Prisma.StringWithAggregatesFilter<"EmailResponse"> | string
   matched?: Prisma.BoolWithAggregatesFilter<"EmailResponse"> | boolean
+  read?: Prisma.BoolWithAggregatesFilter<"EmailResponse"> | boolean
   receivedAt?: Prisma.DateTimeWithAggregatesFilter<"EmailResponse"> | Date | string
 }
 
@@ -323,8 +371,12 @@ export type EmailResponseCreateInput = {
   fromEmail: string
   subject: string
   body?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  messageId?: string | null
   responseType: string
   matched?: boolean
+  read?: boolean
   receivedAt?: Date | string
 }
 
@@ -335,8 +387,12 @@ export type EmailResponseUncheckedCreateInput = {
   fromEmail: string
   subject: string
   body?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  messageId?: string | null
   responseType: string
   matched?: boolean
+  read?: boolean
   receivedAt?: Date | string
 }
 
@@ -346,8 +402,12 @@ export type EmailResponseUpdateInput = {
   fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responseType?: Prisma.StringFieldUpdateOperationsInput | string
   matched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  read?: Prisma.BoolFieldUpdateOperationsInput | boolean
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -358,8 +418,12 @@ export type EmailResponseUncheckedUpdateInput = {
   fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responseType?: Prisma.StringFieldUpdateOperationsInput | string
   matched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  read?: Prisma.BoolFieldUpdateOperationsInput | boolean
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -370,8 +434,12 @@ export type EmailResponseCreateManyInput = {
   fromEmail: string
   subject: string
   body?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  messageId?: string | null
   responseType: string
   matched?: boolean
+  read?: boolean
   receivedAt?: Date | string
 }
 
@@ -381,8 +449,12 @@ export type EmailResponseUpdateManyMutationInput = {
   fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responseType?: Prisma.StringFieldUpdateOperationsInput | string
   matched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  read?: Prisma.BoolFieldUpdateOperationsInput | boolean
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -393,8 +465,12 @@ export type EmailResponseUncheckedUpdateManyInput = {
   fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   responseType?: Prisma.StringFieldUpdateOperationsInput | string
   matched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  read?: Prisma.BoolFieldUpdateOperationsInput | boolean
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -405,8 +481,12 @@ export type EmailResponseCountOrderByAggregateInput = {
   fromEmail?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyText?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
   responseType?: Prisma.SortOrder
   matched?: Prisma.SortOrder
+  read?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
 }
 
@@ -423,8 +503,12 @@ export type EmailResponseMaxOrderByAggregateInput = {
   fromEmail?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyText?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
   responseType?: Prisma.SortOrder
   matched?: Prisma.SortOrder
+  read?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
 }
 
@@ -435,8 +519,12 @@ export type EmailResponseMinOrderByAggregateInput = {
   fromEmail?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyText?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
   responseType?: Prisma.SortOrder
   matched?: Prisma.SortOrder
+  read?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
 }
 
@@ -455,8 +543,12 @@ export type EmailResponseSelect<ExtArgs extends runtime.Types.Extensions.Interna
   fromEmail?: boolean
   subject?: boolean
   body?: boolean
+  bodyText?: boolean
+  bodyHtml?: boolean
+  messageId?: boolean
   responseType?: boolean
   matched?: boolean
+  read?: boolean
   receivedAt?: boolean
 }, ExtArgs["result"]["emailResponse"]>
 
@@ -467,8 +559,12 @@ export type EmailResponseSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   fromEmail?: boolean
   subject?: boolean
   body?: boolean
+  bodyText?: boolean
+  bodyHtml?: boolean
+  messageId?: boolean
   responseType?: boolean
   matched?: boolean
+  read?: boolean
   receivedAt?: boolean
 }, ExtArgs["result"]["emailResponse"]>
 
@@ -479,8 +575,12 @@ export type EmailResponseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   fromEmail?: boolean
   subject?: boolean
   body?: boolean
+  bodyText?: boolean
+  bodyHtml?: boolean
+  messageId?: boolean
   responseType?: boolean
   matched?: boolean
+  read?: boolean
   receivedAt?: boolean
 }, ExtArgs["result"]["emailResponse"]>
 
@@ -491,12 +591,16 @@ export type EmailResponseSelectScalar = {
   fromEmail?: boolean
   subject?: boolean
   body?: boolean
+  bodyText?: boolean
+  bodyHtml?: boolean
+  messageId?: boolean
   responseType?: boolean
   matched?: boolean
+  read?: boolean
   receivedAt?: boolean
 }
 
-export type EmailResponseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "applicationId" | "fromEmail" | "subject" | "body" | "responseType" | "matched" | "receivedAt", ExtArgs["result"]["emailResponse"]>
+export type EmailResponseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "applicationId" | "fromEmail" | "subject" | "body" | "bodyText" | "bodyHtml" | "messageId" | "responseType" | "matched" | "read" | "receivedAt", ExtArgs["result"]["emailResponse"]>
 
 export type $EmailResponsePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "EmailResponse"
@@ -508,8 +612,12 @@ export type $EmailResponsePayload<ExtArgs extends runtime.Types.Extensions.Inter
     fromEmail: string
     subject: string
     body: string | null
+    bodyText: string | null
+    bodyHtml: string | null
+    messageId: string | null
     responseType: string
     matched: boolean
+    read: boolean
     receivedAt: Date
   }, ExtArgs["result"]["emailResponse"]>
   composites: {}
@@ -940,8 +1048,12 @@ export interface EmailResponseFieldRefs {
   readonly fromEmail: Prisma.FieldRef<"EmailResponse", 'String'>
   readonly subject: Prisma.FieldRef<"EmailResponse", 'String'>
   readonly body: Prisma.FieldRef<"EmailResponse", 'String'>
+  readonly bodyText: Prisma.FieldRef<"EmailResponse", 'String'>
+  readonly bodyHtml: Prisma.FieldRef<"EmailResponse", 'String'>
+  readonly messageId: Prisma.FieldRef<"EmailResponse", 'String'>
   readonly responseType: Prisma.FieldRef<"EmailResponse", 'String'>
   readonly matched: Prisma.FieldRef<"EmailResponse", 'Boolean'>
+  readonly read: Prisma.FieldRef<"EmailResponse", 'Boolean'>
   readonly receivedAt: Prisma.FieldRef<"EmailResponse", 'DateTime'>
 }
     

@@ -44,12 +44,31 @@ export type UserProfileMinAggregateOutputType = {
   summary: string | null
   yearsExperience: number | null
   resumeUrl: string | null
+  resumeFilename: string | null
   resumeText: string | null
   analysisStatus: string | null
   analysisResult: string | null
   salaryMin: number | null
   salaryCurrency: string | null
   preferredRemoteType: string | null
+  firstName: string | null
+  lastName: string | null
+  phone: string | null
+  location: string | null
+  education: string | null
+  educationField: string | null
+  educationSchool: string | null
+  educationHistory: string | null
+  currentCompany: string | null
+  currentTitle: string | null
+  experience: string | null
+  certifications: string | null
+  noticePeriod: string | null
+  visaRequired: boolean | null
+  workAuthorization: string | null
+  linkedinUrl: string | null
+  githubUrl: string | null
+  portfolioUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,12 +79,31 @@ export type UserProfileMaxAggregateOutputType = {
   summary: string | null
   yearsExperience: number | null
   resumeUrl: string | null
+  resumeFilename: string | null
   resumeText: string | null
   analysisStatus: string | null
   analysisResult: string | null
   salaryMin: number | null
   salaryCurrency: string | null
   preferredRemoteType: string | null
+  firstName: string | null
+  lastName: string | null
+  phone: string | null
+  location: string | null
+  education: string | null
+  educationField: string | null
+  educationSchool: string | null
+  educationHistory: string | null
+  currentCompany: string | null
+  currentTitle: string | null
+  experience: string | null
+  certifications: string | null
+  noticePeriod: string | null
+  visaRequired: boolean | null
+  workAuthorization: string | null
+  linkedinUrl: string | null
+  githubUrl: string | null
+  portfolioUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -79,6 +117,7 @@ export type UserProfileCountAggregateOutputType = {
   languages: number
   portfolioUrls: number
   resumeUrl: number
+  resumeFilename: number
   resumeText: number
   analysisStatus: number
   analysisResult: number
@@ -87,6 +126,24 @@ export type UserProfileCountAggregateOutputType = {
   preferredLocations: number
   preferredRemoteType: number
   employmentTypes: number
+  firstName: number
+  lastName: number
+  phone: number
+  location: number
+  education: number
+  educationField: number
+  educationSchool: number
+  educationHistory: number
+  currentCompany: number
+  currentTitle: number
+  experience: number
+  certifications: number
+  noticePeriod: number
+  visaRequired: number
+  workAuthorization: number
+  linkedinUrl: number
+  githubUrl: number
+  portfolioUrl: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -111,12 +168,31 @@ export type UserProfileMinAggregateInputType = {
   summary?: true
   yearsExperience?: true
   resumeUrl?: true
+  resumeFilename?: true
   resumeText?: true
   analysisStatus?: true
   analysisResult?: true
   salaryMin?: true
   salaryCurrency?: true
   preferredRemoteType?: true
+  firstName?: true
+  lastName?: true
+  phone?: true
+  location?: true
+  education?: true
+  educationField?: true
+  educationSchool?: true
+  educationHistory?: true
+  currentCompany?: true
+  currentTitle?: true
+  experience?: true
+  certifications?: true
+  noticePeriod?: true
+  visaRequired?: true
+  workAuthorization?: true
+  linkedinUrl?: true
+  githubUrl?: true
+  portfolioUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -127,12 +203,31 @@ export type UserProfileMaxAggregateInputType = {
   summary?: true
   yearsExperience?: true
   resumeUrl?: true
+  resumeFilename?: true
   resumeText?: true
   analysisStatus?: true
   analysisResult?: true
   salaryMin?: true
   salaryCurrency?: true
   preferredRemoteType?: true
+  firstName?: true
+  lastName?: true
+  phone?: true
+  location?: true
+  education?: true
+  educationField?: true
+  educationSchool?: true
+  educationHistory?: true
+  currentCompany?: true
+  currentTitle?: true
+  experience?: true
+  certifications?: true
+  noticePeriod?: true
+  visaRequired?: true
+  workAuthorization?: true
+  linkedinUrl?: true
+  githubUrl?: true
+  portfolioUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -146,6 +241,7 @@ export type UserProfileCountAggregateInputType = {
   languages?: true
   portfolioUrls?: true
   resumeUrl?: true
+  resumeFilename?: true
   resumeText?: true
   analysisStatus?: true
   analysisResult?: true
@@ -154,6 +250,24 @@ export type UserProfileCountAggregateInputType = {
   preferredLocations?: true
   preferredRemoteType?: true
   employmentTypes?: true
+  firstName?: true
+  lastName?: true
+  phone?: true
+  location?: true
+  education?: true
+  educationField?: true
+  educationSchool?: true
+  educationHistory?: true
+  currentCompany?: true
+  currentTitle?: true
+  experience?: true
+  certifications?: true
+  noticePeriod?: true
+  visaRequired?: true
+  workAuthorization?: true
+  linkedinUrl?: true
+  githubUrl?: true
+  portfolioUrl?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -254,6 +368,7 @@ export type UserProfileGroupByOutputType = {
   languages: string[]
   portfolioUrls: string[]
   resumeUrl: string | null
+  resumeFilename: string | null
   resumeText: string | null
   analysisStatus: string
   analysisResult: string | null
@@ -262,6 +377,24 @@ export type UserProfileGroupByOutputType = {
   preferredLocations: string[]
   preferredRemoteType: string | null
   employmentTypes: string[]
+  firstName: string | null
+  lastName: string | null
+  phone: string | null
+  location: string | null
+  education: string | null
+  educationField: string | null
+  educationSchool: string | null
+  educationHistory: string | null
+  currentCompany: string | null
+  currentTitle: string | null
+  experience: string | null
+  certifications: string | null
+  noticePeriod: string | null
+  visaRequired: boolean
+  workAuthorization: string | null
+  linkedinUrl: string | null
+  githubUrl: string | null
+  portfolioUrl: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserProfileCountAggregateOutputType | null
@@ -298,6 +431,7 @@ export type UserProfileWhereInput = {
   languages?: Prisma.StringNullableListFilter<"UserProfile">
   portfolioUrls?: Prisma.StringNullableListFilter<"UserProfile">
   resumeUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  resumeFilename?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   resumeText?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   analysisStatus?: Prisma.StringFilter<"UserProfile"> | string
   analysisResult?: Prisma.StringNullableFilter<"UserProfile"> | string | null
@@ -306,6 +440,24 @@ export type UserProfileWhereInput = {
   preferredLocations?: Prisma.StringNullableListFilter<"UserProfile">
   preferredRemoteType?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   employmentTypes?: Prisma.StringNullableListFilter<"UserProfile">
+  firstName?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  lastName?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  phone?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  location?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  education?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  educationField?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  educationSchool?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  educationHistory?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  currentCompany?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  currentTitle?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  experience?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  certifications?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  noticePeriod?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  visaRequired?: Prisma.BoolFilter<"UserProfile"> | boolean
+  workAuthorization?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  linkedinUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  githubUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  portfolioUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -320,6 +472,7 @@ export type UserProfileOrderByWithRelationInput = {
   languages?: Prisma.SortOrder
   portfolioUrls?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  resumeFilename?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeText?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisStatus?: Prisma.SortOrder
   analysisResult?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -328,6 +481,24 @@ export type UserProfileOrderByWithRelationInput = {
   preferredLocations?: Prisma.SortOrder
   preferredRemoteType?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentTypes?: Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  education?: Prisma.SortOrderInput | Prisma.SortOrder
+  educationField?: Prisma.SortOrderInput | Prisma.SortOrder
+  educationSchool?: Prisma.SortOrderInput | Prisma.SortOrder
+  educationHistory?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentCompany?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  experience?: Prisma.SortOrderInput | Prisma.SortOrder
+  certifications?: Prisma.SortOrderInput | Prisma.SortOrder
+  noticePeriod?: Prisma.SortOrderInput | Prisma.SortOrder
+  visaRequired?: Prisma.SortOrder
+  workAuthorization?: Prisma.SortOrderInput | Prisma.SortOrder
+  linkedinUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -345,6 +516,7 @@ export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
   languages?: Prisma.StringNullableListFilter<"UserProfile">
   portfolioUrls?: Prisma.StringNullableListFilter<"UserProfile">
   resumeUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  resumeFilename?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   resumeText?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   analysisStatus?: Prisma.StringFilter<"UserProfile"> | string
   analysisResult?: Prisma.StringNullableFilter<"UserProfile"> | string | null
@@ -353,6 +525,24 @@ export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
   preferredLocations?: Prisma.StringNullableListFilter<"UserProfile">
   preferredRemoteType?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   employmentTypes?: Prisma.StringNullableListFilter<"UserProfile">
+  firstName?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  lastName?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  phone?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  location?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  education?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  educationField?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  educationSchool?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  educationHistory?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  currentCompany?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  currentTitle?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  experience?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  certifications?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  noticePeriod?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  visaRequired?: Prisma.BoolFilter<"UserProfile"> | boolean
+  workAuthorization?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  linkedinUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  githubUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
+  portfolioUrl?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -367,6 +557,7 @@ export type UserProfileOrderByWithAggregationInput = {
   languages?: Prisma.SortOrder
   portfolioUrls?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  resumeFilename?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeText?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisStatus?: Prisma.SortOrder
   analysisResult?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -375,6 +566,24 @@ export type UserProfileOrderByWithAggregationInput = {
   preferredLocations?: Prisma.SortOrder
   preferredRemoteType?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentTypes?: Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  education?: Prisma.SortOrderInput | Prisma.SortOrder
+  educationField?: Prisma.SortOrderInput | Prisma.SortOrder
+  educationSchool?: Prisma.SortOrderInput | Prisma.SortOrder
+  educationHistory?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentCompany?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  experience?: Prisma.SortOrderInput | Prisma.SortOrder
+  certifications?: Prisma.SortOrderInput | Prisma.SortOrder
+  noticePeriod?: Prisma.SortOrderInput | Prisma.SortOrder
+  visaRequired?: Prisma.SortOrder
+  workAuthorization?: Prisma.SortOrderInput | Prisma.SortOrder
+  linkedinUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserProfileCountOrderByAggregateInput
@@ -396,6 +605,7 @@ export type UserProfileScalarWhereWithAggregatesInput = {
   languages?: Prisma.StringNullableListFilter<"UserProfile">
   portfolioUrls?: Prisma.StringNullableListFilter<"UserProfile">
   resumeUrl?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  resumeFilename?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   resumeText?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   analysisStatus?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
   analysisResult?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
@@ -404,6 +614,24 @@ export type UserProfileScalarWhereWithAggregatesInput = {
   preferredLocations?: Prisma.StringNullableListFilter<"UserProfile">
   preferredRemoteType?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   employmentTypes?: Prisma.StringNullableListFilter<"UserProfile">
+  firstName?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  lastName?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  location?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  education?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  educationField?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  educationSchool?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  educationHistory?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  currentCompany?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  currentTitle?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  experience?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  certifications?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  noticePeriod?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  visaRequired?: Prisma.BoolWithAggregatesFilter<"UserProfile"> | boolean
+  workAuthorization?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  linkedinUrl?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  githubUrl?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
+  portfolioUrl?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserProfile"> | Date | string
 }
@@ -416,6 +644,7 @@ export type UserProfileCreateInput = {
   languages?: Prisma.UserProfileCreatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
+  resumeFilename?: string | null
   resumeText?: string | null
   analysisStatus?: string
   analysisResult?: string | null
@@ -424,6 +653,24 @@ export type UserProfileCreateInput = {
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
   preferredRemoteType?: string | null
   employmentTypes?: Prisma.UserProfileCreateemploymentTypesInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  location?: string | null
+  education?: string | null
+  educationField?: string | null
+  educationSchool?: string | null
+  educationHistory?: string | null
+  currentCompany?: string | null
+  currentTitle?: string | null
+  experience?: string | null
+  certifications?: string | null
+  noticePeriod?: string | null
+  visaRequired?: boolean
+  workAuthorization?: string | null
+  linkedinUrl?: string | null
+  githubUrl?: string | null
+  portfolioUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProfileInput
@@ -438,6 +685,7 @@ export type UserProfileUncheckedCreateInput = {
   languages?: Prisma.UserProfileCreatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
+  resumeFilename?: string | null
   resumeText?: string | null
   analysisStatus?: string
   analysisResult?: string | null
@@ -446,6 +694,24 @@ export type UserProfileUncheckedCreateInput = {
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
   preferredRemoteType?: string | null
   employmentTypes?: Prisma.UserProfileCreateemploymentTypesInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  location?: string | null
+  education?: string | null
+  educationField?: string | null
+  educationSchool?: string | null
+  educationHistory?: string | null
+  currentCompany?: string | null
+  currentTitle?: string | null
+  experience?: string | null
+  certifications?: string | null
+  noticePeriod?: string | null
+  visaRequired?: boolean
+  workAuthorization?: string | null
+  linkedinUrl?: string | null
+  githubUrl?: string | null
+  portfolioUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -458,6 +724,7 @@ export type UserProfileUpdateInput = {
   languages?: Prisma.UserProfileUpdatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeFilename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
   analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -466,6 +733,24 @@ export type UserProfileUpdateInput = {
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
   preferredRemoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentTypes?: Prisma.UserProfileUpdateemploymentTypesInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  education?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationField?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certifications?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noticePeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visaRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workAuthorization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput
@@ -480,6 +765,7 @@ export type UserProfileUncheckedUpdateInput = {
   languages?: Prisma.UserProfileUpdatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeFilename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
   analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -488,6 +774,24 @@ export type UserProfileUncheckedUpdateInput = {
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
   preferredRemoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentTypes?: Prisma.UserProfileUpdateemploymentTypesInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  education?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationField?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certifications?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noticePeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visaRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workAuthorization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -501,6 +805,7 @@ export type UserProfileCreateManyInput = {
   languages?: Prisma.UserProfileCreatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
+  resumeFilename?: string | null
   resumeText?: string | null
   analysisStatus?: string
   analysisResult?: string | null
@@ -509,6 +814,24 @@ export type UserProfileCreateManyInput = {
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
   preferredRemoteType?: string | null
   employmentTypes?: Prisma.UserProfileCreateemploymentTypesInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  location?: string | null
+  education?: string | null
+  educationField?: string | null
+  educationSchool?: string | null
+  educationHistory?: string | null
+  currentCompany?: string | null
+  currentTitle?: string | null
+  experience?: string | null
+  certifications?: string | null
+  noticePeriod?: string | null
+  visaRequired?: boolean
+  workAuthorization?: string | null
+  linkedinUrl?: string | null
+  githubUrl?: string | null
+  portfolioUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -521,6 +844,7 @@ export type UserProfileUpdateManyMutationInput = {
   languages?: Prisma.UserProfileUpdatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeFilename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
   analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -529,6 +853,24 @@ export type UserProfileUpdateManyMutationInput = {
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
   preferredRemoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentTypes?: Prisma.UserProfileUpdateemploymentTypesInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  education?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationField?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certifications?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noticePeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visaRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workAuthorization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -542,6 +884,7 @@ export type UserProfileUncheckedUpdateManyInput = {
   languages?: Prisma.UserProfileUpdatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeFilename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
   analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -550,6 +893,24 @@ export type UserProfileUncheckedUpdateManyInput = {
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
   preferredRemoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentTypes?: Prisma.UserProfileUpdateemploymentTypesInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  education?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationField?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certifications?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noticePeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visaRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workAuthorization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -576,6 +937,7 @@ export type UserProfileCountOrderByAggregateInput = {
   languages?: Prisma.SortOrder
   portfolioUrls?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
+  resumeFilename?: Prisma.SortOrder
   resumeText?: Prisma.SortOrder
   analysisStatus?: Prisma.SortOrder
   analysisResult?: Prisma.SortOrder
@@ -584,6 +946,24 @@ export type UserProfileCountOrderByAggregateInput = {
   preferredLocations?: Prisma.SortOrder
   preferredRemoteType?: Prisma.SortOrder
   employmentTypes?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  education?: Prisma.SortOrder
+  educationField?: Prisma.SortOrder
+  educationSchool?: Prisma.SortOrder
+  educationHistory?: Prisma.SortOrder
+  currentCompany?: Prisma.SortOrder
+  currentTitle?: Prisma.SortOrder
+  experience?: Prisma.SortOrder
+  certifications?: Prisma.SortOrder
+  noticePeriod?: Prisma.SortOrder
+  visaRequired?: Prisma.SortOrder
+  workAuthorization?: Prisma.SortOrder
+  linkedinUrl?: Prisma.SortOrder
+  githubUrl?: Prisma.SortOrder
+  portfolioUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -600,12 +980,31 @@ export type UserProfileMaxOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   yearsExperience?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
+  resumeFilename?: Prisma.SortOrder
   resumeText?: Prisma.SortOrder
   analysisStatus?: Prisma.SortOrder
   analysisResult?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   preferredRemoteType?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  education?: Prisma.SortOrder
+  educationField?: Prisma.SortOrder
+  educationSchool?: Prisma.SortOrder
+  educationHistory?: Prisma.SortOrder
+  currentCompany?: Prisma.SortOrder
+  currentTitle?: Prisma.SortOrder
+  experience?: Prisma.SortOrder
+  certifications?: Prisma.SortOrder
+  noticePeriod?: Prisma.SortOrder
+  visaRequired?: Prisma.SortOrder
+  workAuthorization?: Prisma.SortOrder
+  linkedinUrl?: Prisma.SortOrder
+  githubUrl?: Prisma.SortOrder
+  portfolioUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -616,12 +1015,31 @@ export type UserProfileMinOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   yearsExperience?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
+  resumeFilename?: Prisma.SortOrder
   resumeText?: Prisma.SortOrder
   analysisStatus?: Prisma.SortOrder
   analysisResult?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   preferredRemoteType?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  education?: Prisma.SortOrder
+  educationField?: Prisma.SortOrder
+  educationSchool?: Prisma.SortOrder
+  educationHistory?: Prisma.SortOrder
+  currentCompany?: Prisma.SortOrder
+  currentTitle?: Prisma.SortOrder
+  experience?: Prisma.SortOrder
+  certifications?: Prisma.SortOrder
+  noticePeriod?: Prisma.SortOrder
+  visaRequired?: Prisma.SortOrder
+  workAuthorization?: Prisma.SortOrder
+  linkedinUrl?: Prisma.SortOrder
+  githubUrl?: Prisma.SortOrder
+  portfolioUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -717,6 +1135,10 @@ export type UserProfileUpdateemploymentTypesInput = {
   push?: string | string[]
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type UserProfileCreateWithoutUserInput = {
   headline?: string | null
   summary?: string | null
@@ -725,6 +1147,7 @@ export type UserProfileCreateWithoutUserInput = {
   languages?: Prisma.UserProfileCreatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
+  resumeFilename?: string | null
   resumeText?: string | null
   analysisStatus?: string
   analysisResult?: string | null
@@ -733,6 +1156,24 @@ export type UserProfileCreateWithoutUserInput = {
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
   preferredRemoteType?: string | null
   employmentTypes?: Prisma.UserProfileCreateemploymentTypesInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  location?: string | null
+  education?: string | null
+  educationField?: string | null
+  educationSchool?: string | null
+  educationHistory?: string | null
+  currentCompany?: string | null
+  currentTitle?: string | null
+  experience?: string | null
+  certifications?: string | null
+  noticePeriod?: string | null
+  visaRequired?: boolean
+  workAuthorization?: string | null
+  linkedinUrl?: string | null
+  githubUrl?: string | null
+  portfolioUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -745,6 +1186,7 @@ export type UserProfileUncheckedCreateWithoutUserInput = {
   languages?: Prisma.UserProfileCreatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileCreateportfolioUrlsInput | string[]
   resumeUrl?: string | null
+  resumeFilename?: string | null
   resumeText?: string | null
   analysisStatus?: string
   analysisResult?: string | null
@@ -753,6 +1195,24 @@ export type UserProfileUncheckedCreateWithoutUserInput = {
   preferredLocations?: Prisma.UserProfileCreatepreferredLocationsInput | string[]
   preferredRemoteType?: string | null
   employmentTypes?: Prisma.UserProfileCreateemploymentTypesInput | string[]
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  location?: string | null
+  education?: string | null
+  educationField?: string | null
+  educationSchool?: string | null
+  educationHistory?: string | null
+  currentCompany?: string | null
+  currentTitle?: string | null
+  experience?: string | null
+  certifications?: string | null
+  noticePeriod?: string | null
+  visaRequired?: boolean
+  workAuthorization?: string | null
+  linkedinUrl?: string | null
+  githubUrl?: string | null
+  portfolioUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -781,6 +1241,7 @@ export type UserProfileUpdateWithoutUserInput = {
   languages?: Prisma.UserProfileUpdatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeFilename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
   analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -789,6 +1250,24 @@ export type UserProfileUpdateWithoutUserInput = {
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
   preferredRemoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentTypes?: Prisma.UserProfileUpdateemploymentTypesInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  education?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationField?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certifications?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noticePeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visaRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workAuthorization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -801,6 +1280,7 @@ export type UserProfileUncheckedUpdateWithoutUserInput = {
   languages?: Prisma.UserProfileUpdatelanguagesInput | string[]
   portfolioUrls?: Prisma.UserProfileUpdateportfolioUrlsInput | string[]
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeFilename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisStatus?: Prisma.StringFieldUpdateOperationsInput | string
   analysisResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -809,6 +1289,24 @@ export type UserProfileUncheckedUpdateWithoutUserInput = {
   preferredLocations?: Prisma.UserProfileUpdatepreferredLocationsInput | string[]
   preferredRemoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentTypes?: Prisma.UserProfileUpdateemploymentTypesInput | string[]
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  education?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationField?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certifications?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noticePeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visaRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workAuthorization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -824,6 +1322,7 @@ export type UserProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   languages?: boolean
   portfolioUrls?: boolean
   resumeUrl?: boolean
+  resumeFilename?: boolean
   resumeText?: boolean
   analysisStatus?: boolean
   analysisResult?: boolean
@@ -832,6 +1331,24 @@ export type UserProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   preferredLocations?: boolean
   preferredRemoteType?: boolean
   employmentTypes?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  phone?: boolean
+  location?: boolean
+  education?: boolean
+  educationField?: boolean
+  educationSchool?: boolean
+  educationHistory?: boolean
+  currentCompany?: boolean
+  currentTitle?: boolean
+  experience?: boolean
+  certifications?: boolean
+  noticePeriod?: boolean
+  visaRequired?: boolean
+  workAuthorization?: boolean
+  linkedinUrl?: boolean
+  githubUrl?: boolean
+  portfolioUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -846,6 +1363,7 @@ export type UserProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   languages?: boolean
   portfolioUrls?: boolean
   resumeUrl?: boolean
+  resumeFilename?: boolean
   resumeText?: boolean
   analysisStatus?: boolean
   analysisResult?: boolean
@@ -854,6 +1372,24 @@ export type UserProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   preferredLocations?: boolean
   preferredRemoteType?: boolean
   employmentTypes?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  phone?: boolean
+  location?: boolean
+  education?: boolean
+  educationField?: boolean
+  educationSchool?: boolean
+  educationHistory?: boolean
+  currentCompany?: boolean
+  currentTitle?: boolean
+  experience?: boolean
+  certifications?: boolean
+  noticePeriod?: boolean
+  visaRequired?: boolean
+  workAuthorization?: boolean
+  linkedinUrl?: boolean
+  githubUrl?: boolean
+  portfolioUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -868,6 +1404,7 @@ export type UserProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   languages?: boolean
   portfolioUrls?: boolean
   resumeUrl?: boolean
+  resumeFilename?: boolean
   resumeText?: boolean
   analysisStatus?: boolean
   analysisResult?: boolean
@@ -876,6 +1413,24 @@ export type UserProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   preferredLocations?: boolean
   preferredRemoteType?: boolean
   employmentTypes?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  phone?: boolean
+  location?: boolean
+  education?: boolean
+  educationField?: boolean
+  educationSchool?: boolean
+  educationHistory?: boolean
+  currentCompany?: boolean
+  currentTitle?: boolean
+  experience?: boolean
+  certifications?: boolean
+  noticePeriod?: boolean
+  visaRequired?: boolean
+  workAuthorization?: boolean
+  linkedinUrl?: boolean
+  githubUrl?: boolean
+  portfolioUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -890,6 +1445,7 @@ export type UserProfileSelectScalar = {
   languages?: boolean
   portfolioUrls?: boolean
   resumeUrl?: boolean
+  resumeFilename?: boolean
   resumeText?: boolean
   analysisStatus?: boolean
   analysisResult?: boolean
@@ -898,11 +1454,29 @@ export type UserProfileSelectScalar = {
   preferredLocations?: boolean
   preferredRemoteType?: boolean
   employmentTypes?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  phone?: boolean
+  location?: boolean
+  education?: boolean
+  educationField?: boolean
+  educationSchool?: boolean
+  educationHistory?: boolean
+  currentCompany?: boolean
+  currentTitle?: boolean
+  experience?: boolean
+  certifications?: boolean
+  noticePeriod?: boolean
+  visaRequired?: boolean
+  workAuthorization?: boolean
+  linkedinUrl?: boolean
+  githubUrl?: boolean
+  portfolioUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "headline" | "summary" | "yearsExperience" | "skills" | "languages" | "portfolioUrls" | "resumeUrl" | "resumeText" | "analysisStatus" | "analysisResult" | "salaryMin" | "salaryCurrency" | "preferredLocations" | "preferredRemoteType" | "employmentTypes" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
+export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "headline" | "summary" | "yearsExperience" | "skills" | "languages" | "portfolioUrls" | "resumeUrl" | "resumeFilename" | "resumeText" | "analysisStatus" | "analysisResult" | "salaryMin" | "salaryCurrency" | "preferredLocations" | "preferredRemoteType" | "employmentTypes" | "firstName" | "lastName" | "phone" | "location" | "education" | "educationField" | "educationSchool" | "educationHistory" | "currentCompany" | "currentTitle" | "experience" | "certifications" | "noticePeriod" | "visaRequired" | "workAuthorization" | "linkedinUrl" | "githubUrl" | "portfolioUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
 export type UserProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -927,6 +1501,7 @@ export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.Interna
     languages: string[]
     portfolioUrls: string[]
     resumeUrl: string | null
+    resumeFilename: string | null
     resumeText: string | null
     analysisStatus: string
     analysisResult: string | null
@@ -935,6 +1510,24 @@ export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.Interna
     preferredLocations: string[]
     preferredRemoteType: string | null
     employmentTypes: string[]
+    firstName: string | null
+    lastName: string | null
+    phone: string | null
+    location: string | null
+    education: string | null
+    educationField: string | null
+    educationSchool: string | null
+    educationHistory: string | null
+    currentCompany: string | null
+    currentTitle: string | null
+    experience: string | null
+    certifications: string | null
+    noticePeriod: string | null
+    visaRequired: boolean
+    workAuthorization: string | null
+    linkedinUrl: string | null
+    githubUrl: string | null
+    portfolioUrl: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["userProfile"]>
@@ -1369,6 +1962,7 @@ export interface UserProfileFieldRefs {
   readonly languages: Prisma.FieldRef<"UserProfile", 'String[]'>
   readonly portfolioUrls: Prisma.FieldRef<"UserProfile", 'String[]'>
   readonly resumeUrl: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly resumeFilename: Prisma.FieldRef<"UserProfile", 'String'>
   readonly resumeText: Prisma.FieldRef<"UserProfile", 'String'>
   readonly analysisStatus: Prisma.FieldRef<"UserProfile", 'String'>
   readonly analysisResult: Prisma.FieldRef<"UserProfile", 'String'>
@@ -1377,6 +1971,24 @@ export interface UserProfileFieldRefs {
   readonly preferredLocations: Prisma.FieldRef<"UserProfile", 'String[]'>
   readonly preferredRemoteType: Prisma.FieldRef<"UserProfile", 'String'>
   readonly employmentTypes: Prisma.FieldRef<"UserProfile", 'String[]'>
+  readonly firstName: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly lastName: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly phone: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly location: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly education: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly educationField: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly educationSchool: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly educationHistory: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly currentCompany: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly currentTitle: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly experience: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly certifications: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly noticePeriod: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly visaRequired: Prisma.FieldRef<"UserProfile", 'Boolean'>
+  readonly workAuthorization: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly linkedinUrl: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly githubUrl: Prisma.FieldRef<"UserProfile", 'String'>
+  readonly portfolioUrl: Prisma.FieldRef<"UserProfile", 'String'>
   readonly createdAt: Prisma.FieldRef<"UserProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UserProfile", 'DateTime'>
 }

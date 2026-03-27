@@ -6,11 +6,12 @@ import { isValidDemoToken } from "@/lib/demo-token";
 /** Fake demo user returned when browsing in demo mode */
 const DEMO_USER = {
   id: 0,
-  email: "demo@jobfinder.app",
+  email: "demo@jf.taras.cloud",
   name: "Demo User",
   image: null,
   googleId: null,
-  role: "guest" as const,
+  jfEmail: "demo@jf.taras.cloud",
+  role: "user" as const,
   createdAt: new Date(),
   updatedAt: new Date(),
 } as const;

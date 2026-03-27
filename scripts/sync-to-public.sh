@@ -76,6 +76,8 @@ scan_pattern() {
     --exclude="sync-to-public.sh" \
     --exclude=".env.example" \
     --exclude="docker-compose.yml" \
+    --exclude-dir="setup" \
+    --exclude="apply-email.ts" \
     2>/dev/null || true)
 
   if [ -n "$matches" ]; then

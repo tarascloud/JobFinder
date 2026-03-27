@@ -1,26 +1,11 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
 import { getRandomUserAgent } from "@/lib/proxy";
+import { stripHtml } from "@/lib/html-utils";
+import { delay, fetchWithTimeout } from "./utils";
 
 const BASE_URL = "https://www.indeed.com/jobs";
 const REMOTE_FILTER = "032b3046-06a3-4876-8dfd-474eb5e7ed11";
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 interface IndeedJob {
   externalId: string;
@@ -168,7 +153,7 @@ async function searchIndeed(query: string): Promise<IndeedJob[]> {
   const url = `${BASE_URL}?${params.toString()}`;
   console.log(`[indeed] Fetching: ${query}`);
 
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     headers: {
       "User-Agent": getRandomUserAgent(),
       Accept:

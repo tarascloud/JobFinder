@@ -64,7 +64,8 @@ export const ModelName = {
   UserAISettings: 'UserAISettings',
   Notification: 'Notification',
   CompanyResearch: 'CompanyResearch',
-  EmailResponse: 'EmailResponse'
+  EmailResponse: 'EmailResponse',
+  AdminEmail: 'AdminEmail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -89,10 +90,12 @@ export const UserScalarFieldEnum = {
   name: 'name',
   image: 'image',
   googleId: 'googleId',
+  jfEmail: 'jfEmail',
   role: 'role',
   preferredLocale: 'preferredLocale',
   preferredSkin: 'preferredSkin',
   preferredTheme: 'preferredTheme',
+  applicationLimit: 'applicationLimit',
   createdAt: 'createdAt'
 } as const
 
@@ -117,6 +120,7 @@ export const UserProfileScalarFieldEnum = {
   languages: 'languages',
   portfolioUrls: 'portfolioUrls',
   resumeUrl: 'resumeUrl',
+  resumeFilename: 'resumeFilename',
   resumeText: 'resumeText',
   analysisStatus: 'analysisStatus',
   analysisResult: 'analysisResult',
@@ -125,6 +129,24 @@ export const UserProfileScalarFieldEnum = {
   preferredLocations: 'preferredLocations',
   preferredRemoteType: 'preferredRemoteType',
   employmentTypes: 'employmentTypes',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  phone: 'phone',
+  location: 'location',
+  education: 'education',
+  educationField: 'educationField',
+  educationSchool: 'educationSchool',
+  educationHistory: 'educationHistory',
+  currentCompany: 'currentCompany',
+  currentTitle: 'currentTitle',
+  experience: 'experience',
+  certifications: 'certifications',
+  noticePeriod: 'noticePeriod',
+  visaRequired: 'visaRequired',
+  workAuthorization: 'workAuthorization',
+  linkedinUrl: 'linkedinUrl',
+  githubUrl: 'githubUrl',
+  portfolioUrl: 'portfolioUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -214,10 +236,14 @@ export const ApplicationScalarFieldEnum = {
   searchProfileId: 'searchProfileId',
   status: 'status',
   coverLetter: 'coverLetter',
+  coverLetterVariant: 'coverLetterVariant',
   interviewPrep: 'interviewPrep',
   appliedAt: 'appliedAt',
+  failedAt: 'failedAt',
+  errorMessage: 'errorMessage',
   screenshotPath: 'screenshotPath',
   applyLog: 'applyLog',
+  appliedWithPersonalAccount: 'appliedWithPersonalAccount',
   createdAt: 'createdAt'
 } as const
 
@@ -298,6 +324,7 @@ export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[k
 export const CompanyResearchScalarFieldEnum = {
   id: 'id',
   companyName: 'companyName',
+  userId: 'userId',
   data: 'data',
   createdAt: 'createdAt'
 } as const
@@ -312,12 +339,34 @@ export const EmailResponseScalarFieldEnum = {
   fromEmail: 'fromEmail',
   subject: 'subject',
   body: 'body',
+  bodyText: 'bodyText',
+  bodyHtml: 'bodyHtml',
+  messageId: 'messageId',
   responseType: 'responseType',
   matched: 'matched',
+  read: 'read',
   receivedAt: 'receivedAt'
 } as const
 
 export type EmailResponseScalarFieldEnum = (typeof EmailResponseScalarFieldEnum)[keyof typeof EmailResponseScalarFieldEnum]
+
+
+export const AdminEmailScalarFieldEnum = {
+  id: 'id',
+  fromEmail: 'fromEmail',
+  toEmail: 'toEmail',
+  subject: 'subject',
+  body: 'body',
+  bodyText: 'bodyText',
+  bodyHtml: 'bodyHtml',
+  messageId: 'messageId',
+  platform: 'platform',
+  category: 'category',
+  read: 'read',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminEmailScalarFieldEnum = (typeof AdminEmailScalarFieldEnum)[keyof typeof AdminEmailScalarFieldEnum]
 
 
 export const SortOrder = {

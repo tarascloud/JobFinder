@@ -22,17 +22,20 @@ import {
   Plus,
   Minus,
   Languages,
+  Sparkles,
+  MousePointerClick,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { getVacancyDetail } from "@/actions/vacancies";
-import { queueVacancyForApply } from "@/actions/apply-queue";
+import { queueVacancyForApply, markAsManuallyApplied } from "@/actions/apply-queue";
 import { generateCoverLetterAction } from "@/actions/scoring";
 import { researchCompany, getCachedCompanyResearch } from "@/actions/company-research";
 import { tailorResume } from "@/actions/resume-tailor";
 import { getTranslation } from "@/actions/translations";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 const statusColors: Record<string, "yellow" | "blue" | "green" | "purple" | "indigo" | "red"> = {
   queued: "yellow",
@@ -100,6 +103,7 @@ export default function VacancyDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [coverLetter, setCoverLetter] = useState("");
   const [isQueuing, setIsQueuing] = useState(false);
+  const [isApplyingManual, setIsApplyingManual] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -229,9 +233,11 @@ export default function VacancyDetailPage() {
   }
 
   async function handleQueue() {
-    if (!vacancy || !vacancy.scores[0]) return;
+    if (!vacancy) return;
     setIsQueuing(true);
-    const result = await queueVacancyForApply(vacancy.id, vacancy.scores[0].searchProfile.id);
+    // Use first score's search profile, or first active profile as fallback
+    const searchProfileId = vacancy.scores[0]?.searchProfile?.id;
+    const result = await queueVacancyForApply(vacancy.id, searchProfileId || 0);
     if ("application" in result) {
       // Reload
       const updated = await getVacancyDetail(vacancyId);
@@ -245,10 +251,36 @@ export default function VacancyDetailPage() {
     setIsQueuing(false);
   }
 
+  async function handleApplyManual() {
+    if (!vacancy) return;
+    window.open(vacancy.url, "_blank", "noopener,noreferrer");
+    setIsApplyingManual(true);
+    try {
+      if (vacancy.application) {
+        await markAsManuallyApplied(vacancy.application.id);
+      } else {
+        const searchProfileId = vacancy.scores[0]?.searchProfile?.id || 0;
+        const result = await queueVacancyForApply(vacancy.id, searchProfileId);
+        if ("application" in result && result.application) {
+          await markAsManuallyApplied(result.application.id);
+        }
+      }
+      // Reload
+      const updated = await getVacancyDetail(vacancyId);
+      if ("id" in updated) {
+        setVacancy(updated as unknown as VacancyDetail);
+      }
+    } catch {
+      // URL was already opened
+    }
+    setIsApplyingManual(false);
+  }
+
   async function handleGenerateCoverLetter() {
-    if (!vacancy || !vacancy.scores[0]) return;
+    if (!vacancy) return;
     setIsGenerating(true);
-    const result = await generateCoverLetterAction(vacancy.id, vacancy.scores[0].searchProfile.id);
+    const searchProfileId = vacancy.scores[0]?.searchProfile?.id || 0;
+    const result = await generateCoverLetterAction(vacancy.id, searchProfileId);
     if (result.coverLetter) {
       setCoverLetter(result.coverLetter);
     }
@@ -337,8 +369,21 @@ export default function VacancyDetailPage() {
             className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80"
           >
             <ExternalLink className="h-4 w-4" />
-            Original
+            {t("open_original")}
           </a>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleApplyManual}
+            disabled={isApplyingManual}
+          >
+            {isApplyingManual ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <MousePointerClick className="h-4 w-4" />
+            )}
+            {tq("apply_manual")}
+          </Button>
         </div>
       </div>
 
@@ -370,14 +415,37 @@ export default function VacancyDetailPage() {
                   </button>
                 </div>
               )}
-              <div
-                className="prose prose-invert prose-sm max-w-none text-foreground/80"
-                dangerouslySetInnerHTML={{
-                  __html: showTranslatedDesc && translatedDescription
-                    ? translatedDescription
-                    : vacancy.description,
-                }}
-              />
+              {vacancy.description && vacancy.description.length > 10 ? (
+                <div
+                  className="prose prose-invert prose-sm max-w-none text-foreground/80"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(
+                      showTranslatedDesc && translatedDescription
+                        ? translatedDescription
+                        : vacancy.description
+                    ),
+                  }}
+                />
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground mb-3">No description available</p>
+                  <Button
+                    variant="outline"
+                    onClick={async () => {
+                      const { fetchVacancyDescription } = await import("@/actions/fetch-description");
+                      const result = await fetchVacancyDescription(vacancy.id);
+                      if ("description" in result) {
+                        setVacancy({ ...vacancy, description: result.description });
+                      }
+                    }}
+                  >
+                    Fetch Description from Source
+                  </Button>
+                  <a href={vacancy.url} target="_blank" rel="noopener noreferrer" className="block mt-2 text-sm text-primary hover:underline">
+                    Open original listing →
+                  </a>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -453,7 +521,7 @@ export default function VacancyDetailPage() {
                 <Button
                   className="w-full"
                   onClick={handleQueue}
-                  disabled={isQueuing || !bestScore}
+                  disabled={isQueuing}
                 >
                   {isQueuing ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -507,7 +575,7 @@ export default function VacancyDetailPage() {
                 size="sm"
                 className="w-full"
                 onClick={handleGenerateCoverLetter}
-                disabled={isGenerating || !bestScore}
+                disabled={isGenerating}
               >
                 {isGenerating ? (
                   <>
@@ -516,8 +584,11 @@ export default function VacancyDetailPage() {
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="h-4 w-4" />
-                    {tq("edit_cover_letter")}
+                    {coverLetter ? (
+                      <><CheckCircle2 className="h-4 w-4" />{tq("edit_cover_letter")}</>
+                    ) : (
+                      <><Sparkles className="h-4 w-4" />Generate Cover Letter</>
+                    )}
                   </>
                 )}
               </Button>

@@ -22,19 +22,18 @@ export async function scoreVacancies(
   });
   if (!userProfile) throw new Error("Please create your profile first");
 
-  // Get unscored vacancies for this search profile (no VacancyScore record yet)
-  const unscoredVacancies = await prisma.vacancy.findMany({
+  // Get unscored vacancies — either no score record OR score is 0 (placeholder from scraper)
+  const unscoredScores = await prisma.vacancyScore.findMany({
     where: {
-      vacancyScores: {
-        none: {
-          userId: user.id,
-          searchProfileId: searchProfileId,
-        },
-      },
+      userId: user.id,
+      searchProfileId: searchProfileId,
+      matchScore: 0,
     },
+    include: { vacancy: true },
     take: 20,
-    orderBy: { scrapedAt: "desc" },
+    orderBy: { vacancy: { scrapedAt: "desc" } },
   });
+  const unscoredVacancies = unscoredScores.map(s => s.vacancy);
 
   let scored = 0;
   let errors = 0;
@@ -62,21 +61,38 @@ export async function scoreVacancies(
           currency: searchProfile.currency,
           remoteOnly: searchProfile.remoteOnly,
           geographies: searchProfile.geographies,
-        }
+        },
+        { userId: user.id }
       );
 
-      await prisma.vacancyScore.create({
-        data: {
-          vacancyId: vacancy.id,
-          userId: user.id,
-          searchProfileId: searchProfileId,
-          matchScore: result.matchScore,
-          salaryFit: result.salaryFit,
-          remoteFit: result.remoteFit,
-          notes: result.notes,
-          scoredBy: "gemini-2.0-flash",
-        },
-      });
+      // Find and update existing score record (created by scraper with matchScore=0)
+      const existingScore = unscoredScores.find(s => s.vacancyId === vacancy.id);
+      if (existingScore) {
+        await prisma.vacancyScore.update({
+          where: { id: existingScore.id },
+          data: {
+            matchScore: result.matchScore,
+            salaryFit: result.salaryFit,
+            remoteFit: result.remoteFit,
+            notes: result.notes,
+            scoredBy: "groq",
+            scoredAt: new Date(),
+          },
+        });
+      } else {
+        await prisma.vacancyScore.create({
+          data: {
+            vacancyId: vacancy.id,
+            userId: user.id,
+            searchProfileId: searchProfileId,
+            matchScore: result.matchScore,
+            salaryFit: result.salaryFit,
+            remoteFit: result.remoteFit,
+            notes: result.notes,
+            scoredBy: "groq",
+          },
+        });
+      }
 
       scored++;
     } catch {
@@ -109,7 +125,7 @@ export async function generateCoverLetterAction(
     // Detect language from vacancy
     const language = vacancy.language ?? undefined;
 
-    const coverLetter = await generateCoverLetterAI(
+    const result = await generateCoverLetterAI(
       {
         title: vacancy.title,
         company: vacancy.company,
@@ -121,7 +137,9 @@ export async function generateCoverLetterAction(
         yearsExperience: userProfile.yearsExperience,
         skills: userProfile.skills,
       },
-      language
+      language,
+      undefined,
+      { userId: user.id }
     );
 
     // Save to application if one exists
@@ -137,11 +155,11 @@ export async function generateCoverLetterAction(
     if (existingApp) {
       await prisma.application.update({
         where: { id: existingApp.id },
-        data: { coverLetter },
+        data: { coverLetter: result.text, coverLetterVariant: result.variant },
       });
     }
 
-    return { coverLetter };
+    return { coverLetter: result.text };
   } catch (e) {
     return {
       error: e instanceof Error ? e.message : "Failed to generate cover letter",

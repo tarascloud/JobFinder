@@ -23,6 +23,10 @@ import {
   getTopCompanies,
   getScoreDistribution,
   getApplyTimeAnalysis,
+  getPlatformResponseRates,
+  getBestTimeToApply,
+  getCompanyResponseRates,
+  getCoverLetterVariantStats,
 } from "@/actions/analytics";
 
 interface FunnelData {
@@ -68,6 +72,34 @@ interface TimeData {
   responses: number;
 }
 
+interface PlatformResponseData {
+  platform: string;
+  applied: number;
+  responses: number;
+  responseRate: number;
+}
+
+interface BestTimeData {
+  hour: number;
+  applied: number;
+  responses: number;
+  responseRate: number;
+}
+
+interface CompanyResponseData {
+  company: string;
+  applied: number;
+  responses: number;
+  responseRate: number;
+}
+
+interface VariantData {
+  variant: string;
+  sent: number;
+  responses: number;
+  responseRate: number;
+}
+
 const CHART_COLORS = {
   blue: "#3b82f6",
   green: "#22c55e",
@@ -95,6 +127,19 @@ const SCORE_COLORS = [
   CHART_COLORS.green,
 ];
 
+const VARIANT_COLORS: Record<string, string> = {
+  formal: CHART_COLORS.blue,
+  casual: CHART_COLORS.green,
+  technical: CHART_COLORS.purple,
+};
+
+const TOOLTIP_STYLE = {
+  background: "#1a1a1a",
+  border: "1px solid #333",
+  borderRadius: "8px",
+  color: "#fff",
+};
+
 function ChartSkeleton() {
   return (
     <div className="space-y-3">
@@ -113,18 +158,26 @@ export default function AnalyticsPage() {
   const [companies, setCompanies] = useState<CompanyData[]>([]);
   const [scores, setScores] = useState<ScoreData[]>([]);
   const [timeData, setTimeData] = useState<TimeData[]>([]);
+  const [platformResponse, setPlatformResponse] = useState<PlatformResponseData[]>([]);
+  const [bestTime, setBestTime] = useState<BestTimeData[]>([]);
+  const [companyResponse, setCompanyResponse] = useState<CompanyResponseData[]>([]);
+  const [variantStats, setVariantStats] = useState<VariantData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const [f, w, p, c, s, td] = await Promise.all([
+        const [f, w, p, c, s, td, pr, bt, cr, vs] = await Promise.all([
           getApplicationFunnel(),
           getWeeklyApplicationStats(),
           getPlatformStats(),
           getTopCompanies(),
           getScoreDistribution(),
           getApplyTimeAnalysis(),
+          getPlatformResponseRates(),
+          getBestTimeToApply(),
+          getCompanyResponseRates(),
+          getCoverLetterVariantStats(),
         ]);
 
         if (f && !("error" in f)) setFunnel(f);
@@ -133,6 +186,10 @@ export default function AnalyticsPage() {
         if (Array.isArray(c)) setCompanies(c);
         if (Array.isArray(s)) setScores(s);
         if (Array.isArray(td)) setTimeData(td);
+        if (Array.isArray(pr)) setPlatformResponse(pr);
+        if (Array.isArray(bt)) setBestTime(bt);
+        if (Array.isArray(cr)) setCompanyResponse(cr);
+        if (Array.isArray(vs)) setVariantStats(vs);
       } finally {
         setLoading(false);
       }
@@ -176,6 +233,10 @@ export default function AnalyticsPage() {
   const activeHours = timeData.filter((d) => d.applications > 0);
   const showTimeChart = activeHours.length > 0;
 
+  // Filter best time data to hours with activity
+  const activeBestTimeHours = bestTime.filter((d) => d.applied > 0);
+  const showBestTimeChart = activeBestTimeHours.length > 0;
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t("title")}</h1>
@@ -202,14 +263,7 @@ export default function AnalyticsPage() {
                     fontSize={12}
                     width={80}
                   />
-                  <Tooltip
-                    contentStyle={{
-                      background: "#1a1a1a",
-                      border: "1px solid #333",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
-                  />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                     {funnelChartData.map((_, idx) => (
                       <Cell key={idx} fill={FUNNEL_COLORS[idx % FUNNEL_COLORS.length]} />
@@ -240,14 +294,7 @@ export default function AnalyticsPage() {
                     tickFormatter={(v: string) => v.replace(/^\d{4}-/, "")}
                   />
                   <YAxis stroke="#888" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      background: "#1a1a1a",
-                      border: "1px solid #333",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
-                  />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Line
                     type="monotone"
                     dataKey="applied"
@@ -298,12 +345,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="platform" stroke="#888" fontSize={12} />
                   <YAxis stroke="#888" fontSize={12} />
                   <Tooltip
-                    contentStyle={{
-                      background: "#1a1a1a",
-                      border: "1px solid #333",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
+                    contentStyle={TOOLTIP_STYLE}
                     formatter={(value, name) => {
                       if (name === "responseRate") return [`${value}%`, t("response_rate")];
                       return [value, name];
@@ -332,14 +374,7 @@ export default function AnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                   <XAxis dataKey="range" stroke="#888" fontSize={12} />
                   <YAxis stroke="#888" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      background: "#1a1a1a",
-                      border: "1px solid #333",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
-                  />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                     {scores.map((_, idx) => (
                       <Cell key={idx} fill={SCORE_COLORS[idx % SCORE_COLORS.length]} />
@@ -434,12 +469,7 @@ export default function AnalyticsPage() {
                   />
                   <YAxis stroke="#888" fontSize={12} />
                   <Tooltip
-                    contentStyle={{
-                      background: "#1a1a1a",
-                      border: "1px solid #333",
-                      borderRadius: "8px",
-                      color: "#fff",
-                    }}
+                    contentStyle={TOOLTIP_STYLE}
                     labelFormatter={(h) => `${String(h).padStart(2, "0")}:00`}
                   />
                   <Bar
@@ -454,6 +484,180 @@ export default function AnalyticsPage() {
                     name="Responses"
                     radius={[4, 4, 0, 0]}
                   />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Row 4: Best Platforms (Response Rate) + Best Time to Apply (Response Rate) */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Best Platforms by Response Rate */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("best_platforms")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : platformResponse.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("no_data")}</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={platformResponse} margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="platform" stroke="#888" fontSize={12} />
+                  <YAxis stroke="#888" fontSize={12} unit="%" />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(value, name) => {
+                      if (name === "responseRate") return [`${value}%`, t("response_rate")];
+                      return [value, name];
+                    }}
+                  />
+                  <Bar dataKey="responseRate" fill={CHART_COLORS.green} name="responseRate" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="applied" fill={CHART_COLORS.blue} name="Applied" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Best Time to Apply (Response Rate by Hour) */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("best_time_response_rate")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : !showBestTimeChart ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("no_data")}</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={activeBestTimeHours} margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis
+                    dataKey="hour"
+                    stroke="#888"
+                    fontSize={11}
+                    tickFormatter={(h: number) => `${String(h).padStart(2, "0")}:00`}
+                  />
+                  <YAxis stroke="#888" fontSize={12} unit="%" />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    labelFormatter={(h) => `${String(h).padStart(2, "0")}:00`}
+                    formatter={(value, name) => {
+                      if (name === "responseRate") return [`${value}%`, t("response_rate")];
+                      return [value, name];
+                    }}
+                  />
+                  <Bar
+                    dataKey="responseRate"
+                    fill={CHART_COLORS.cyan}
+                    name="responseRate"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Row 5: Company Response Rate + Cover Letter A/B Testing */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Response Rate by Company */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("company_response_rate")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                ))}
+              </div>
+            ) : companyResponse.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("no_data")}</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-muted-foreground">
+                      <th className="text-left py-2 font-medium">Company</th>
+                      <th className="text-right py-2 font-medium">Applied</th>
+                      <th className="text-right py-2 font-medium">Responses</th>
+                      <th className="text-right py-2 font-medium">{t("response_rate")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {companyResponse.map((c) => (
+                      <tr key={c.company} className="border-b border-border/50">
+                        <td className="py-2 text-foreground truncate max-w-[200px]">
+                          {c.company}
+                        </td>
+                        <td className="py-2 text-right text-foreground/80">{c.applied}</td>
+                        <td className="py-2 text-right text-foreground/80">{c.responses}</td>
+                        <td className="py-2 text-right">
+                          <span
+                            className={
+                              c.responseRate >= 50
+                                ? "text-green-400"
+                                : c.responseRate >= 20
+                                  ? "text-yellow-400"
+                                  : "text-muted-foreground"
+                            }
+                          >
+                            {c.responseRate}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Cover Letter A/B Testing */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("cover_letter_ab")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <ChartSkeleton />
+            ) : variantStats.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("no_variant_data")}</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={variantStats} margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="variant" stroke="#888" fontSize={12} />
+                  <YAxis stroke="#888" fontSize={12} />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(value, name) => {
+                      if (name === "responseRate") return [`${value}%`, t("response_rate")];
+                      return [value, name];
+                    }}
+                  />
+                  <Bar dataKey="sent" name="Sent" radius={[4, 4, 0, 0]}>
+                    {variantStats.map((entry) => (
+                      <Cell
+                        key={entry.variant}
+                        fill={VARIANT_COLORS[entry.variant] ?? CHART_COLORS.blue}
+                      />
+                    ))}
+                  </Bar>
+                  <Bar dataKey="responseRate" fill={CHART_COLORS.green} name="responseRate" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}

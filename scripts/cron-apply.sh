@@ -1,9 +1,18 @@
 #!/bin/bash
-# Run by cron on Mini at 18:00 CET
-# Triggers apply for all approved applications via API
+# Run by cron on Mini at 18:00 CET (Mon-Fri)
+# Triggers Playwright-based auto-apply for all approved applications via API
 #
-# Crontab entry (on Mini):
-#   0 18 * * * /opt/repos/taras-code/jf-private/scripts/cron-apply.sh >> /var/log/jobfinder-apply.log 2>&1
+# Crontab entry (on Mini — uses TZ for automatic CET/CEST handling):
+#   CRON_TZ=Europe/Berlin
+#   0 18 * * 1-5 /opt/repos/taras-code/jf-private/scripts/cron-apply.sh >> /var/log/jobfinder-apply.log 2>&1
+#
+# This runs at 18:00 CET (17:00 UTC winter) / 18:00 CEST (16:00 UTC summer) automatically.
+#
+# Setup on Mini:
+#   crontab -e
+#   Add the two lines above (CRON_TZ + schedule)
+#
+# Requires: JOBFINDER_CRON_SECRET in /opt/docker/secrets/.jobfinder.env
 
 set -euo pipefail
 

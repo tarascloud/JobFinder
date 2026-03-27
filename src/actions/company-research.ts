@@ -23,13 +23,24 @@ export async function researchCompany(
   try {
     const user = await requireUser();
 
-    // Check cache first
+    // Check cache first (per-user, with 30-day TTL)
     const cached = await prisma.companyResearch.findUnique({
-      where: { companyName: companyName.trim().toLowerCase() },
+      where: {
+        companyName_userId: {
+          companyName: companyName.trim().toLowerCase(),
+          userId: user.id,
+        },
+      },
     });
 
     if (cached) {
-      return JSON.parse(cached.data) as CompanyResearchResult;
+      const ageMs = Date.now() - cached.createdAt.getTime();
+      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+      if (ageMs < thirtyDaysMs) {
+        return JSON.parse(cached.data) as CompanyResearchResult;
+      }
+      // Cache expired — delete and re-generate
+      await prisma.companyResearch.delete({ where: { id: cached.id } });
     }
 
     const prompt = `Research the company "${companyName}" and provide detailed information.
@@ -56,10 +67,11 @@ If you don't have reliable information about the company, still provide your bes
         "You are a knowledgeable company researcher. Provide accurate, helpful information about companies. Return only valid JSON.",
     });
 
-    // Cache in DB
+    // Cache in DB (per-user)
     await prisma.companyResearch.create({
       data: {
         companyName: companyName.trim().toLowerCase(),
+        userId: user.id,
         data: JSON.stringify(result),
       },
     });
@@ -77,13 +89,24 @@ export async function getCachedCompanyResearch(
   companyName: string
 ): Promise<CompanyResearchResult | null> {
   try {
-    await requireUser();
+    const user = await requireUser();
 
     const cached = await prisma.companyResearch.findUnique({
-      where: { companyName: companyName.trim().toLowerCase() },
+      where: {
+        companyName_userId: {
+          companyName: companyName.trim().toLowerCase(),
+          userId: user.id,
+        },
+      },
     });
 
     if (!cached) return null;
+
+    // Check 30-day TTL
+    const ageMs = Date.now() - cached.createdAt.getTime();
+    const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+    if (ageMs >= thirtyDaysMs) return null;
+
     return JSON.parse(cached.data) as CompanyResearchResult;
   } catch {
     return null;

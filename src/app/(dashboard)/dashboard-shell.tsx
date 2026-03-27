@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
-  LayoutDashboard,
   User,
   Search,
   Briefcase,
@@ -14,44 +13,60 @@ import {
   Mail,
   BarChart3,
   Settings,
+  Shield,
   Menu,
   X,
   LogOut,
   Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { LanguageToggle } from "@/components/shared/language-toggle";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import BottomNav from "@/components/shared/bottom-nav";
 import { NotificationBell } from "@/components/shared/notification-bell";
 import { signOut } from "next-auth/react";
 import { exitDemoMode } from "@/actions/demo";
+import { getUnreadEmailCount } from "@/actions/emails";
 
 const navItems = [
-  { href: "/", key: "dashboard", icon: LayoutDashboard },
   { href: "/profile", key: "profile", icon: User },
+  { href: "/qa", key: "qa", icon: MessageSquare },
   { href: "/searches", key: "searches", icon: Search },
   { href: "/vacancies", key: "vacancies", icon: Briefcase },
   { href: "/applications", key: "applications", icon: Send },
   { href: "/emails", key: "emails", icon: Mail },
-  { href: "/qa", key: "qa", icon: MessageSquare },
   { href: "/analytics", key: "analytics", icon: BarChart3 },
 ] as const;
 
 const bottomNavItems = [
+  { href: "/admin", key: "admin", icon: Shield, ownerOnly: true },
   { href: "/settings", key: "settings", icon: Settings },
 ] as const;
 
 export default function DashboardShell({
   children,
   isDemo = false,
+  userRole = "user",
 }: {
   children: React.ReactNode;
   isDemo?: boolean;
+  userRole?: string;
 }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [unreadEmailCount, setUnreadEmailCount] = useState(0);
   const t = useTranslations("nav");
+
+  useEffect(() => {
+    if (!isDemo) {
+      getUnreadEmailCount()
+        .then((data) => {
+          if ("count" in data && typeof data.count === "number") setUnreadEmailCount(data.count);
+        })
+        .catch(() => {});
+    }
+  }, [isDemo, pathname]);
 
   // Placeholder session data
   const user = isDemo
@@ -96,12 +111,19 @@ export default function DashboardShell({
           >
             <Icon className="h-5 w-5 shrink-0" />
             {t(key)}
+            {key === "emails" && unreadEmailCount > 0 && (
+              <Badge variant="destructive" className="ml-auto text-[10px] px-1.5 py-0">
+                {unreadEmailCount}
+              </Badge>
+            )}
           </Link>
         ))}
       </div>
       {/* Settings at bottom */}
       <div className="px-3 mb-1">
-        {bottomNavItems.map(({ href, key, icon: Icon }) => (
+        {bottomNavItems
+          .filter((item) => !("ownerOnly" in item && item.ownerOnly) || userRole === "owner")
+          .map(({ href, key, icon: Icon }) => (
           <Link
             key={href}
             href={href}

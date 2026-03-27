@@ -28,10 +28,12 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
+  applicationLimit: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
+  applicationLimit: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -40,10 +42,12 @@ export type UserMinAggregateOutputType = {
   name: string | null
   image: string | null
   googleId: string | null
+  jfEmail: string | null
   role: string | null
   preferredLocale: string | null
   preferredSkin: string | null
   preferredTheme: string | null
+  applicationLimit: number | null
   createdAt: Date | null
 }
 
@@ -53,10 +57,12 @@ export type UserMaxAggregateOutputType = {
   name: string | null
   image: string | null
   googleId: string | null
+  jfEmail: string | null
   role: string | null
   preferredLocale: string | null
   preferredSkin: string | null
   preferredTheme: string | null
+  applicationLimit: number | null
   createdAt: Date | null
 }
 
@@ -66,10 +72,12 @@ export type UserCountAggregateOutputType = {
   name: number
   image: number
   googleId: number
+  jfEmail: number
   role: number
   preferredLocale: number
   preferredSkin: number
   preferredTheme: number
+  applicationLimit: number
   createdAt: number
   _all: number
 }
@@ -77,10 +85,12 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   id?: true
+  applicationLimit?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
+  applicationLimit?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -89,10 +99,12 @@ export type UserMinAggregateInputType = {
   name?: true
   image?: true
   googleId?: true
+  jfEmail?: true
   role?: true
   preferredLocale?: true
   preferredSkin?: true
   preferredTheme?: true
+  applicationLimit?: true
   createdAt?: true
 }
 
@@ -102,10 +114,12 @@ export type UserMaxAggregateInputType = {
   name?: true
   image?: true
   googleId?: true
+  jfEmail?: true
   role?: true
   preferredLocale?: true
   preferredSkin?: true
   preferredTheme?: true
+  applicationLimit?: true
   createdAt?: true
 }
 
@@ -115,10 +129,12 @@ export type UserCountAggregateInputType = {
   name?: true
   image?: true
   googleId?: true
+  jfEmail?: true
   role?: true
   preferredLocale?: true
   preferredSkin?: true
   preferredTheme?: true
+  applicationLimit?: true
   createdAt?: true
   _all?: true
 }
@@ -215,10 +231,12 @@ export type UserGroupByOutputType = {
   name: string | null
   image: string | null
   googleId: string | null
+  jfEmail: string | null
   role: string
   preferredLocale: string
   preferredSkin: string
   preferredTheme: string
+  applicationLimit: number
   createdAt: Date
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -251,10 +269,12 @@ export type UserWhereInput = {
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
   googleId?: Prisma.StringNullableFilter<"User"> | string | null
+  jfEmail?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
   preferredLocale?: Prisma.StringFilter<"User"> | string
   preferredSkin?: Prisma.StringFilter<"User"> | string
   preferredTheme?: Prisma.StringFilter<"User"> | string
+  applicationLimit?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   searchProfiles?: Prisma.SearchProfileListRelationFilter
@@ -265,6 +285,7 @@ export type UserWhereInput = {
   aiFeedback?: Prisma.AiFeedbackListRelationFilter
   aiSettings?: Prisma.XOR<Prisma.UserAISettingsNullableScalarRelationFilter, Prisma.UserAISettingsWhereInput> | null
   notifications?: Prisma.NotificationListRelationFilter
+  companyResearch?: Prisma.CompanyResearchListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -273,10 +294,12 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  jfEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   preferredLocale?: Prisma.SortOrder
   preferredSkin?: Prisma.SortOrder
   preferredTheme?: Prisma.SortOrder
+  applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   profile?: Prisma.UserProfileOrderByWithRelationInput
   searchProfiles?: Prisma.SearchProfileOrderByRelationAggregateInput
@@ -287,12 +310,14 @@ export type UserOrderByWithRelationInput = {
   aiFeedback?: Prisma.AiFeedbackOrderByRelationAggregateInput
   aiSettings?: Prisma.UserAISettingsOrderByWithRelationInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  companyResearch?: Prisma.CompanyResearchOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   email?: string
   googleId?: string
+  jfEmail?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -302,6 +327,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   preferredLocale?: Prisma.StringFilter<"User"> | string
   preferredSkin?: Prisma.StringFilter<"User"> | string
   preferredTheme?: Prisma.StringFilter<"User"> | string
+  applicationLimit?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   searchProfiles?: Prisma.SearchProfileListRelationFilter
@@ -312,7 +338,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   aiFeedback?: Prisma.AiFeedbackListRelationFilter
   aiSettings?: Prisma.XOR<Prisma.UserAISettingsNullableScalarRelationFilter, Prisma.UserAISettingsWhereInput> | null
   notifications?: Prisma.NotificationListRelationFilter
-}, "id" | "email" | "googleId">
+  companyResearch?: Prisma.CompanyResearchListRelationFilter
+}, "id" | "email" | "googleId" | "jfEmail">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -320,10 +347,12 @@ export type UserOrderByWithAggregationInput = {
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  jfEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   preferredLocale?: Prisma.SortOrder
   preferredSkin?: Prisma.SortOrder
   preferredTheme?: Prisma.SortOrder
+  applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -341,10 +370,12 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  jfEmail?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
   preferredLocale?: Prisma.StringWithAggregatesFilter<"User"> | string
   preferredSkin?: Prisma.StringWithAggregatesFilter<"User"> | string
   preferredTheme?: Prisma.StringWithAggregatesFilter<"User"> | string
+  applicationLimit?: Prisma.IntWithAggregatesFilter<"User"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
@@ -353,10 +384,12 @@ export type UserCreateInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -367,6 +400,7 @@ export type UserCreateInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -375,10 +409,12 @@ export type UserUncheckedCreateInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -389,6 +425,7 @@ export type UserUncheckedCreateInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -396,10 +433,12 @@ export type UserUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -410,6 +449,7 @@ export type UserUpdateInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -418,10 +458,12 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -432,6 +474,7 @@ export type UserUncheckedUpdateInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -440,10 +483,12 @@ export type UserCreateManyInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
 }
 
@@ -452,10 +497,12 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -465,10 +512,12 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -478,15 +527,18 @@ export type UserCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
+  jfEmail?: Prisma.SortOrder
   role?: Prisma.SortOrder
   preferredLocale?: Prisma.SortOrder
   preferredSkin?: Prisma.SortOrder
   preferredTheme?: Prisma.SortOrder
+  applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  applicationLimit?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -495,10 +547,12 @@ export type UserMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
+  jfEmail?: Prisma.SortOrder
   role?: Prisma.SortOrder
   preferredLocale?: Prisma.SortOrder
   preferredSkin?: Prisma.SortOrder
   preferredTheme?: Prisma.SortOrder
+  applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -508,15 +562,18 @@ export type UserMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
+  jfEmail?: Prisma.SortOrder
   role?: Prisma.SortOrder
   preferredLocale?: Prisma.SortOrder
   preferredSkin?: Prisma.SortOrder
   preferredTheme?: Prisma.SortOrder
+  applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  applicationLimit?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -532,16 +589,16 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type UserCreateNestedOneWithoutProfileInput = {
@@ -670,15 +727,31 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutCompanyResearchInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCompanyResearchInput, Prisma.UserUncheckedCreateWithoutCompanyResearchInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCompanyResearchInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCompanyResearchNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCompanyResearchInput, Prisma.UserUncheckedCreateWithoutCompanyResearchInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCompanyResearchInput
+  upsert?: Prisma.UserUpsertWithoutCompanyResearchInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCompanyResearchInput, Prisma.UserUpdateWithoutCompanyResearchInput>, Prisma.UserUncheckedUpdateWithoutCompanyResearchInput>
+}
+
 export type UserCreateWithoutProfileInput = {
   email: string
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -688,6 +761,7 @@ export type UserCreateWithoutProfileInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -696,10 +770,12 @@ export type UserUncheckedCreateWithoutProfileInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -709,6 +785,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -732,10 +809,12 @@ export type UserUpdateWithoutProfileInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -745,6 +824,7 @@ export type UserUpdateWithoutProfileInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -753,10 +833,12 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -766,6 +848,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSearchProfilesInput = {
@@ -773,10 +856,12 @@ export type UserCreateWithoutSearchProfilesInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -786,6 +871,7 @@ export type UserCreateWithoutSearchProfilesInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSearchProfilesInput = {
@@ -794,10 +880,12 @@ export type UserUncheckedCreateWithoutSearchProfilesInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -807,6 +895,7 @@ export type UserUncheckedCreateWithoutSearchProfilesInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSearchProfilesInput = {
@@ -830,10 +919,12 @@ export type UserUpdateWithoutSearchProfilesInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -843,6 +934,7 @@ export type UserUpdateWithoutSearchProfilesInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSearchProfilesInput = {
@@ -851,10 +943,12 @@ export type UserUncheckedUpdateWithoutSearchProfilesInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -864,6 +958,7 @@ export type UserUncheckedUpdateWithoutSearchProfilesInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVacancyScoresInput = {
@@ -871,10 +966,12 @@ export type UserCreateWithoutVacancyScoresInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -884,6 +981,7 @@ export type UserCreateWithoutVacancyScoresInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVacancyScoresInput = {
@@ -892,10 +990,12 @@ export type UserUncheckedCreateWithoutVacancyScoresInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -905,6 +1005,7 @@ export type UserUncheckedCreateWithoutVacancyScoresInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVacancyScoresInput = {
@@ -928,10 +1029,12 @@ export type UserUpdateWithoutVacancyScoresInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -941,6 +1044,7 @@ export type UserUpdateWithoutVacancyScoresInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVacancyScoresInput = {
@@ -949,10 +1053,12 @@ export type UserUncheckedUpdateWithoutVacancyScoresInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -962,6 +1068,7 @@ export type UserUncheckedUpdateWithoutVacancyScoresInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApplicationsInput = {
@@ -969,10 +1076,12 @@ export type UserCreateWithoutApplicationsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -982,6 +1091,7 @@ export type UserCreateWithoutApplicationsInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
@@ -990,10 +1100,12 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1003,6 +1115,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -1026,10 +1139,12 @@ export type UserUpdateWithoutApplicationsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1039,6 +1154,7 @@ export type UserUpdateWithoutApplicationsInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
@@ -1047,10 +1163,12 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1060,6 +1178,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQaPairsInput = {
@@ -1067,10 +1186,12 @@ export type UserCreateWithoutQaPairsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1080,6 +1201,7 @@ export type UserCreateWithoutQaPairsInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQaPairsInput = {
@@ -1088,10 +1210,12 @@ export type UserUncheckedCreateWithoutQaPairsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1101,6 +1225,7 @@ export type UserUncheckedCreateWithoutQaPairsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQaPairsInput = {
@@ -1124,10 +1249,12 @@ export type UserUpdateWithoutQaPairsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1137,6 +1264,7 @@ export type UserUpdateWithoutQaPairsInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQaPairsInput = {
@@ -1145,10 +1273,12 @@ export type UserUncheckedUpdateWithoutQaPairsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1158,6 +1288,7 @@ export type UserUncheckedUpdateWithoutQaPairsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlatformAccountsInput = {
@@ -1165,10 +1296,12 @@ export type UserCreateWithoutPlatformAccountsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1178,6 +1311,7 @@ export type UserCreateWithoutPlatformAccountsInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlatformAccountsInput = {
@@ -1186,10 +1320,12 @@ export type UserUncheckedCreateWithoutPlatformAccountsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1199,6 +1335,7 @@ export type UserUncheckedCreateWithoutPlatformAccountsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlatformAccountsInput = {
@@ -1222,10 +1359,12 @@ export type UserUpdateWithoutPlatformAccountsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1235,6 +1374,7 @@ export type UserUpdateWithoutPlatformAccountsInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
@@ -1243,10 +1383,12 @@ export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1256,6 +1398,7 @@ export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiFeedbackInput = {
@@ -1263,10 +1406,12 @@ export type UserCreateWithoutAiFeedbackInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1276,6 +1421,7 @@ export type UserCreateWithoutAiFeedbackInput = {
   platformAccounts?: Prisma.PlatformAccountCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiFeedbackInput = {
@@ -1284,10 +1430,12 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1297,6 +1445,7 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
   platformAccounts?: Prisma.PlatformAccountUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiFeedbackInput = {
@@ -1320,10 +1469,12 @@ export type UserUpdateWithoutAiFeedbackInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1333,6 +1484,7 @@ export type UserUpdateWithoutAiFeedbackInput = {
   platformAccounts?: Prisma.PlatformAccountUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiFeedbackInput = {
@@ -1341,10 +1493,12 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1354,6 +1508,7 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
   platformAccounts?: Prisma.PlatformAccountUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiSettingsInput = {
@@ -1361,10 +1516,12 @@ export type UserCreateWithoutAiSettingsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1374,6 +1531,7 @@ export type UserCreateWithoutAiSettingsInput = {
   platformAccounts?: Prisma.PlatformAccountCreateNestedManyWithoutUserInput
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiSettingsInput = {
@@ -1382,10 +1540,12 @@ export type UserUncheckedCreateWithoutAiSettingsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1395,6 +1555,7 @@ export type UserUncheckedCreateWithoutAiSettingsInput = {
   platformAccounts?: Prisma.PlatformAccountUncheckedCreateNestedManyWithoutUserInput
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiSettingsInput = {
@@ -1418,10 +1579,12 @@ export type UserUpdateWithoutAiSettingsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1431,6 +1594,7 @@ export type UserUpdateWithoutAiSettingsInput = {
   platformAccounts?: Prisma.PlatformAccountUpdateManyWithoutUserNestedInput
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiSettingsInput = {
@@ -1439,10 +1603,12 @@ export type UserUncheckedUpdateWithoutAiSettingsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1452,6 +1618,7 @@ export type UserUncheckedUpdateWithoutAiSettingsInput = {
   platformAccounts?: Prisma.PlatformAccountUncheckedUpdateManyWithoutUserNestedInput
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1459,10 +1626,12 @@ export type UserCreateWithoutNotificationsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -1472,6 +1641,7 @@ export type UserCreateWithoutNotificationsInput = {
   platformAccounts?: Prisma.PlatformAccountCreateNestedManyWithoutUserInput
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1480,10 +1650,12 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   name?: string | null
   image?: string | null
   googleId?: string | null
+  jfEmail?: string | null
   role?: string
   preferredLocale?: string
   preferredSkin?: string
   preferredTheme?: string
+  applicationLimit?: number
   createdAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -1493,6 +1665,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   platformAccounts?: Prisma.PlatformAccountUncheckedCreateNestedManyWithoutUserInput
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1516,10 +1689,12 @@ export type UserUpdateWithoutNotificationsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -1529,6 +1704,7 @@ export type UserUpdateWithoutNotificationsInput = {
   platformAccounts?: Prisma.PlatformAccountUpdateManyWithoutUserNestedInput
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1537,10 +1713,12 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
   preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -1550,6 +1728,117 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   platformAccounts?: Prisma.PlatformAccountUncheckedUpdateManyWithoutUserNestedInput
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCompanyResearchInput = {
+  email: string
+  name?: string | null
+  image?: string | null
+  googleId?: string | null
+  jfEmail?: string | null
+  role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
+  applicationLimit?: number
+  createdAt?: Date | string
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
+  vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  qaPairs?: Prisma.QaPairCreateNestedManyWithoutUserInput
+  platformAccounts?: Prisma.PlatformAccountCreateNestedManyWithoutUserInput
+  aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
+  aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCompanyResearchInput = {
+  id?: number
+  email: string
+  name?: string | null
+  image?: string | null
+  googleId?: string | null
+  jfEmail?: string | null
+  role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
+  applicationLimit?: number
+  createdAt?: Date | string
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutUserInput
+  platformAccounts?: Prisma.PlatformAccountUncheckedCreateNestedManyWithoutUserInput
+  aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
+  aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCompanyResearchInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyResearchInput, Prisma.UserUncheckedCreateWithoutCompanyResearchInput>
+}
+
+export type UserUpsertWithoutCompanyResearchInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCompanyResearchInput, Prisma.UserUncheckedUpdateWithoutCompanyResearchInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCompanyResearchInput, Prisma.UserUncheckedCreateWithoutCompanyResearchInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCompanyResearchInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCompanyResearchInput, Prisma.UserUncheckedUpdateWithoutCompanyResearchInput>
+}
+
+export type UserUpdateWithoutCompanyResearchInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
+  vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  qaPairs?: Prisma.QaPairUpdateManyWithoutUserNestedInput
+  platformAccounts?: Prisma.PlatformAccountUpdateManyWithoutUserNestedInput
+  aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
+  aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCompanyResearchInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutUserNestedInput
+  platformAccounts?: Prisma.PlatformAccountUncheckedUpdateManyWithoutUserNestedInput
+  aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1565,6 +1854,7 @@ export type UserCountOutputType = {
   platformAccounts: number
   aiFeedback: number
   notifications: number
+  companyResearch: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1575,6 +1865,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   platformAccounts?: boolean | UserCountOutputTypeCountPlatformAccountsArgs
   aiFeedback?: boolean | UserCountOutputTypeCountAiFeedbackArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  companyResearch?: boolean | UserCountOutputTypeCountCompanyResearchArgs
 }
 
 /**
@@ -1636,6 +1927,13 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.NotificationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCompanyResearchArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompanyResearchWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1643,10 +1941,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   image?: boolean
   googleId?: boolean
+  jfEmail?: boolean
   role?: boolean
   preferredLocale?: boolean
   preferredSkin?: boolean
   preferredTheme?: boolean
+  applicationLimit?: boolean
   createdAt?: boolean
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   searchProfiles?: boolean | Prisma.User$searchProfilesArgs<ExtArgs>
@@ -1657,6 +1957,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   aiFeedback?: boolean | Prisma.User$aiFeedbackArgs<ExtArgs>
   aiSettings?: boolean | Prisma.User$aiSettingsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  companyResearch?: boolean | Prisma.User$companyResearchArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1666,10 +1967,12 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   image?: boolean
   googleId?: boolean
+  jfEmail?: boolean
   role?: boolean
   preferredLocale?: boolean
   preferredSkin?: boolean
   preferredTheme?: boolean
+  applicationLimit?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1679,10 +1982,12 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   image?: boolean
   googleId?: boolean
+  jfEmail?: boolean
   role?: boolean
   preferredLocale?: boolean
   preferredSkin?: boolean
   preferredTheme?: boolean
+  applicationLimit?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1692,14 +1997,16 @@ export type UserSelectScalar = {
   name?: boolean
   image?: boolean
   googleId?: boolean
+  jfEmail?: boolean
   role?: boolean
   preferredLocale?: boolean
   preferredSkin?: boolean
   preferredTheme?: boolean
+  applicationLimit?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "role" | "preferredLocale" | "preferredSkin" | "preferredTheme" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "jfEmail" | "role" | "preferredLocale" | "preferredSkin" | "preferredTheme" | "applicationLimit" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   searchProfiles?: boolean | Prisma.User$searchProfilesArgs<ExtArgs>
@@ -1710,6 +2017,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   aiFeedback?: boolean | Prisma.User$aiFeedbackArgs<ExtArgs>
   aiSettings?: boolean | Prisma.User$aiSettingsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  companyResearch?: boolean | Prisma.User$companyResearchArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1727,6 +2035,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     aiFeedback: Prisma.$AiFeedbackPayload<ExtArgs>[]
     aiSettings: Prisma.$UserAISettingsPayload<ExtArgs> | null
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    companyResearch: Prisma.$CompanyResearchPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1734,10 +2043,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string | null
     image: string | null
     googleId: string | null
+    jfEmail: string | null
     role: string
     preferredLocale: string
     preferredSkin: string
     preferredTheme: string
+    applicationLimit: number
     createdAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -2142,6 +2453,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   aiFeedback<T extends Prisma.User$aiFeedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiSettings<T extends Prisma.User$aiSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiSettingsArgs<ExtArgs>>): Prisma.Prisma__UserAISettingsClient<runtime.Types.Result.GetResult<Prisma.$UserAISettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  companyResearch<T extends Prisma.User$companyResearchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyResearchArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2176,10 +2488,12 @@ export interface UserFieldRefs {
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly googleId: Prisma.FieldRef<"User", 'String'>
+  readonly jfEmail: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'String'>
   readonly preferredLocale: Prisma.FieldRef<"User", 'String'>
   readonly preferredSkin: Prisma.FieldRef<"User", 'String'>
   readonly preferredTheme: Prisma.FieldRef<"User", 'String'>
+  readonly applicationLimit: Prisma.FieldRef<"User", 'Int'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
@@ -2777,6 +3091,30 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.companyResearch
+ */
+export type User$companyResearchArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompanyResearch
+   */
+  select?: Prisma.CompanyResearchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompanyResearch
+   */
+  omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
+  where?: Prisma.CompanyResearchWhereInput
+  orderBy?: Prisma.CompanyResearchOrderByWithRelationInput | Prisma.CompanyResearchOrderByWithRelationInput[]
+  cursor?: Prisma.CompanyResearchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CompanyResearchScalarFieldEnum | Prisma.CompanyResearchScalarFieldEnum[]
 }
 
 /**

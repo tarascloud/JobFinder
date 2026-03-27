@@ -4,48 +4,110 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import type { AnalyzedProfile, AnalyzedSearchProfile, AnalyzedQaPair } from "@/actions/profile";
 
+/**
+ * Skip onboarding entirely — create an empty profile and redirect to /profile.
+ */
+export async function skipOnboarding() {
+  try {
+    const user = await requireUser();
+    console.log("[skipOnboarding] Skipping onboarding for user:", user.id);
+
+    await prisma.userProfile.upsert({
+      where: { userId: user.id },
+      create: {
+        userId: user.id,
+        skills: [],
+        languages: [],
+        portfolioUrls: [],
+        preferredLocations: [],
+        employmentTypes: [],
+      },
+      update: {},
+    });
+
+    return { ok: true };
+  } catch (e) {
+    console.error("[skipOnboarding] Error:", e);
+    return { error: e instanceof Error ? e.message : "Failed to skip onboarding" };
+  }
+}
+
+/**
+ * Reset onboarding — delete the user profile so OnboardingGate redirects to /onboarding.
+ */
+export async function resetOnboarding() {
+  try {
+    const user = await requireUser();
+    console.log("[resetOnboarding] Resetting onboarding for user:", user.id);
+
+    // Delete profile if exists (deleteMany doesn't throw if not found)
+    await prisma.userProfile.deleteMany({
+      where: { userId: user.id },
+    });
+
+    return { ok: true };
+  } catch (e) {
+    console.error("[resetOnboarding] Error:", e);
+    return { error: e instanceof Error ? e.message : "Failed to reset onboarding" };
+  }
+}
+
 export async function completeOnboarding(
-  profileData: AnalyzedProfile & { resumeUrl: string },
+  profileData: AnalyzedProfile & { resumeUrl: string; resumeFilename?: string },
   searchProfiles: AnalyzedSearchProfile[],
   qaPairs: AnalyzedQaPair[]
 ) {
   try {
     const user = await requireUser();
+    console.log("[completeOnboarding] Starting for user:", user.id, "headline:", profileData.headline);
+
+    // Validate input data
+    const profilePayload = {
+      headline: profileData.headline || null,
+      summary: profileData.summary || null,
+      yearsExperience: typeof profileData.yearsExperience === "number" ? profileData.yearsExperience : null,
+      skills: Array.isArray(profileData.skills) ? profileData.skills : [],
+      languages: Array.isArray(profileData.languages) ? profileData.languages : [],
+      portfolioUrls: Array.isArray(profileData.portfolioUrls) ? profileData.portfolioUrls : [],
+      resumeUrl: profileData.resumeUrl || null,
+      resumeFilename: profileData.resumeFilename || null,
+      salaryMin: typeof profileData.salaryMin === "number" ? profileData.salaryMin : null,
+      salaryCurrency: profileData.salaryCurrency || null,
+      preferredLocations: Array.isArray(profileData.preferredLocations) ? profileData.preferredLocations : [],
+      preferredRemoteType: profileData.preferredRemoteType || null,
+      employmentTypes: Array.isArray(profileData.employmentTypes) ? profileData.employmentTypes : [],
+      // Extended auto-apply fields from AI analysis
+      firstName: profileData.firstName || null,
+      lastName: profileData.lastName || null,
+      phone: profileData.phone || null,
+      location: profileData.location || null,
+      currentTitle: profileData.currentTitle || null,
+      currentCompany: profileData.currentCompany || null,
+      linkedinUrl: profileData.linkedinUrl || null,
+      githubUrl: profileData.githubUrl || null,
+      portfolioUrl: profileData.portfolioUrl || null,
+      certifications: Array.isArray(profileData.certifications) ? profileData.certifications.join(", ") : (profileData.certifications || null),
+      experience: Array.isArray(profileData.experience) ? JSON.stringify(profileData.experience) : (profileData.experience || null),
+      educationHistory: Array.isArray(profileData.educationHistory) ? JSON.stringify(profileData.educationHistory) : (profileData.educationHistory || null),
+    };
 
     // Use a transaction to save everything atomically
     await prisma.$transaction(async (tx) => {
       // 1. Upsert user profile
+      console.log("[completeOnboarding] Upserting profile with", profilePayload.skills.length, "skills,", profilePayload.languages.length, "languages");
       await tx.userProfile.upsert({
         where: { userId: user.id },
         create: {
           userId: user.id,
-          headline: profileData.headline || null,
-          summary: profileData.summary || null,
-          yearsExperience: profileData.yearsExperience,
-          skills: profileData.skills,
-          languages: profileData.languages,
-          portfolioUrls: profileData.portfolioUrls,
-          resumeUrl: profileData.resumeUrl || null,
-          salaryMin: profileData.salaryMin,
-          salaryCurrency: profileData.salaryCurrency || null,
-          preferredLocations: profileData.preferredLocations,
-          preferredRemoteType: profileData.preferredRemoteType || null,
-          employmentTypes: profileData.employmentTypes,
+          ...profilePayload,
         },
-        update: {
-          headline: profileData.headline || null,
-          summary: profileData.summary || null,
-          yearsExperience: profileData.yearsExperience,
-          skills: profileData.skills,
-          languages: profileData.languages,
-          portfolioUrls: profileData.portfolioUrls,
-          resumeUrl: profileData.resumeUrl || null,
-          salaryMin: profileData.salaryMin,
-          salaryCurrency: profileData.salaryCurrency || null,
-          preferredLocations: profileData.preferredLocations,
-          preferredRemoteType: profileData.preferredRemoteType || null,
-          employmentTypes: profileData.employmentTypes,
-        },
+        update: profilePayload,
+      });
+
+      // 1b. Clear analysis status so profile page doesn't show stale reanalysis panel
+      await tx.userProfile.update({
+        where: { userId: user.id },
+        data: { analysisStatus: "idle", analysisResult: null },
       });
 
       // 2. Upsert search profiles (may already exist from auto-creation)
@@ -129,7 +191,7 @@ export async function completeOnboarding(
               question: p.question,
               answer: p.answer,
               answeredAt: new Date(),
-              category: "resume",
+              category: p.category || "linkedin_apply",
               source: "manual",
             },
           });
@@ -137,8 +199,10 @@ export async function completeOnboarding(
       }
     });
 
+    console.log("[completeOnboarding] Success for user:", user.id);
     return { ok: true };
   } catch (e) {
+    console.error("[completeOnboarding] Error:", e);
     return {
       error: e instanceof Error ? e.message : "Failed to complete onboarding",
     };

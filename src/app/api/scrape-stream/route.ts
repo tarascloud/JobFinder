@@ -3,10 +3,8 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { scrapePlatform } from "@/lib/scrapers";
 import type { ScrapedVacancy, SearchCriteria } from "@/lib/scrapers/types";
-import { findDuplicate } from "@/lib/dedup";
-import { computeEurSalary } from "@/lib/salary";
-import { tagVacancy } from "@/lib/ai/tagger";
 import { checkRateLimit } from "@/lib/rate-limiter";
+import { saveVacancy, loadExistingVacanciesForDedup } from "@/lib/save-vacancy";
 
 // Re-export scrapers list for sequential streaming
 const PLATFORMS = [
@@ -18,9 +16,19 @@ const PLATFORMS = [
   "wellfound",
   "hn-whohiring",
   "djinni",
-  "stackoverflow",
+  "dou",
+  "workua",
+  "robotaua",
   "ziprecruiter",
-  "google-jobs",
+  "dice",
+  "simplyhired",
+  "arcdev",
+  "himalayas",
+  "infojobs",
+  "tecnoempleo",
+  "jobatus",
+  "computrabajo",
+  // Disabled: stackoverflow (shut down March 2022), google-jobs (CAPTCHA blocked)
 ];
 
 export async function POST(request: NextRequest) {
@@ -52,7 +60,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: { searchProfileId?: number };
+  let body: { searchProfileId?: number; platforms?: string[] };
   try {
     body = await request.json();
   } catch {
@@ -63,6 +71,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { searchProfileId } = body;
+  const requestedPlatforms = body.platforms;
   if (!searchProfileId) {
     return new Response(JSON.stringify({ error: "searchProfileId required" }), {
       status: 400,
@@ -99,17 +108,19 @@ export async function POST(request: NextRequest) {
 
       try {
         // Load existing vacancies for cross-platform dedup
-        const existingVacancies = await prisma.vacancy.findMany({
-          where: { vacancyScores: { some: { userId: user.id } } },
-          select: { id: true, company: true, title: true, postedAt: true },
-        });
+        const existingVacancies = await loadExistingVacanciesForDedup(user.id);
 
         let totalNew = 0;
         let totalDuplicates = 0;
         const allScraped: ScrapedVacancy[] = [];
 
+        // Filter platforms if user selected specific ones
+        const platformsToScrape = requestedPlatforms && requestedPlatforms.length > 0
+          ? PLATFORMS.filter((p) => requestedPlatforms.includes(p))
+          : PLATFORMS;
+
         // Scrape platforms sequentially, streaming progress
-        for (const platform of PLATFORMS) {
+        for (const platform of platformsToScrape) {
           send({ type: "platform_start", platform });
 
           let results: ScrapedVacancy[] = [];
@@ -131,7 +142,7 @@ export async function POST(request: NextRequest) {
 
         for (const vacancy of allScraped) {
           try {
-            const result = await saveVacancyWithTags(
+            const { result } = await saveVacancy(
               vacancy,
               user.id,
               searchProfileId,
@@ -156,6 +167,43 @@ export async function POST(request: NextRequest) {
           totalDuplicates,
           totalScraped: allScraped.length,
         });
+
+        // Auto-score new vacancies with AI
+        if (totalNew > 0) {
+          send({ type: "scoring", total: totalNew });
+          try {
+            const { scoreVacancy } = await import("@/lib/ai/scorer");
+            const userProfile = await prisma.userProfile.findUnique({ where: { userId: user.id } });
+
+            const unscored = await prisma.vacancyScore.findMany({
+              where: { userId: user.id, searchProfileId: searchProfile.id, matchScore: 0 },
+              include: { vacancy: true },
+              take: 20,
+            });
+
+            let scored = 0;
+            for (const vs of unscored) {
+              try {
+                const result = await scoreVacancy(
+                  { title: vs.vacancy.title, company: vs.vacancy.company || "", description: vs.vacancy.description, salaryText: vs.vacancy.salaryText },
+                  { headline: userProfile?.headline || "", skills: userProfile?.skills || [], yearsExperience: userProfile?.yearsExperience || 0, summary: userProfile?.summary || "" },
+                  { jobTitles: searchProfile.jobTitles, minSalary: searchProfile.minSalary || 0, currency: searchProfile.currency || "EUR", remoteOnly: searchProfile.remoteOnly, geographies: searchProfile.geographies },
+                  { userId: user.id }
+                );
+                await prisma.vacancyScore.update({
+                  where: { id: vs.id },
+                  data: { matchScore: result.matchScore, salaryFit: result.salaryFit, remoteFit: result.remoteFit, notes: result.notes, scoredBy: "groq", scoredAt: new Date() },
+                });
+                scored++;
+              } catch (e) {
+                console.error("[scrape-stream] Score error:", e instanceof Error ? e.message : e);
+              }
+            }
+            send({ type: "scored", count: scored });
+          } catch (e) {
+            console.error("[scrape-stream] Auto-scoring failed:", e instanceof Error ? e.message : e);
+          }
+        }
       } catch (err) {
         send({
           type: "error",
@@ -176,140 +224,3 @@ export async function POST(request: NextRequest) {
   });
 }
 
-// --- Save vacancy (same as scraper.ts but with auto-tagging) ---
-
-interface ExistingVacancyForDedup {
-  id: number;
-  company: string | null;
-  title: string;
-  postedAt: Date | null;
-}
-
-async function saveVacancyWithTags(
-  vacancy: ScrapedVacancy,
-  userId: number,
-  searchProfileId: number,
-  existingVacancies: ExistingVacancyForDedup[]
-): Promise<"new" | "duplicate" | "cross-platform-dup"> {
-  // Step 1: Check exact platform + externalId dedup
-  const existing = await prisma.vacancy.findUnique({
-    where: {
-      platform_externalId: {
-        platform: vacancy.platform,
-        externalId: vacancy.externalId,
-      },
-    },
-  });
-
-  if (existing) {
-    await ensureVacancyScore(existing.id, userId, searchProfileId);
-    // Backfill tags if missing
-    if (!existing.tagLevel) {
-      const tags = tagVacancy(
-        existing.title,
-        existing.company ?? "",
-        existing.description
-      );
-      await prisma.vacancy.update({
-        where: { id: existing.id },
-        data: {
-          tagStack: tags.stack,
-          tagLevel: tags.level,
-          tagIndustry: tags.industry,
-          tagTeamSize: tags.teamSize,
-        },
-      });
-    }
-    return "duplicate";
-  }
-
-  // Step 2: Smart cross-platform dedup
-  const duplicateOfId = findDuplicate(vacancy, existingVacancies);
-
-  // Compute EUR-normalized salary
-  const eurSalary = computeEurSalary(
-    vacancy.salaryMin,
-    vacancy.salaryMax,
-    vacancy.salaryCurrency,
-    vacancy.salaryText
-  );
-
-  // Auto-tag
-  const tags = tagVacancy(
-    vacancy.title,
-    vacancy.company ?? "",
-    vacancy.description || ""
-  );
-
-  const created = await prisma.vacancy.create({
-    data: {
-      platform: vacancy.platform,
-      externalId: vacancy.externalId,
-      url: vacancy.url,
-      title: vacancy.title,
-      company: vacancy.company,
-      location: vacancy.location,
-      salaryText: vacancy.salaryText,
-      salaryMin: vacancy.salaryMin,
-      salaryMax: vacancy.salaryMax,
-      salaryCurrency: vacancy.salaryCurrency,
-      salaryMinEur: eurSalary.minEur,
-      salaryMaxEur: eurSalary.maxEur,
-      remoteType: vacancy.remoteType,
-      employmentType: vacancy.employmentType,
-      description: vacancy.description || "",
-      language: vacancy.language,
-      postedAt: vacancy.postedAt,
-      isDuplicateOf: duplicateOfId,
-      tagStack: tags.stack,
-      tagLevel: tags.level,
-      tagIndustry: tags.industry,
-      tagTeamSize: tags.teamSize,
-    },
-  });
-
-  existingVacancies.push({
-    id: created.id,
-    company: vacancy.company,
-    title: vacancy.title,
-    postedAt: vacancy.postedAt,
-  });
-
-  if (duplicateOfId) {
-    return "cross-platform-dup";
-  }
-
-  await prisma.vacancyScore.create({
-    data: {
-      vacancyId: created.id,
-      userId,
-      searchProfileId,
-      matchScore: 0,
-      scoredBy: "scraper",
-    },
-  });
-
-  return "new";
-}
-
-async function ensureVacancyScore(
-  vacancyId: number,
-  userId: number,
-  searchProfileId: number
-) {
-  const existingScore = await prisma.vacancyScore.findFirst({
-    where: { vacancyId, userId, searchProfileId },
-  });
-
-  if (!existingScore) {
-    await prisma.vacancyScore.create({
-      data: {
-        vacancyId,
-        userId,
-        searchProfileId,
-        matchScore: 0,
-        scoredBy: "scraper",
-      },
-    });
-  }
-}

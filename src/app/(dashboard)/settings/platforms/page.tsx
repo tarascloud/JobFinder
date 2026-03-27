@@ -5,8 +5,11 @@ import { useTranslations } from "next-intl";
 import {
   getPlatformAccounts,
   addPlatformAccount,
+  updatePlatformAccount,
   deletePlatformAccount,
   testPlatformConnection,
+  getServiceIntegrationPlatforms,
+  getAvailablePlatformNames,
 } from "@/actions/platform-accounts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,20 +32,41 @@ import {
   EyeOff,
   Loader2,
   Link2,
+  CheckCircle2,
+  AlertTriangle,
+  Info,
+  Shield,
+  Pencil,
+  User,
 } from "lucide-react";
 import SettingsTabs from "../settings-tabs";
 
-const PLATFORMS = [
-  { value: "linkedin", label: "LinkedIn" },
-  { value: "indeed", label: "Indeed" },
-  { value: "glassdoor", label: "Glassdoor" },
-  { value: "wellfound", label: "Wellfound" },
-  { value: "arcdev", label: "Arc.dev" },
-  { value: "djinni", label: "Djinni" },
-  { value: "dou", label: "DOU" },
-  { value: "remoteok", label: "RemoteOK" },
-  { value: "weworkremotely", label: "WeWorkRemotely" },
-];
+const ALL_PLATFORM_LABELS: Record<string, string> = {
+  linkedin: "LinkedIn",
+  indeed: "Indeed",
+  glassdoor: "Glassdoor",
+  wellfound: "Wellfound",
+  arcdev: "Arc.dev",
+  djinni: "Djinni",
+  dou: "DOU",
+  workua: "Work.ua",
+  robotaua: "Robota.ua",
+  remoteok: "RemoteOK",
+  weworkremotely: "WeWorkRemotely",
+  dice: "Dice",
+  simplyhired: "SimplyHired",
+  himalayas: "Himalayas",
+  infojobs: "InfoJobs",
+  tecnoempleo: "Tecnoempleo",
+  jobatus: "Jobatus",
+  computrabajo: "Computrabajo",
+  "hn-whohiring": "HN Who's Hiring",
+  ziprecruiter: "ZipRecruiter",
+  nodesk: "NoDesk",
+  relocateme: "RelocateMe",
+  "4dayweek": "4 Day Week",
+  euroremotejobs: "EuroRemoteJobs",
+};
 
 const AUTH_TYPES = [
   { value: "password", label: "Email + Password" },
@@ -71,16 +95,15 @@ function statusColor(status: string) {
   }
 }
 
-function platformLabel(value: string) {
-  return PLATFORMS.find((p) => p.value === value)?.label ?? value;
-}
-
 export default function PlatformsPage() {
   const t = useTranslations("platforms");
   const tCommon = useTranslations("common");
 
   const [accounts, setAccounts] = useState<PlatformAccount[]>([]);
+  const [integratedPlatforms, setIntegratedPlatforms] = useState<Set<string>>(new Set());
+  const [visiblePlatforms, setVisiblePlatforms] = useState<{ value: string; label: string }[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<PlatformAccount | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [testingId, setTestingId] = useState<number | null>(null);
@@ -93,9 +116,21 @@ export default function PlatformsPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const load = useCallback(async () => {
-    const data = await getPlatformAccounts();
-    if ("error" in data) return;
-    setAccounts(data.accounts);
+    const [accountsData, integrations, availableNames] = await Promise.all([
+      getPlatformAccounts(),
+      getServiceIntegrationPlatforms(),
+      getAvailablePlatformNames(),
+    ]);
+    if (!("error" in accountsData)) {
+      setAccounts(accountsData.accounts);
+    }
+    setIntegratedPlatforms(new Set(integrations));
+    setVisiblePlatforms(
+      availableNames.map((name) => ({
+        value: name,
+        label: ALL_PLATFORM_LABELS[name] || name,
+      }))
+    );
   }, []);
 
   useEffect(() => {
@@ -103,32 +138,64 @@ export default function PlatformsPage() {
   }, [load]);
 
   function resetForm() {
-    setPlatform("linkedin");
+    setPlatform(visiblePlatforms[0]?.value || "linkedin");
     setAuthType("password");
     setEmail("");
     setPassword("");
     setShowPassword(false);
     setError("");
+    setEditingAccount(null);
   }
 
-  async function handleAdd(e: React.FormEvent) {
+  function openAddDialog(platformValue?: string) {
+    resetForm();
+    if (platformValue) setPlatform(platformValue);
+    setDialogOpen(true);
+  }
+
+  function openEditDialog(account: PlatformAccount) {
+    setEditingAccount(account);
+    setPlatform(account.platform);
+    setAuthType(account.authType);
+    setEmail(account.email || "");
+    setPassword("");
+    setShowPassword(false);
+    setError("");
+    setDialogOpen(true);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const result = await addPlatformAccount({
-      platform,
-      authType,
-      email,
-      password: password || undefined,
-    });
-
-    if ("error" in result && result.error) {
-      setError(result.error);
+    if (editingAccount) {
+      const result = await updatePlatformAccount(editingAccount.id, {
+        email,
+        password: password || undefined,
+        authType,
+      });
+      if ("error" in result && result.error) {
+        setError(result.error);
+      } else {
+        setDialogOpen(false);
+        resetForm();
+        await load();
+      }
     } else {
-      setDialogOpen(false);
-      resetForm();
-      await load();
+      const result = await addPlatformAccount({
+        platform,
+        authType,
+        email,
+        password: password || undefined,
+      });
+      if ("error" in result && result.error) {
+        setError(result.error);
+      } else {
+        setDialogOpen(false);
+        resetForm();
+        await load();
+      }
     }
 
     setLoading(false);
@@ -147,10 +214,25 @@ export default function PlatformsPage() {
     setTestingId(null);
   }
 
+  // Sort platforms: JF account available first, then personal account, then not configured
+  const sortedPlatforms = [...visiblePlatforms].sort((a, b) => {
+    const aAccount = accounts.find((acc) => acc.platform === a.value);
+    const bAccount = accounts.find((acc) => acc.platform === b.value);
+    const aJF = integratedPlatforms.has(a.value);
+    const bJF = integratedPlatforms.has(b.value);
+
+    // Priority: has personal account (2) > JF only (1) > nothing (0)
+    const aScore = aAccount ? 2 : aJF ? 1 : 0;
+    const bScore = bAccount ? 2 : bJF ? 1 : 0;
+    if (aScore !== bScore) return bScore - aScore;
+    return 0;
+  });
+
   return (
     <div className="space-y-6">
       <SettingsTabs active="platforms" />
 
+      {/* Platform Status Overview */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -159,91 +241,176 @@ export default function PlatformsPage() {
           </CardTitle>
           <Button
             size="sm"
-            onClick={() => {
-              resetForm();
-              setDialogOpen(true);
-            }}
+            onClick={() => openAddDialog()}
           >
             <Plus className="h-4 w-4 mr-1" />
             {t("add")}
           </Button>
         </CardHeader>
         <CardContent>
-          {accounts.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("no_platforms")}</p>
-          ) : (
-            <div className="space-y-2">
-              {accounts.map((acc) => (
+          <div className="space-y-2">
+            {sortedPlatforms.map((p) => {
+              const account = accounts.find((a) => a.platform === p.value);
+              const hasJFAccount = integratedPlatforms.has(p.value);
+              const isLinkedIn = p.value === "linkedin";
+
+              return (
                 <div
-                  key={acc.id}
+                  key={p.value}
                   className="flex items-center justify-between p-3 rounded-lg border border-border"
                 >
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <p className="text-sm font-medium">
-                        {platformLabel(acc.platform)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{acc.email}</p>
-                    </div>
-                    <Badge className={statusColor(acc.status)}>
-                      {acc.status === "active"
-                        ? t("status_connected")
-                        : acc.status === "failed"
-                          ? t("status_failed")
-                          : acc.status}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleTest(acc.id)}
-                      disabled={testingId === acc.id}
-                    >
-                      {testingId === acc.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">{p.label}</p>
+
+                      {/* Account type description */}
+                      {account ? (
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                          <User className="h-3 w-3 flex-shrink-0" />
+                          {t("using_personal_account")}
+                          {account.email && (
+                            <span className="text-foreground/70">{account.email}</span>
+                          )}
+                        </p>
+                      ) : hasJFAccount ? (
+                        <p className="text-xs text-green-400/80 flex items-center gap-1 mt-0.5">
+                          <Shield className="h-3 w-3 flex-shrink-0" />
+                          {t("using_jf_account")}
+                        </p>
                       ) : (
-                        <Plug className="h-4 w-4" />
+                        <p className="text-xs text-muted-foreground/60 mt-0.5">
+                          {t("not_configured_desc")}
+                        </p>
                       )}
-                      <span className="ml-1 hidden sm:inline">
-                        {t("test_connection")}
-                      </span>
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleDelete(acc.id)}
-                    >
-                      <Trash2 className="h-4 w-4 text-red-400" />
-                    </Button>
+
+                      {isLinkedIn && !account && (
+                        <p className="text-xs text-blue-400 flex items-center gap-1 mt-0.5">
+                          <Info className="h-3 w-3 flex-shrink-0" />
+                          {t("linkedin_recommendation")}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Status badges */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {hasJFAccount && (
+                        <Badge className="bg-green-500/15 text-green-400 border-green-500/30">
+                          <Shield className="h-3 w-3 mr-1" />
+                          {t("available_via_jf")}
+                        </Badge>
+                      )}
+                      {account ? (
+                        <Badge className={statusColor(account.status)}>
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          {account.status === "active"
+                            ? t("status_connected")
+                            : account.status === "failed"
+                              ? t("status_failed")
+                              : account.status}
+                        </Badge>
+                      ) : !hasJFAccount ? (
+                        <Badge className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20">
+                          <AlertTriangle className="h-3 w-3 mr-1" />
+                          {t("status_not_configured")}
+                        </Badge>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+                    {account ? (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleTest(account.id)}
+                          disabled={testingId === account.id}
+                        >
+                          {testingId === account.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Plug className="h-4 w-4" />
+                          )}
+                          <span className="ml-1 hidden sm:inline">
+                            {t("test_connection")}
+                          </span>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => openEditDialog(account)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                          <span className="ml-1 hidden sm:inline">
+                            {t("modify_credentials")}
+                          </span>
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => handleDelete(account.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-400" />
+                        </Button>
+                      </>
+                    ) : hasJFAccount ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openAddDialog(p.value)}
+                      >
+                        <Plus className="h-3.5 w-3.5 mr-1" />
+                        {t("add_personal_credentials")}
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openAddDialog(p.value)}
+                      >
+                        <Plus className="h-3.5 w-3.5 mr-1" />
+                        {t("setup")}
+                      </Button>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
 
-      {/* Add Platform Dialog */}
+      {/* Add/Edit Platform Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("add")}</DialogTitle>
+            <DialogTitle>
+              {editingAccount ? t("modify_credentials") : t("add")}
+            </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleAdd} className="space-y-4">
-            <div className="space-y-2">
-              <Label>{t("platform")}</Label>
-              <Select
-                value={platform}
-                onChange={(e) => setPlatform(e.target.value)}
-              >
-                {PLATFORMS.map((p) => (
-                  <SelectOption key={p.value} value={p.value}>
-                    {p.label}
-                  </SelectOption>
-                ))}
-              </Select>
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!editingAccount && (
+              <div className="space-y-2">
+                <Label>{t("platform")}</Label>
+                <Select
+                  value={platform}
+                  onChange={(e) => setPlatform(e.target.value)}
+                >
+                  {visiblePlatforms.map((p) => (
+                    <SelectOption key={p.value} value={p.value}>
+                      {p.label}
+                    </SelectOption>
+                  ))}
+                </Select>
+              </div>
+            )}
+
+            {editingAccount && (
+              <div className="text-sm text-muted-foreground">
+                {ALL_PLATFORM_LABELS[editingAccount.platform] || editingAccount.platform}
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>{t("auth_type")}</Label>
@@ -271,13 +438,21 @@ export default function PlatformsPage() {
 
             {authType === "password" && (
               <div className="space-y-2">
-                <Label>{t("password")}</Label>
+                <Label>
+                  {t("password")}
+                  {editingAccount && (
+                    <span className="text-xs text-muted-foreground ml-2">
+                      {t("password_leave_empty")}
+                    </span>
+                  )}
+                </Label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pr-10"
+                    placeholder={editingAccount ? "••••••••" : ""}
                   />
                   <button
                     type="button"
@@ -291,6 +466,16 @@ export default function PlatformsPage() {
                     )}
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* Show info when platform has JF account */}
+            {!editingAccount && integratedPlatforms.has(platform) && (
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                <Shield className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-green-400">
+                  {t("jf_account_info")}
+                </p>
               </div>
             )}
 

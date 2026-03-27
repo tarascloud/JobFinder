@@ -28,15 +28,18 @@ export type AggregateCompanyResearch = {
 
 export type CompanyResearchAvgAggregateOutputType = {
   id: number | null
+  userId: number | null
 }
 
 export type CompanyResearchSumAggregateOutputType = {
   id: number | null
+  userId: number | null
 }
 
 export type CompanyResearchMinAggregateOutputType = {
   id: number | null
   companyName: string | null
+  userId: number | null
   data: string | null
   createdAt: Date | null
 }
@@ -44,6 +47,7 @@ export type CompanyResearchMinAggregateOutputType = {
 export type CompanyResearchMaxAggregateOutputType = {
   id: number | null
   companyName: string | null
+  userId: number | null
   data: string | null
   createdAt: Date | null
 }
@@ -51,6 +55,7 @@ export type CompanyResearchMaxAggregateOutputType = {
 export type CompanyResearchCountAggregateOutputType = {
   id: number
   companyName: number
+  userId: number
   data: number
   createdAt: number
   _all: number
@@ -59,15 +64,18 @@ export type CompanyResearchCountAggregateOutputType = {
 
 export type CompanyResearchAvgAggregateInputType = {
   id?: true
+  userId?: true
 }
 
 export type CompanyResearchSumAggregateInputType = {
   id?: true
+  userId?: true
 }
 
 export type CompanyResearchMinAggregateInputType = {
   id?: true
   companyName?: true
+  userId?: true
   data?: true
   createdAt?: true
 }
@@ -75,6 +83,7 @@ export type CompanyResearchMinAggregateInputType = {
 export type CompanyResearchMaxAggregateInputType = {
   id?: true
   companyName?: true
+  userId?: true
   data?: true
   createdAt?: true
 }
@@ -82,6 +91,7 @@ export type CompanyResearchMaxAggregateInputType = {
 export type CompanyResearchCountAggregateInputType = {
   id?: true
   companyName?: true
+  userId?: true
   data?: true
   createdAt?: true
   _all?: true
@@ -176,6 +186,7 @@ export type CompanyResearchGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type CompanyResearchGroupByOutputType = {
   id: number
   companyName: string
+  userId: number
   data: string
   createdAt: Date
   _count: CompanyResearchCountAggregateOutputType | null
@@ -206,30 +217,38 @@ export type CompanyResearchWhereInput = {
   NOT?: Prisma.CompanyResearchWhereInput | Prisma.CompanyResearchWhereInput[]
   id?: Prisma.IntFilter<"CompanyResearch"> | number
   companyName?: Prisma.StringFilter<"CompanyResearch"> | string
+  userId?: Prisma.IntFilter<"CompanyResearch"> | number
   data?: Prisma.StringFilter<"CompanyResearch"> | string
   createdAt?: Prisma.DateTimeFilter<"CompanyResearch"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type CompanyResearchOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type CompanyResearchWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  companyName?: string
+  companyName_userId?: Prisma.CompanyResearchCompanyNameUserIdCompoundUniqueInput
   AND?: Prisma.CompanyResearchWhereInput | Prisma.CompanyResearchWhereInput[]
   OR?: Prisma.CompanyResearchWhereInput[]
   NOT?: Prisma.CompanyResearchWhereInput | Prisma.CompanyResearchWhereInput[]
+  companyName?: Prisma.StringFilter<"CompanyResearch"> | string
+  userId?: Prisma.IntFilter<"CompanyResearch"> | number
   data?: Prisma.StringFilter<"CompanyResearch"> | string
   createdAt?: Prisma.DateTimeFilter<"CompanyResearch"> | Date | string
-}, "id" | "companyName">
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+}, "id" | "companyName_userId">
 
 export type CompanyResearchOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CompanyResearchCountOrderByAggregateInput
@@ -245,6 +264,7 @@ export type CompanyResearchScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CompanyResearchScalarWhereWithAggregatesInput | Prisma.CompanyResearchScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"CompanyResearch"> | number
   companyName?: Prisma.StringWithAggregatesFilter<"CompanyResearch"> | string
+  userId?: Prisma.IntWithAggregatesFilter<"CompanyResearch"> | number
   data?: Prisma.StringWithAggregatesFilter<"CompanyResearch"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CompanyResearch"> | Date | string
 }
@@ -253,11 +273,13 @@ export type CompanyResearchCreateInput = {
   companyName: string
   data: string
   createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutCompanyResearchInput
 }
 
 export type CompanyResearchUncheckedCreateInput = {
   id?: number
   companyName: string
+  userId: number
   data: string
   createdAt?: Date | string
 }
@@ -266,11 +288,13 @@ export type CompanyResearchUpdateInput = {
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutCompanyResearchNestedInput
 }
 
 export type CompanyResearchUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -278,6 +302,7 @@ export type CompanyResearchUncheckedUpdateInput = {
 export type CompanyResearchCreateManyInput = {
   id?: number
   companyName: string
+  userId: number
   data: string
   createdAt?: Date | string
 }
@@ -291,24 +316,43 @@ export type CompanyResearchUpdateManyMutationInput = {
 export type CompanyResearchUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CompanyResearchListRelationFilter = {
+  every?: Prisma.CompanyResearchWhereInput
+  some?: Prisma.CompanyResearchWhereInput
+  none?: Prisma.CompanyResearchWhereInput
+}
+
+export type CompanyResearchOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type CompanyResearchCompanyNameUserIdCompoundUniqueInput = {
+  companyName: string
+  userId: number
 }
 
 export type CompanyResearchCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type CompanyResearchAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type CompanyResearchMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -316,12 +360,133 @@ export type CompanyResearchMaxOrderByAggregateInput = {
 export type CompanyResearchMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type CompanyResearchSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+}
+
+export type CompanyResearchCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CompanyResearchCreateWithoutUserInput, Prisma.CompanyResearchUncheckedCreateWithoutUserInput> | Prisma.CompanyResearchCreateWithoutUserInput[] | Prisma.CompanyResearchUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CompanyResearchCreateOrConnectWithoutUserInput | Prisma.CompanyResearchCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CompanyResearchCreateManyUserInputEnvelope
+  connect?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+}
+
+export type CompanyResearchUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CompanyResearchCreateWithoutUserInput, Prisma.CompanyResearchUncheckedCreateWithoutUserInput> | Prisma.CompanyResearchCreateWithoutUserInput[] | Prisma.CompanyResearchUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CompanyResearchCreateOrConnectWithoutUserInput | Prisma.CompanyResearchCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CompanyResearchCreateManyUserInputEnvelope
+  connect?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+}
+
+export type CompanyResearchUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyResearchCreateWithoutUserInput, Prisma.CompanyResearchUncheckedCreateWithoutUserInput> | Prisma.CompanyResearchCreateWithoutUserInput[] | Prisma.CompanyResearchUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CompanyResearchCreateOrConnectWithoutUserInput | Prisma.CompanyResearchCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CompanyResearchUpsertWithWhereUniqueWithoutUserInput | Prisma.CompanyResearchUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CompanyResearchCreateManyUserInputEnvelope
+  set?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  disconnect?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  delete?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  connect?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  update?: Prisma.CompanyResearchUpdateWithWhereUniqueWithoutUserInput | Prisma.CompanyResearchUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CompanyResearchUpdateManyWithWhereWithoutUserInput | Prisma.CompanyResearchUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CompanyResearchScalarWhereInput | Prisma.CompanyResearchScalarWhereInput[]
+}
+
+export type CompanyResearchUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyResearchCreateWithoutUserInput, Prisma.CompanyResearchUncheckedCreateWithoutUserInput> | Prisma.CompanyResearchCreateWithoutUserInput[] | Prisma.CompanyResearchUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CompanyResearchCreateOrConnectWithoutUserInput | Prisma.CompanyResearchCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CompanyResearchUpsertWithWhereUniqueWithoutUserInput | Prisma.CompanyResearchUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CompanyResearchCreateManyUserInputEnvelope
+  set?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  disconnect?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  delete?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  connect?: Prisma.CompanyResearchWhereUniqueInput | Prisma.CompanyResearchWhereUniqueInput[]
+  update?: Prisma.CompanyResearchUpdateWithWhereUniqueWithoutUserInput | Prisma.CompanyResearchUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CompanyResearchUpdateManyWithWhereWithoutUserInput | Prisma.CompanyResearchUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CompanyResearchScalarWhereInput | Prisma.CompanyResearchScalarWhereInput[]
+}
+
+export type CompanyResearchCreateWithoutUserInput = {
+  companyName: string
+  data: string
+  createdAt?: Date | string
+}
+
+export type CompanyResearchUncheckedCreateWithoutUserInput = {
+  id?: number
+  companyName: string
+  data: string
+  createdAt?: Date | string
+}
+
+export type CompanyResearchCreateOrConnectWithoutUserInput = {
+  where: Prisma.CompanyResearchWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyResearchCreateWithoutUserInput, Prisma.CompanyResearchUncheckedCreateWithoutUserInput>
+}
+
+export type CompanyResearchCreateManyUserInputEnvelope = {
+  data: Prisma.CompanyResearchCreateManyUserInput | Prisma.CompanyResearchCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type CompanyResearchUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CompanyResearchWhereUniqueInput
+  update: Prisma.XOR<Prisma.CompanyResearchUpdateWithoutUserInput, Prisma.CompanyResearchUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.CompanyResearchCreateWithoutUserInput, Prisma.CompanyResearchUncheckedCreateWithoutUserInput>
+}
+
+export type CompanyResearchUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CompanyResearchWhereUniqueInput
+  data: Prisma.XOR<Prisma.CompanyResearchUpdateWithoutUserInput, Prisma.CompanyResearchUncheckedUpdateWithoutUserInput>
+}
+
+export type CompanyResearchUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.CompanyResearchScalarWhereInput
+  data: Prisma.XOR<Prisma.CompanyResearchUpdateManyMutationInput, Prisma.CompanyResearchUncheckedUpdateManyWithoutUserInput>
+}
+
+export type CompanyResearchScalarWhereInput = {
+  AND?: Prisma.CompanyResearchScalarWhereInput | Prisma.CompanyResearchScalarWhereInput[]
+  OR?: Prisma.CompanyResearchScalarWhereInput[]
+  NOT?: Prisma.CompanyResearchScalarWhereInput | Prisma.CompanyResearchScalarWhereInput[]
+  id?: Prisma.IntFilter<"CompanyResearch"> | number
+  companyName?: Prisma.StringFilter<"CompanyResearch"> | string
+  userId?: Prisma.IntFilter<"CompanyResearch"> | number
+  data?: Prisma.StringFilter<"CompanyResearch"> | string
+  createdAt?: Prisma.DateTimeFilter<"CompanyResearch"> | Date | string
+}
+
+export type CompanyResearchCreateManyUserInput = {
+  id?: number
+  companyName: string
+  data: string
+  createdAt?: Date | string
+}
+
+export type CompanyResearchUpdateWithoutUserInput = {
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  data?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CompanyResearchUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  data?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CompanyResearchUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  data?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -329,39 +494,58 @@ export type CompanyResearchSumOrderByAggregateInput = {
 export type CompanyResearchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   companyName?: boolean
+  userId?: boolean
   data?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["companyResearch"]>
 
 export type CompanyResearchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   companyName?: boolean
+  userId?: boolean
   data?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["companyResearch"]>
 
 export type CompanyResearchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   companyName?: boolean
+  userId?: boolean
   data?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["companyResearch"]>
 
 export type CompanyResearchSelectScalar = {
   id?: boolean
   companyName?: boolean
+  userId?: boolean
   data?: boolean
   createdAt?: boolean
 }
 
-export type CompanyResearchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "data" | "createdAt", ExtArgs["result"]["companyResearch"]>
+export type CompanyResearchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "userId" | "data" | "createdAt", ExtArgs["result"]["companyResearch"]>
+export type CompanyResearchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type CompanyResearchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type CompanyResearchIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $CompanyResearchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CompanyResearch"
-  objects: {}
+  objects: {
+    user: Prisma.$UserPayload<ExtArgs>
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     companyName: string
+    userId: number
     data: string
     createdAt: Date
   }, ExtArgs["result"]["companyResearch"]>
@@ -758,6 +942,7 @@ readonly fields: CompanyResearchFieldRefs;
  */
 export interface Prisma__CompanyResearchClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -789,6 +974,7 @@ export interface Prisma__CompanyResearchClient<T, Null = never, ExtArgs extends 
 export interface CompanyResearchFieldRefs {
   readonly id: Prisma.FieldRef<"CompanyResearch", 'Int'>
   readonly companyName: Prisma.FieldRef<"CompanyResearch", 'String'>
+  readonly userId: Prisma.FieldRef<"CompanyResearch", 'Int'>
   readonly data: Prisma.FieldRef<"CompanyResearch", 'String'>
   readonly createdAt: Prisma.FieldRef<"CompanyResearch", 'DateTime'>
 }
@@ -808,6 +994,10 @@ export type CompanyResearchFindUniqueArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
+  /**
    * Filter, which CompanyResearch to fetch.
    */
   where: Prisma.CompanyResearchWhereUniqueInput
@@ -826,6 +1016,10 @@ export type CompanyResearchFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.E
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
+  /**
    * Filter, which CompanyResearch to fetch.
    */
   where: Prisma.CompanyResearchWhereUniqueInput
@@ -843,6 +1037,10 @@ export type CompanyResearchFindFirstArgs<ExtArgs extends runtime.Types.Extension
    * Omit specific fields from the CompanyResearch
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
   /**
    * Filter, which CompanyResearch to fetch.
    */
@@ -892,6 +1090,10 @@ export type CompanyResearchFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
+  /**
    * Filter, which CompanyResearch to fetch.
    */
   where?: Prisma.CompanyResearchWhereInput
@@ -939,6 +1141,10 @@ export type CompanyResearchFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the CompanyResearch
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
   /**
    * Filter, which CompanyResearches to fetch.
    */
@@ -988,6 +1194,10 @@ export type CompanyResearchCreateArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
+  /**
    * The data needed to create a CompanyResearch.
    */
   data: Prisma.XOR<Prisma.CompanyResearchCreateInput, Prisma.CompanyResearchUncheckedCreateInput>
@@ -1021,6 +1231,10 @@ export type CompanyResearchCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    */
   data: Prisma.CompanyResearchCreateManyInput | Prisma.CompanyResearchCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1035,6 +1249,10 @@ export type CompanyResearchUpdateArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CompanyResearch
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
   /**
    * The data needed to update a CompanyResearch.
    */
@@ -1087,6 +1305,10 @@ export type CompanyResearchUpdateManyAndReturnArgs<ExtArgs extends runtime.Types
    * Limit how many CompanyResearches to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1101,6 +1323,10 @@ export type CompanyResearchUpsertArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CompanyResearch
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
   /**
    * The filter to search for the CompanyResearch to update in case it exists.
    */
@@ -1127,6 +1353,10 @@ export type CompanyResearchDeleteArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CompanyResearch
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
   /**
    * Filter which CompanyResearch to delete.
    */
@@ -1159,4 +1389,8 @@ export type CompanyResearchDefaultArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the CompanyResearch
    */
   omit?: Prisma.CompanyResearchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyResearchInclude<ExtArgs> | null
 }

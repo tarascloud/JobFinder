@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
+import { callAIJSON } from "@/lib/ai/provider";
 
 export async function getSearchProfiles() {
   try {
@@ -180,19 +181,6 @@ export async function generateSearchFromProfile(): Promise<
       return { error: "Please create your profile first" };
     }
 
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) {
-      return {
-        name: "My Job Search",
-        jobTitles: profile.headline ? [profile.headline] : ["Software Engineer"],
-        minSalary: profile.salaryMin,
-        currency: profile.salaryCurrency ?? "EUR",
-        employmentTypes: profile.employmentTypes.length > 0 ? profile.employmentTypes : ["full-time"],
-        remoteOnly: profile.preferredRemoteType === "remote",
-        geographies: profile.preferredLocations,
-      };
-    }
-
     const profileSummary = {
       headline: profile.headline,
       summary: profile.summary,
@@ -206,17 +194,7 @@ export async function generateSearchFromProfile(): Promise<
       employmentTypes: profile.employmentTypes,
     };
 
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `Based on this professional profile, suggest job search criteria. Return ONLY a valid JSON object with these fields:
+    const prompt = `Based on this professional profile, suggest job search criteria. Return ONLY a valid JSON object with these fields:
 - "name": suggested search profile name (string)
 - "jobTitles": 5-10 relevant job title suggestions (string[])
 - "minSalary": minimum annual salary in EUR (number or null)
@@ -227,25 +205,11 @@ export async function generateSearchFromProfile(): Promise<
 
 Profile: ${JSON.stringify(profileSummary)}
 
-Return ONLY the JSON object, no markdown formatting or code blocks.`,
-                },
-              ],
-            },
-          ],
-        }),
-      }
-    );
+Return ONLY the JSON object, no markdown formatting or code blocks.`;
 
-    if (!geminiResponse.ok) {
-      return { error: `Gemini API error: ${geminiResponse.status}` };
-    }
-
-    const geminiData = await geminiResponse.json();
-    const text =
-      geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-
-    const cleaned = text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
-    const parsed = JSON.parse(cleaned) as GeneratedSearchData;
+    const parsed = await callAIJSON<GeneratedSearchData>(prompt, {
+      userId: user.id,
+    });
 
     return {
       name: parsed.name ?? "My Job Search",

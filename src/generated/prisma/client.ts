@@ -111,3 +111,8 @@ export type CompanyResearch = Prisma.CompanyResearchModel
  * 
  */
 export type EmailResponse = Prisma.EmailResponseModel
+/**
+ * Model AdminEmail
+ * 
+ */
+export type AdminEmail = Prisma.AdminEmailModel

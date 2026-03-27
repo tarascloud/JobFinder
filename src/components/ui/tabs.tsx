@@ -84,8 +84,11 @@ export const TabsTrigger = forwardRef<
           : "text-muted-foreground hover:text-foreground",
         className
       )}
-      onClick={() => onValueChange(value)}
       {...props}
+      onClick={(e) => {
+        onValueChange(value);
+        props.onClick?.(e);
+      }}
     />
   );
 });

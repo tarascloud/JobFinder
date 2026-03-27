@@ -8,8 +8,12 @@ interface EmailResponse {
   fromEmail: string;
   subject: string;
   body: string | null;
+  bodyText: string | null;
+  bodyHtml: string | null;
+  messageId: string | null;
   responseType: string;
   matched: boolean;
+  read: boolean;
   applicationId: number | null;
   receivedAt: Date;
   vacancyTitle?: string | null;
@@ -29,44 +33,61 @@ export async function getEmailResponses(filters?: EmailFilters) {
 
     const page = filters?.page ?? 1;
     const limit = filters?.limit ?? 20;
-    const offset = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-    // Build WHERE clauses
-    const conditions: string[] = [];
-    const params: unknown[] = [];
-    let paramIdx = 1;
-
+    const where: { matched?: boolean; responseType?: string } = {};
     if (filters?.matched !== undefined) {
-      conditions.push(`e.matched = $${paramIdx++}`);
-      params.push(filters.matched);
+      where.matched = filters.matched;
     }
     if (filters?.responseType) {
-      conditions.push(`e.response_type = $${paramIdx++}`);
-      params.push(filters.responseType);
+      where.responseType = filters.responseType;
     }
 
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    const [total, emailRows] = await Promise.all([
+      prisma.emailResponse.count({ where }),
+      prisma.emailResponse.findMany({
+        where,
+        orderBy: { receivedAt: "desc" },
+        take: limit,
+        skip,
+      }),
+    ]);
 
-    const countResult = await prisma.$queryRawUnsafe(
-      `SELECT COUNT(*)::int as count FROM email_responses e ${whereClause}`,
-      ...params
-    ) as { count: number }[];
-    const total = countResult[0]?.count ?? 0;
+    // Fetch vacancy info for matched emails via their applicationId
+    const applicationIds = emailRows
+      .filter((e) => e.applicationId !== null)
+      .map((e) => e.applicationId as number);
 
-    const emails = await prisma.$queryRawUnsafe(
-      `SELECT e.id, e.from_email as "fromEmail", e.subject, e.body, e.response_type as "responseType",
-              e.matched, e.application_id as "applicationId", e.received_at as "receivedAt",
-              v.title as "vacancyTitle", v.company as "vacancyCompany"
-       FROM email_responses e
-       LEFT JOIN applications a ON a.id = e.application_id
-       LEFT JOIN vacancies v ON v.id = a.vacancy_id
-       ${whereClause}
-       ORDER BY e.received_at DESC
-       LIMIT $${paramIdx++} OFFSET $${paramIdx++}`,
-      ...params,
-      limit,
-      offset
-    ) as EmailResponse[];
+    const vacancyMap = new Map<number, { title: string | null; company: string | null }>();
+    if (applicationIds.length > 0) {
+      const applications = await prisma.application.findMany({
+        where: { id: { in: applicationIds } },
+        select: { id: true, vacancy: { select: { title: true, company: true } } },
+      });
+      for (const app of applications) {
+        vacancyMap.set(app.id, { title: app.vacancy.title, company: app.vacancy.company });
+      }
+    }
+
+    const emails: EmailResponse[] = emailRows.map((e) => {
+      const vacancy = e.applicationId ? vacancyMap.get(e.applicationId) : undefined;
+      return {
+        id: e.id,
+        fromEmail: e.fromEmail,
+        subject: e.subject,
+        body: e.body,
+        bodyText: e.bodyText,
+        bodyHtml: e.bodyHtml,
+        messageId: e.messageId,
+        responseType: e.responseType,
+        matched: e.matched,
+        read: e.read,
+        applicationId: e.applicationId,
+        receivedAt: e.receivedAt,
+        vacancyTitle: vacancy?.title ?? null,
+        vacancyCompany: vacancy?.company ?? null,
+      };
+    });
 
     return {
       emails,
@@ -84,11 +105,10 @@ export async function linkEmailToApplication(emailId: number, applicationId: num
   try {
     await requireUser();
 
-    await prisma.$queryRawUnsafe(
-      `UPDATE email_responses SET application_id = $1, matched = true WHERE id = $2`,
-      applicationId,
-      emailId
-    );
+    await prisma.emailResponse.update({
+      where: { id: emailId },
+      data: { applicationId, matched: true },
+    });
 
     return { success: true };
   } catch (e) {
@@ -100,12 +120,98 @@ export async function getUnmatchedEmailCount() {
   try {
     await requireUser();
 
-    const result = await prisma.$queryRawUnsafe(
-      `SELECT COUNT(*)::int as count FROM email_responses WHERE matched = false`
-    ) as { count: number }[];
+    const count = await prisma.emailResponse.count({
+      where: { matched: false },
+    });
 
-    return { count: result[0]?.count ?? 0 };
+    return { count };
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Failed to count unmatched emails" };
+  }
+}
+
+export async function getUnreadEmailCount() {
+  try {
+    await requireUser();
+
+    const count = await prisma.emailResponse.count({
+      where: { read: false },
+    });
+
+    return { count };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to count unread emails" };
+  }
+}
+
+export async function sendUserEmail(data: {
+  to: string;
+  subject: string;
+  body: string;
+  inReplyTo?: string;
+}) {
+  try {
+    const user = await requireUser();
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) return { error: "RESEND_API_KEY not configured" };
+
+    const fromEmail = user.jfEmail || "jf@taras.cloud";
+    const fromName = user.name || "JobFinder";
+
+    const payload: Record<string, unknown> = {
+      from: `${fromName} <${fromEmail}>`,
+      to: [data.to],
+      subject: data.subject,
+      text: data.body,
+    };
+
+    if (data.inReplyTo) {
+      payload.headers = { "In-Reply-To": data.inReplyTo, References: data.inReplyTo };
+    }
+
+    const resp = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify(payload),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      console.error("[sendUserEmail] Resend error:", resp.status, err);
+      return { error: `Send failed: ${(err as Record<string,string>).message || resp.status}` };
+    }
+
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to send email" };
+  }
+}
+
+export async function deleteUserEmail(id: number) {
+  try {
+    await requireUser();
+
+    await prisma.emailResponse.delete({
+      where: { id },
+    });
+
+    return { success: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to delete email" };
+  }
+}
+
+export async function markEmailAsRead(emailId: number) {
+  try {
+    await requireUser();
+
+    await prisma.emailResponse.update({
+      where: { id: emailId },
+      data: { read: true },
+    });
+
+    return { success: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to mark email as read" };
   }
 }

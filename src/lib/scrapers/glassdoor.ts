@@ -1,25 +1,9 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
 import { getRandomUserAgent } from "@/lib/proxy";
+import { stripHtml } from "@/lib/html-utils";
+import { delay, matchesTitle } from "./utils";
 
 const DELAY_MS = 3000;
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 function parseSalary(text: string): {
   min: number | null;
@@ -135,12 +119,6 @@ function parseJobListings(html: string): GlassdoorJob[] {
   }
 
   return jobs;
-}
-
-function matchesTitle(title: string, jobTitles: string[]): boolean {
-  if (jobTitles.length === 0) return true;
-  const lower = title.toLowerCase();
-  return jobTitles.some((search) => lower.includes(search.toLowerCase()));
 }
 
 async function searchGlassdoor(query: string): Promise<GlassdoorJob[]> {

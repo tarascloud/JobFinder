@@ -1,16 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/db";
 import { scrapeAll } from "@/lib/scrapers";
 import { scoreVacancy } from "@/lib/ai/scorer";
 import { generateCoverLetter } from "@/lib/ai/cover-letter";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { createNotification } from "@/actions/notifications";
+import { saveVacancy, loadExistingVacanciesForDedup } from "@/lib/save-vacancy";
 
 function verifyCronSecret(request: NextRequest): boolean {
   const secret = process.env.JOBFINDER_CRON_SECRET;
   if (!secret) return false;
   const auth = request.headers.get("authorization");
-  return auth === `Bearer ${secret}`;
+  if (!auth) return false;
+  const expected = `Bearer ${secret}`;
+  if (Buffer.byteLength(auth) !== Buffer.byteLength(expected)) return false;
+  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
 }
 
 export async function POST(request: NextRequest) {
@@ -47,60 +52,31 @@ export async function POST(request: NextRequest) {
         currency: sp.currency ?? "EUR",
       });
 
+      // Load existing vacancies for cross-platform dedup
+      const existingVacancies = await loadExistingVacanciesForDedup(sp.userId);
+
       // Save and dedup vacancies
       for (const v of vacancies) {
-        const vacancy = await prisma.vacancy.upsert({
-          where: {
-            platform_externalId: {
-              platform: v.platform,
-              externalId: v.externalId,
-            },
-          },
-          update: {
-            title: v.title,
-            company: v.company,
-            location: v.location,
-            salaryText: v.salaryText,
-            salaryMin: v.salaryMin,
-            salaryMax: v.salaryMax,
-            salaryCurrency: v.salaryCurrency,
-            remoteType: v.remoteType,
-            employmentType: v.employmentType,
-            description: v.description,
-            language: v.language,
-            postedAt: v.postedAt,
-          },
-          create: {
-            platform: v.platform,
-            externalId: v.externalId,
-            url: v.url,
-            title: v.title,
-            company: v.company,
-            location: v.location,
-            salaryText: v.salaryText,
-            salaryMin: v.salaryMin,
-            salaryMax: v.salaryMax,
-            salaryCurrency: v.salaryCurrency,
-            remoteType: v.remoteType,
-            employmentType: v.employmentType,
-            description: v.description,
-            language: v.language,
-            postedAt: v.postedAt,
-          },
-        });
+        let vacancyId: number;
+        let isNew: boolean;
+        try {
+          const saved = await saveVacancy(v, sp.userId, sp.id, existingVacancies);
+          vacancyId = saved.vacancyId;
+          isNew = saved.result === "new";
+        } catch (err) {
+          console.error(
+            `[scrape] Save error for ${v.platform}/${v.externalId}:`,
+            err instanceof Error ? err.message : err
+          );
+          continue;
+        }
 
         totalScraped++;
 
-        // Check if already scored for this user + search profile
-        const existingScore = await prisma.vacancyScore.findFirst({
-          where: {
-            vacancyId: vacancy.id,
-            userId: sp.userId,
-            searchProfileId: sp.id,
-          },
-        });
-
-        if (!existingScore && sp.user.profile) {
+        // Score new vacancies with AI
+        if (isNew && sp.user.profile) {
+          const vacancy = await prisma.vacancy.findUnique({ where: { id: vacancyId } });
+          if (!vacancy) continue;
           try {
             const score = await scoreVacancy(
               vacancy,
@@ -119,18 +95,23 @@ export async function POST(request: NextRequest) {
               }
             );
 
-            await prisma.vacancyScore.create({
-              data: {
-                vacancyId: vacancy.id,
-                userId: sp.userId,
-                searchProfileId: sp.id,
-                matchScore: score.matchScore,
-                salaryFit: score.salaryFit,
-                remoteFit: score.remoteFit,
-                notes: score.notes,
-                scoredBy: "gemini-auto",
-              },
+            // Update the VacancyScore created by saveVacancy with AI scores
+            const existingScore = await prisma.vacancyScore.findFirst({
+              where: { vacancyId: vacancy.id, userId: sp.userId, searchProfileId: sp.id },
             });
+            if (existingScore) {
+              await prisma.vacancyScore.update({
+                where: { id: existingScore.id },
+                data: {
+                  matchScore: score.matchScore,
+                  salaryFit: score.salaryFit,
+                  remoteFit: score.remoteFit,
+                  notes: score.notes,
+                  scoredBy: "gemini-auto",
+                  scoredAt: new Date(),
+                },
+              });
+            }
 
             totalScored++;
 
@@ -148,8 +129,9 @@ export async function POST(request: NextRequest) {
 
               if (!existingApp && sp.user.profile) {
                 let coverLetter: string | null = null;
+                let coverLetterVariant: string | null = null;
                 try {
-                  coverLetter = await generateCoverLetter(
+                  const result = await generateCoverLetter(
                     {
                       title: vacancy.title,
                       company: vacancy.company,
@@ -161,8 +143,12 @@ export async function POST(request: NextRequest) {
                       yearsExperience: sp.user.profile.yearsExperience,
                       skills: sp.user.profile.skills,
                     },
-                    vacancy.language ?? undefined
+                    vacancy.language ?? undefined,
+                    undefined,
+                    { userId: sp.userId }
                   );
+                  coverLetter = result.text;
+                  coverLetterVariant = result.variant;
                 } catch {
                   // Continue without cover letter
                 }
@@ -174,6 +160,7 @@ export async function POST(request: NextRequest) {
                     searchProfileId: sp.id,
                     status: "approved",
                     coverLetter,
+                    coverLetterVariant,
                   },
                 });
 

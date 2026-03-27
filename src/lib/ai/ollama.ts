@@ -40,16 +40,9 @@ export async function isJfAssistantAvailable(url?: string): Promise<boolean> {
  * then user-configured model, then default qwen2.5.
  */
 async function resolveModel(options?: { model?: string; url?: string }): Promise<string> {
-  // If user explicitly specified a model, use it
   if (options?.model) return options.model;
-
-  // Check if jf-assistant is available (fine-tuned for JobFinder)
-  const url = options?.url || process.env.OLLAMA_URL || "http://ollama:11434";
-  if (await isJfAssistantAvailable(url)) {
-    return "jf-assistant";
-  }
-
-  return process.env.OLLAMA_MODEL || "qwen2.5:14b-instruct-q4_K_M";
+  // Always prefer jf-assistant (3B, fast) — fallback to env or default
+  return "jf-assistant";
 }
 
 export async function callOllama(

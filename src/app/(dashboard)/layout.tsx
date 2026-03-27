@@ -6,6 +6,7 @@ import OnboardingGate from "./onboarding-gate";
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   let onboarding = false;
   let demo = false;
+  let userRole = "user";
 
   try {
     demo = await isDemoMode();
@@ -13,6 +14,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       const user = await getCurrentUser();
       if (user) {
         onboarding = await needsOnboarding(user.id);
+        userRole = user.role;
       }
     }
     // Demo users skip onboarding
@@ -21,7 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   return (
-    <DashboardShell isDemo={demo}>
+    <DashboardShell isDemo={demo} userRole={userRole}>
       <OnboardingGate needsOnboarding={onboarding}>
         {children}
       </OnboardingGate>

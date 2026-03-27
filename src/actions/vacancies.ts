@@ -8,6 +8,7 @@ import { generateCoverLetter as generateCoverLetterAI } from "@/lib/ai/cover-let
 
 interface VacancyFilters {
   platform?: string;
+  platforms?: string[];
   minScore?: number;
   status?: string;
   searchProfileId?: number;
@@ -23,10 +24,13 @@ export async function getVacancies(filters?: VacancyFilters) {
     const user = await requireUser();
 
     const page = filters?.page ?? 1;
-    const limit = filters?.limit ?? 20;
+    const limit = Math.min(filters?.limit || 20, 100);
     const skip = (page - 1) * limit;
 
-    // Build the where clause for vacancies that have scores for this user
+    // Build the where clause
+    // When searchProfileId or minScore is set, filter by vacancyScores
+    const hasScoreFilter = !!(filters?.searchProfileId || filters?.minScore);
+
     const scoreWhere: Prisma.VacancyScoreWhereInput = {
       userId: user.id,
       ...(filters?.searchProfileId && { searchProfileId: filters.searchProfileId }),
@@ -34,8 +38,11 @@ export async function getVacancies(filters?: VacancyFilters) {
     };
 
     const vacancyWhere: Prisma.VacancyWhereInput = {
-      ...(filters?.platform && { platform: filters.platform }),
-      vacancyScores: { some: scoreWhere },
+      ...(filters?.platforms && filters.platforms.length > 0 && { platform: { in: filters.platforms } }),
+      ...(filters?.platform && !filters?.platforms && { platform: filters.platform }),
+      // Only require vacancyScores when filtering by profile or minScore
+      // Otherwise show ALL vacancies (including unscored ones)
+      ...(hasScoreFilter && { vacancyScores: { some: scoreWhere } }),
       ...(filters?.status && {
         applications: {
           some: { userId: user.id, status: filters.status },
@@ -91,7 +98,9 @@ export async function getVacancies(filters?: VacancyFilters) {
         salaryFit: v.vacancyScores[0]?.salaryFit ?? null,
         remoteFit: v.vacancyScores[0]?.remoteFit ?? null,
         dismissed: v.vacancyScores[0]?.dismissed ?? false,
+        applicationId: v.applications[0]?.id ?? null,
         applicationStatus: v.applications[0]?.status ?? null,
+        appliedWithPersonalAccount: v.applications[0]?.appliedWithPersonalAccount ?? false,
         tagStack: v.tagStack,
         tagLevel: v.tagLevel,
         tagIndustry: v.tagIndustry,
@@ -320,8 +329,9 @@ export async function batchQueueVacancies(
       try {
         const language = vacancy.language ?? undefined;
         let coverLetter: string | null = null;
+        let coverLetterVariant: string | null = null;
         try {
-          coverLetter = await generateCoverLetterAI(
+          const result = await generateCoverLetterAI(
             {
               title: vacancy.title,
               company: vacancy.company,
@@ -333,8 +343,12 @@ export async function batchQueueVacancies(
               yearsExperience: userProfile.yearsExperience,
               skills: userProfile.skills,
             },
-            language
+            language,
+            undefined,
+            { userId: user.id }
           );
+          coverLetter = result.text;
+          coverLetterVariant = result.variant;
         } catch {
           // Continue without cover letter
         }
@@ -346,6 +360,7 @@ export async function batchQueueVacancies(
             searchProfileId,
             status: "queued",
             coverLetter,
+            coverLetterVariant,
           },
         });
 

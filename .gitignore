@@ -17,3 +17,7 @@ public/screenshots/
 # Chrome extension build artifacts
 extension/*.crx
 extension/*.pem
+
+cv/
+playwright-report/
+test-results/

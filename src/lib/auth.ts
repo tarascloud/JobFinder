@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
 import { prisma } from "./db";
+import { generateJfEmail } from "./jf-email";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
@@ -10,10 +11,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    ...(process.env.GITHUB_ID && process.env.GITHUB_SECRET
+    ...(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET
       ? [GitHub({
-          clientId: process.env.GITHUB_ID!,
-          clientSecret: process.env.GITHUB_SECRET!,
+          clientId: process.env.GITHUB_CLIENT_ID!,
+          clientSecret: process.env.GITHUB_CLIENT_SECRET!,
         })]
       : []),
   ],
@@ -21,15 +22,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       if (!user.email) return false;
+
+      const isGoogle = account?.provider === "google";
 
       // Check if user already exists
       const existing = await prisma.user.findUnique({ where: { email: user.email } });
       if (existing) {
         await prisma.user.update({
           where: { email: user.email },
-          data: { name: user.name, image: user.image },
+          data: {
+            name: user.name,
+            image: user.image,
+            ...(isGoogle && user.id ? { googleId: user.id } : {}),
+          },
         });
         return true;
       }
@@ -38,13 +45,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const created = await prisma.$transaction(async (tx) => {
         const count = await tx.user.count();
         if (count === 0) {
+          const jfEmail = await generateJfEmail(user.name, user.email!);
           await tx.user.create({
             data: {
               email: user.email!,
               name: user.name,
               image: user.image,
-              googleId: user.id,
+              ...(isGoogle && user.id ? { googleId: user.id } : {}),
               role: "owner",
+              jfEmail,
             },
           });
           return true;
@@ -56,13 +65,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Check guest invite
       const invite = await prisma.guestInvite.findUnique({ where: { email: user.email } });
       if (invite) {
+        const jfEmail = await generateJfEmail(user.name, user.email!);
         await prisma.user.create({
           data: {
             email: user.email,
             name: user.name,
             image: user.image,
-            googleId: user.id,
+            ...(isGoogle && user.id ? { googleId: user.id } : {}),
             role: "guest",
+            jfEmail,
           },
         });
         return true;

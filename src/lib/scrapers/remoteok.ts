@@ -1,5 +1,7 @@
 import type { ScrapedVacancy, SearchCriteria } from "./types";
 import { getRandomUserAgent } from "@/lib/proxy";
+import { stripHtml } from "@/lib/html-utils";
+import { fetchWithTimeout } from "./utils";
 
 const API_URL = "https://remoteok.com/api";
 
@@ -55,25 +57,13 @@ function buildSalaryText(job: RemoteOKJob): string | null {
   return parts.join(" - ");
 }
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .trim();
-}
 
 export async function scrape(
   criteria: SearchCriteria
 ): Promise<ScrapedVacancy[]> {
   console.log("[remoteok] Starting scrape...");
 
-  const res = await fetch(API_URL, {
+  const res = await fetchWithTimeout(API_URL, {
     headers: {
       "User-Agent": getRandomUserAgent(),
     },

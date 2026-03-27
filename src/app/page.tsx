@@ -5,10 +5,10 @@ import { isDemoMode } from "@/lib/current-user";
 export default async function RootPage() {
   const session = await auth();
   if (session?.user) {
-    redirect("/profile");
+    redirect("/vacancies");
   }
   if (await isDemoMode()) {
-    redirect("/profile");
+    redirect("/vacancies");
   }
   redirect("/login");
 }

@@ -13,7 +13,7 @@ export default function OnboardingGate({ needsOnboarding, children }: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    if (needsOnboarding && !pathname.startsWith("/onboarding")) {
+    if (needsOnboarding && !pathname.startsWith("/onboarding") && !pathname.startsWith("/settings")) {
       router.replace("/onboarding");
     }
   }, [needsOnboarding, pathname, router]);

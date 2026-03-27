@@ -15,13 +15,12 @@ export function LanguageToggle() {
   const locale = useLocale() as Locale;
   const router = useRouter();
 
-  const cycleLocale = async () => {
-    const currentIndex = routing.locales.indexOf(locale);
-    const nextIndex = (currentIndex + 1) % routing.locales.length;
-    const nextLocale = routing.locales[nextIndex];
+  const switchLocale = async (nextLocale: Locale) => {
+    if (nextLocale === locale) return;
 
-    // Set cookie immediately for instant SSR update
+    // Set cookie + localStorage for instant SSR update
     document.cookie = `locale=${nextLocale};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+    localStorage.setItem("locale", nextLocale);
 
     // Persist to DB (fire and forget — cookie already set)
     updatePreference("locale", nextLocale);
@@ -30,12 +29,20 @@ export function LanguageToggle() {
   };
 
   return (
-    <button
-      onClick={cycleLocale}
-      className="flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-      title={`Language: ${localeLabels[locale]}`}
-    >
-      {localeLabels[locale]}
-    </button>
+    <div className="inline-flex items-center rounded-md border border-border bg-muted/40 p-0.5">
+      {routing.locales.map((loc) => (
+        <button
+          key={loc}
+          onClick={() => switchLocale(loc)}
+          className={`px-2 py-0.5 text-xs font-medium rounded transition-colors ${
+            loc === locale
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {localeLabels[loc]}
+        </button>
+      ))}
+    </div>
   );
 }

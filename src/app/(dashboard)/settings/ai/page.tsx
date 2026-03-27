@@ -20,9 +20,10 @@ import { getAiFeedbackStats, getRecentFeedback } from "@/actions/ai-feedback";
 import { getEditTrackingStats } from "@/actions/ai-edit-tracking";
 
 const PROVIDERS: { value: AIProvider; key: string }[] = [
-  { value: "ollama", key: "ollama" },
-  { value: "gemini", key: "gemini" },
+  { value: "jf_groq", key: "jf_groq" },
   { value: "groq", key: "groq" },
+  { value: "gemini", key: "gemini" },
+  { value: "ollama", key: "ollama" },
 ];
 
 export default function AISettingsPage() {
@@ -60,6 +61,7 @@ export default function AISettingsPage() {
     ollama: null,
     gemini: null,
     groq: null,
+    jf_groq: null,
   });
 
   const load = useCallback(async () => {
@@ -107,11 +109,13 @@ export default function AISettingsPage() {
   }
 
   async function handleTest(p: AIProvider) {
+    // jf_groq uses the server-side JF_GROQ_API_KEY, test as "groq" provider
+    const testProvider = p === "jf_groq" ? "groq" : p;
     setTestResult((prev) => ({ ...prev, [p]: "testing" }));
-    const result = await testAIConnection(p, {
-      ollamaUrl: p === "ollama" ? ollamaUrl : undefined,
-      geminiApiKey: p === "gemini" ? geminiApiKey : undefined,
-      groqApiKey: p === "groq" ? groqApiKey : undefined,
+    const result = await testAIConnection(testProvider as "ollama" | "gemini" | "groq", {
+      ollamaUrl: testProvider === "ollama" ? ollamaUrl : undefined,
+      geminiApiKey: testProvider === "gemini" ? geminiApiKey : undefined,
+      groqApiKey: testProvider === "groq" && p !== "jf_groq" ? groqApiKey : undefined,
     });
     setTestResult((prev) => ({
       ...prev,
@@ -163,6 +167,34 @@ export default function AISettingsPage() {
                 </SelectOption>
               ))}
             </Select>
+          </div>
+
+          {/* JF Groq AI (system-wide, no user key needed) */}
+          <div className="space-y-3 rounded-lg border border-primary/40 bg-primary/5 p-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-medium flex items-center gap-2">
+                {t("jf_groq")}
+                {provider === "jf_groq" && (
+                  <Badge variant="default">Active</Badge>
+                )}
+              </h3>
+              <div className="flex items-center gap-2">
+                {renderTestIcon("jf_groq")}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleTest("jf_groq")}
+                  disabled={testResult.jf_groq === "testing"}
+                >
+                  {t("test")}
+                </Button>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-green-400">
+              <CheckCircle2 className="h-4 w-4" />
+              {t("jf_groq_active")}
+            </div>
+            <p className="text-xs text-muted-foreground">{t("jf_groq_desc")}</p>
           </div>
 
           {/* Ollama settings */}
@@ -265,6 +297,15 @@ export default function AISettingsPage() {
                 onChange={(e) => setGroqApiKey(e.target.value)}
                 placeholder="gsk_..."
               />
+            </div>
+            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <Badge color="green">{t("groq_recommended")}</Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">{t("groq_instructions")}</p>
+              <a href={t("groq_url")} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">
+                console.groq.com/keys →
+              </a>
             </div>
           </div>
 

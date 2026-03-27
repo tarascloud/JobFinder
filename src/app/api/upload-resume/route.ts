@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/db";
+import { getCurrentUser } from "@/lib/current-user";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -12,14 +11,7 @@ const DATA_RESUMES_DIR = path.join(
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-    });
+    const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -58,7 +50,7 @@ export async function POST(request: NextRequest) {
     // Serve via API route (not public/ — that's baked into Docker image at build)
     const url = `/api/resumes/${filename}`;
 
-    return NextResponse.json({ url });
+    return NextResponse.json({ url, originalFilename: file.name });
   } catch (e) {
     console.error("Upload resume error:", e);
     return NextResponse.json(

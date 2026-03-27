@@ -1,6 +1,76 @@
-import { chromium, type Page, type Browser } from "playwright";
+import { chromium, type Page, type Browser, type BrowserContext } from "playwright";
 import { type ApplyContext, type ApplyResult } from "./types";
 import { randomDelay, fillField, safeClick, takeScreenshot, matchQaAnswer } from "./helpers";
+import { matchQuestion, type MatchResult } from "@/lib/ai/qa-matcher";
+import { prisma } from "@/lib/db";
+import { encrypt, decryptGraceful } from "@/lib/encryption";
+
+/**
+ * Load saved session cookies from PlatformAccount.sessionData.
+ * Returns parsed cookies or null if none saved / decryption fails.
+ */
+async function loadSessionCookies(
+  platformAccountId: number
+): Promise<Array<{
+  name: string;
+  value: string;
+  domain: string;
+  path: string;
+  expires?: number;
+  httpOnly?: boolean;
+  secure?: boolean;
+  sameSite?: "Strict" | "Lax" | "None";
+}> | null> {
+  try {
+    const account = await prisma.platformAccount.findUnique({
+      where: { id: platformAccountId },
+      select: { sessionData: true },
+    });
+    if (!account?.sessionData) return null;
+
+    const decrypted = decryptGraceful(account.sessionData);
+    const cookies = JSON.parse(decrypted);
+    if (!Array.isArray(cookies) || cookies.length === 0) return null;
+
+    // Filter out expired cookies
+    const now = Date.now() / 1000;
+    const valid = cookies.filter(
+      (c: { expires?: number }) => !c.expires || c.expires === -1 || c.expires > now
+    );
+    return valid.length > 0 ? valid : null;
+  } catch (err) {
+    console.error("[linkedin] Failed to load session cookies:", err instanceof Error ? err.message : err);
+    return null;
+  }
+}
+
+/**
+ * Save browser cookies to PlatformAccount.sessionData (encrypted).
+ */
+async function saveSessionCookies(
+  platformAccountId: number,
+  context: BrowserContext
+): Promise<void> {
+  try {
+    const cookies = await context.cookies();
+    // Only save LinkedIn cookies
+    const linkedinCookies = cookies.filter((c) =>
+      c.domain.includes("linkedin.com")
+    );
+    if (linkedinCookies.length === 0) return;
+
+    const encrypted = encrypt(JSON.stringify(linkedinCookies));
+    await prisma.platformAccount.update({
+      where: { id: platformAccountId },
+      data: {
+        sessionData: encrypted,
+        lastLogin: new Date(),
+      },
+    });
+  } catch (err) {
+    console.error("[linkedin] Failed to save session cookies:", err instanceof Error ? err.message : err);
+  }
+}
 
 export async function applyLinkedIn(
   ctx: ApplyContext,
@@ -8,14 +78,16 @@ export async function applyLinkedIn(
 ): Promise<ApplyResult> {
   const log: string[] = [];
   const newQuestions: string[] = [];
+  const suggestedAnswers: { question: string; answer: string; confidence: number }[] = [];
   let browser: Browser | null = null;
   let screenshotPath: string | undefined;
 
   try {
     log.push("Launching browser...");
     browser = await chromium.launch({
+      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined,
       headless: true,
-      args: ["--disable-blink-features=AutomationControlled"],
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-blink-features=AutomationControlled"],
     });
 
     const context = await browser.newContext({
@@ -25,51 +97,89 @@ export async function applyLinkedIn(
       locale: "en-US",
     });
 
-    const page = await context.newPage();
+    // --- Session cookie reuse ---
+    let loggedInViaCookies = false;
+    const savedCookies = await loadSessionCookies(ctx.platformAccountId);
+    if (savedCookies) {
+      log.push(`Loading ${savedCookies.length} saved session cookies...`);
+      await context.addCookies(savedCookies);
 
-    // --- Login ---
-    log.push("Navigating to LinkedIn login...");
-    await page.goto("https://www.linkedin.com/login", {
-      waitUntil: "domcontentloaded",
-      timeout: 30000,
-    });
-    await randomDelay(1000, 2000);
+      // Try navigating directly to feed to check if session is valid
+      const page = await context.newPage();
+      try {
+        await page.goto("https://www.linkedin.com/feed/", {
+          waitUntil: "domcontentloaded",
+          timeout: 15000,
+        });
+        await randomDelay(1000, 2000);
 
-    await fillField(page, "#username", credentials.email);
-    await randomDelay(500, 1000);
-    await fillField(page, "#password", credentials.password);
-    await randomDelay(500, 1000);
-
-    await safeClick(page, 'button[type="submit"]');
-    log.push("Submitted login form");
-
-    // Wait for login to complete
-    try {
-      await page.waitForURL("**/feed/**", { timeout: 15000 });
-      log.push("Login successful");
-    } catch {
-      // Check for security challenge or captcha
-      const currentUrl = page.url();
-      if (currentUrl.includes("checkpoint") || currentUrl.includes("challenge")) {
-        screenshotPath = await takeScreenshot(page, "linkedin-security-challenge");
-        return {
-          success: false,
-          screenshotPath,
-          log: [...log, "Security challenge detected. Manual intervention required."],
-          error: "LinkedIn security challenge — manual login needed",
-        };
+        const currentUrl = page.url();
+        if (currentUrl.includes("/feed") || currentUrl.includes("/mynetwork") || currentUrl.includes("/in/")) {
+          log.push("Session cookies valid — skipping login");
+          loggedInViaCookies = true;
+        } else {
+          log.push("Session cookies expired — falling back to password login");
+          await page.close();
+        }
+      } catch {
+        log.push("Session cookie check failed — falling back to password login");
+        await page.close();
       }
-      // Check for incorrect credentials
-      const errorEl = await page.$(".form__label--error");
-      if (errorEl) {
-        return {
-          success: false,
-          log: [...log, "Invalid credentials"],
-          error: "LinkedIn login failed — invalid credentials",
-        };
+    }
+
+    const page = loggedInViaCookies
+      ? context.pages()[0]
+      : await context.newPage();
+
+    if (!loggedInViaCookies) {
+      // --- Login ---
+      log.push("Navigating to LinkedIn login...");
+      await page.goto("https://www.linkedin.com/login", {
+        waitUntil: "domcontentloaded",
+        timeout: 30000,
+      });
+      await randomDelay(1000, 2000);
+
+      await fillField(page, "#username", credentials.email);
+      await randomDelay(500, 1000);
+      await fillField(page, "#password", credentials.password);
+      await randomDelay(500, 1000);
+
+      await safeClick(page, 'button[type="submit"]');
+      log.push("Submitted login form");
+
+      // Wait for login to complete
+      try {
+        await page.waitForURL("**/feed/**", { timeout: 15000 });
+        log.push("Login successful");
+
+        // Save cookies after successful login
+        await saveSessionCookies(ctx.platformAccountId, context);
+        log.push("Session cookies saved for reuse");
+      } catch {
+        // Check for security challenge or captcha
+        const currentUrl = page.url();
+        if (currentUrl.includes("checkpoint") || currentUrl.includes("challenge")) {
+          screenshotPath = await takeScreenshot(page, "linkedin-security-challenge");
+          return {
+            success: false,
+            screenshotPath,
+            log: [...log, "Security challenge detected. Manual intervention required."],
+            error: "LinkedIn security challenge — manual login needed",
+          };
+        }
+        // Check for incorrect credentials
+        const errorEl = await page.$(".form__label--error");
+        if (errorEl) {
+          return {
+            success: false,
+            log: [...log, "Invalid credentials"],
+            error: "LinkedIn login failed — invalid credentials",
+          };
+        }
+        // Might have landed on a different page after login
+        log.push(`Login redirect to: ${currentUrl}`);
       }
-      // Might have landed on a different page after login
-      log.push(`Login redirect to: ${currentUrl}`);
     }
 
     await randomDelay(2000, 3000);
@@ -129,8 +239,22 @@ export async function applyLinkedIn(
       // Upload resume if file input exists
       await handleResumeUpload(page, ctx, log);
 
-      // Handle screening questions
-      await handleScreeningQuestions(page, ctx, log, newQuestions);
+      // Handle screening questions (with AI matching)
+      const screeningResult = await handleScreeningQuestions(page, ctx, log, newQuestions, suggestedAnswers);
+
+      // If unanswered questions found, pause and return early
+      if (screeningResult.shouldPause) {
+        log.push(`Pausing — ${screeningResult.newQuestions.length} unanswered question(s) found`);
+        screenshotPath = await takeScreenshot(page, "linkedin-paused-qa");
+        return {
+          success: false,
+          paused: true,
+          screenshotPath,
+          newQuestions: newQuestions.length > 0 ? newQuestions : undefined,
+          suggestedAnswers: suggestedAnswers.length > 0 ? suggestedAnswers : undefined,
+          log,
+        };
+      }
 
       // Check for Submit vs Next
       const submitBtn = await page.$(
@@ -152,10 +276,13 @@ export async function applyLinkedIn(
         if (confirmationEl) {
           log.push("Application submitted successfully!");
           screenshotPath = await takeScreenshot(page, "linkedin-success");
+          // Save cookies after successful application
+          await saveSessionCookies(ctx.platformAccountId, context);
           return {
             success: true,
             screenshotPath,
             newQuestions: newQuestions.length > 0 ? newQuestions : undefined,
+            suggestedAnswers: suggestedAnswers.length > 0 ? suggestedAnswers : undefined,
             log,
           };
         }
@@ -170,6 +297,7 @@ export async function applyLinkedIn(
             success: false,
             screenshotPath,
             newQuestions: newQuestions.length > 0 ? newQuestions : undefined,
+            suggestedAnswers: suggestedAnswers.length > 0 ? suggestedAnswers : undefined,
             log,
             error: `Validation error: ${errorText}`,
           };
@@ -209,6 +337,7 @@ export async function applyLinkedIn(
       success: false,
       screenshotPath,
       newQuestions: newQuestions.length > 0 ? newQuestions : undefined,
+      suggestedAnswers: suggestedAnswers.length > 0 ? suggestedAnswers : undefined,
       log: [...log, "Could not confirm submission — review screenshot"],
       error: "Submission could not be confirmed",
     };
@@ -219,6 +348,7 @@ export async function applyLinkedIn(
       success: false,
       screenshotPath,
       newQuestions: newQuestions.length > 0 ? newQuestions : undefined,
+      suggestedAnswers: suggestedAnswers.length > 0 ? suggestedAnswers : undefined,
       log,
       error: errorMsg,
     };
@@ -255,13 +385,13 @@ async function fillContactFields(
     }
   }
 
-  // Email
+  // Email — use per-user apply email for tracking recruiter replies
   const emailInput = await page.$('input[name*="email"], input[type="email"]');
   if (emailInput) {
     const currentVal = await emailInput.inputValue();
     if (!currentVal) {
-      await emailInput.fill(ctx.profile.email);
-      log.push("Filled email");
+      await emailInput.fill(ctx.profile.applyEmail);
+      log.push(`Filled email with apply address: ${ctx.profile.applyEmail}`);
     }
   }
 
@@ -328,12 +458,73 @@ async function handleResumeUpload(
   }
 }
 
+/**
+ * Try to find an answer for a screening question:
+ * 1. Exact/substring match from Q&A base
+ * 2. If no match, AI semantic matching with confidence tiers
+ *
+ * Returns { answer, source } or null if no answer found.
+ */
+async function findAnswer(
+  questionText: string,
+  ctx: ApplyContext,
+  log: string[],
+  suggestedAnswers: { question: string; answer: string; confidence: number }[]
+): Promise<{ answer: string; source: "qa_exact" | "ai_auto" } | null> {
+  // Step 1: exact / substring match
+  const exactAnswer = matchQaAnswer(questionText, ctx.qaAnswers);
+  if (exactAnswer) {
+    return { answer: exactAnswer, source: "qa_exact" };
+  }
+
+  // Step 2: AI semantic match
+  const qaPairs = Array.from(ctx.qaAnswers.entries()).map(([q, a]) => ({
+    question: q,
+    answer: a,
+  }));
+
+  if (qaPairs.length === 0) return null;
+
+  const aiResult: MatchResult = await matchQuestion(questionText, qaPairs, ctx.userId);
+
+  if (aiResult.tier === "auto" && aiResult.answer) {
+    log.push(
+      `AI auto-matched "${questionText}" (confidence: ${aiResult.confidence.toFixed(2)})`
+    );
+    return { answer: aiResult.answer, source: "ai_auto" };
+  }
+
+  if (aiResult.tier === "suggested" && aiResult.answer) {
+    log.push(
+      `AI suggested answer for "${questionText}" (confidence: ${aiResult.confidence.toFixed(2)}) — needs review`
+    );
+    suggestedAnswers.push({
+      question: questionText,
+      answer: aiResult.answer,
+      confidence: aiResult.confidence,
+    });
+    // Still return null — we want to pause for review
+    return null;
+  }
+
+  if (aiResult.confidence > 0) {
+    log.push(
+      `AI could not match "${questionText}" (confidence: ${aiResult.confidence.toFixed(2)})`
+    );
+  }
+
+  return null;
+}
+
 async function handleScreeningQuestions(
   page: Page,
   ctx: ApplyContext,
   log: string[],
-  newQuestions: string[]
-): Promise<void> {
+  newQuestions: string[],
+  suggestedAnswers: { question: string; answer: string; confidence: number }[]
+): Promise<{ shouldPause: boolean; newQuestions: string[] }> {
+  let shouldPause = false;
+  const stepNewQuestions: string[] = [];
   // Find all question groups in the form
   const questionGroups = await page.$$(
     '.jobs-easy-apply-form-section__grouping, [data-test-form-element]'
@@ -357,12 +548,14 @@ async function handleScreeningQuestions(
       const currentVal = await textInput.inputValue();
       if (currentVal) continue; // Already filled
 
-      const answer = matchQaAnswer(questionText, ctx.qaAnswers);
-      if (answer) {
-        await textInput.fill(answer);
-        log.push(`Answered "${questionText}" from Q&A base`);
+      const result = await findAnswer(questionText, ctx, log, suggestedAnswers);
+      if (result) {
+        await textInput.fill(result.answer);
+        log.push(`Answered "${questionText}" from ${result.source === "ai_auto" ? "AI match" : "Q&A base"}`);
       } else {
         newQuestions.push(questionText);
+        stepNewQuestions.push(questionText);
+        shouldPause = true;
         log.push(`New question (no answer): "${questionText}"`);
       }
       continue;
@@ -371,14 +564,14 @@ async function handleScreeningQuestions(
     // Check for select dropdown
     const selectEl = await group.$('select');
     if (selectEl) {
-      const answer = matchQaAnswer(questionText, ctx.qaAnswers);
-      if (answer) {
+      const result = await findAnswer(questionText, ctx, log, suggestedAnswers);
+      if (result) {
         // Try to find option matching the answer
         const options = await selectEl.$$('option');
         let matched = false;
         for (const opt of options) {
           const optText = (await opt.textContent())?.trim().toLowerCase();
-          if (optText && answer.toLowerCase().includes(optText)) {
+          if (optText && result.answer.toLowerCase().includes(optText)) {
             const optValue = await opt.getAttribute("value");
             if (optValue) {
               await selectEl.selectOption(optValue);
@@ -390,10 +583,14 @@ async function handleScreeningQuestions(
         }
         if (!matched) {
           newQuestions.push(questionText);
+          stepNewQuestions.push(questionText);
+          shouldPause = true;
           log.push(`Could not match dropdown option for "${questionText}"`);
         }
       } else {
         newQuestions.push(questionText);
+        stepNewQuestions.push(questionText);
+        shouldPause = true;
         log.push(`New question (dropdown, no answer): "${questionText}"`);
       }
       continue;
@@ -402,14 +599,14 @@ async function handleScreeningQuestions(
     // Check for radio buttons
     const radioButtons = await group.$$('input[type="radio"]');
     if (radioButtons.length > 0) {
-      const answer = matchQaAnswer(questionText, ctx.qaAnswers);
-      if (answer) {
+      const result = await findAnswer(questionText, ctx, log, suggestedAnswers);
+      if (result) {
         let matched = false;
         for (const radio of radioButtons) {
           const radioLabel = await radio.evaluate(
             (el) => el.closest("label")?.textContent?.trim() ?? ""
           );
-          if (radioLabel.toLowerCase().includes(answer.toLowerCase())) {
+          if (radioLabel.toLowerCase().includes(result.answer.toLowerCase())) {
             await radio.check();
             log.push(`Selected radio "${radioLabel}" for "${questionText}"`);
             matched = true;
@@ -418,12 +615,18 @@ async function handleScreeningQuestions(
         }
         if (!matched) {
           newQuestions.push(questionText);
+          stepNewQuestions.push(questionText);
+          shouldPause = true;
           log.push(`Could not match radio option for "${questionText}"`);
         }
       } else {
         newQuestions.push(questionText);
+        stepNewQuestions.push(questionText);
+        shouldPause = true;
         log.push(`New question (radio, no answer): "${questionText}"`);
       }
     }
   }
+
+  return { shouldPause, newQuestions: stepNewQuestions };
 }

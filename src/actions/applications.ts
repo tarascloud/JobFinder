@@ -14,7 +14,7 @@ export async function getApplications(filters?: ApplicationFilters) {
     const user = await requireUser();
 
     const page = filters?.page ?? 1;
-    const limit = filters?.limit ?? 20;
+    const limit = Math.min(filters?.limit || 20, 100);
     const skip = (page - 1) * limit;
 
     const where = {
@@ -25,7 +25,15 @@ export async function getApplications(filters?: ApplicationFilters) {
     const [applications, total] = await Promise.all([
       prisma.application.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          status: true,
+          coverLetter: true,
+          appliedAt: true,
+          appliedWithPersonalAccount: true,
+          createdAt: true,
+          errorMessage: true,
+          applyLog: true,
           vacancy: {
             select: {
               id: true,
@@ -125,13 +133,53 @@ export async function getApplicationStats() {
       total,
       queued: statusCounts["queued"] ?? 0,
       approved: statusCounts["approved"] ?? 0,
-      applied: statusCounts["applied"] ?? 0,
+      applied: (statusCounts["applied"] ?? 0) + (statusCounts["applied_manual"] ?? 0),
+      applied_manual: statusCounts["applied_manual"] ?? 0,
       withdrawn: statusCounts["withdrawn"] ?? 0,
       rejected: statusCounts["rejected"] ?? 0,
       interview: statusCounts["interview"] ?? 0,
       offer: statusCounts["offer"] ?? 0,
+      pending_qa: statusCounts["pending_qa"] ?? 0,
+      failed: statusCounts["failed"] ?? 0,
     };
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Failed to load application stats" };
+  }
+}
+
+/**
+ * Get the user's daily application rate limit info.
+ * Returns count of applications with status "applied" in the last 24 hours
+ * and the user's configured limit.
+ */
+export async function getApplicationRateLimit() {
+  try {
+    const user = await requireUser();
+
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const [appliedToday, userData] = await Promise.all([
+      prisma.application.count({
+        where: {
+          userId: user.id,
+          status: "applied",
+          appliedAt: { gte: twentyFourHoursAgo },
+        },
+      }),
+      prisma.user.findUnique({
+        where: { id: user.id },
+        select: { applicationLimit: true },
+      }),
+    ]);
+
+    const limit = userData?.applicationLimit ?? 10;
+
+    return {
+      used: appliedToday,
+      limit,
+      remaining: Math.max(0, limit - appliedToday),
+    };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Failed to load rate limit" };
   }
 }

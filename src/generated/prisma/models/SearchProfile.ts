@@ -789,10 +789,6 @@ export type SearchProfileCreatestackFilterInput = {
   set: string[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type SearchProfileUpdatejobTitlesInput = {
   set?: string[]
   push?: string | string[]
