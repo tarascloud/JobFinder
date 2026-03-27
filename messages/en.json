@@ -126,7 +126,14 @@
     "work_authorization": "Work Authorization",
     "select_option": "Select...",
     "rerun_onboarding": "Re-run Onboarding",
-    "rerun_onboarding_desc": "Start the onboarding wizard again. Your current profile will be reset."
+    "rerun_onboarding_desc": "Start the onboarding wizard again. Your current profile will be reset.",
+    "telegram_title": "Telegram Notifications",
+    "telegram_username_placeholder": "your_telegram_username",
+    "telegram_save": "Save",
+    "telegram_saving": "Saving...",
+    "telegram_connected": "Connected to Telegram bot",
+    "telegram_disconnect": "Disconnect",
+    "telegram_connect_instruction": "Save your username, then find @jobfinder_bot on Telegram and send /start to connect."
   },
   "searches": {
     "title": "Search Profiles",
@@ -462,8 +469,8 @@
     "ready_description": "Your JobFinder is configured. Start finding jobs!",
     "start_button": "Start Finding Jobs",
     "qa_count": "{count} interview Q&A pairs ready",
-    "ready_tip_qa": "Tip: Review your LinkedIn Easy Apply Q&A answers in the Q&A section to improve auto-apply accuracy.",
-    "ready_tip_qa_link": "Go to Q&A"
+    "ready_tip_qa": "Review your Q&A Bank — check your LinkedIn Easy Apply screening questions to improve auto-apply accuracy.",
+    "ready_tip_qa_link": "Go to Q&A Bank"
   },
   "analytics": {
     "title": "Analytics",
@@ -699,7 +706,26 @@
     "reliability_reliable": "Reliable",
     "reliability_moderate": "Moderate",
     "reliability_unreliable": "Unreliable",
-    "reliability_defunct": "Defunct"
+    "reliability_defunct": "Defunct",
+    "tab_telegram": "Telegram",
+    "telegram_bot_status": "Telegram Bot",
+    "telegram_token": "Bot Token",
+    "telegram_configured": "Configured",
+    "telegram_not_configured": "Not Configured",
+    "telegram_connection": "Connection",
+    "telegram_disconnected": "Disconnected",
+    "telegram_bot_username": "Bot",
+    "telegram_webhook": "Webhook",
+    "telegram_webhook_active": "Active",
+    "telegram_no_webhook": "Not Set",
+    "telegram_setup_webhook": "Setup Webhook",
+    "telegram_remove_webhook": "Remove",
+    "telegram_connected_users": "Connected Users",
+    "telegram_setup_hint": "Set TELEGRAM_BOT_TOKEN in environment variables to enable the Telegram bot.",
+    "telegram_refresh": "Refresh",
+    "telegram_users_title": "Telegram Users",
+    "telegram_linked": "Linked",
+    "telegram_pending": "Pending"
   },
   "emails": {
     "title": "Email Responses",

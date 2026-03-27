@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/about", "/api/auth", "/api/health", "/api/status", "/api/admin/emails", "/api/email-response"];
+// v2 - landing page support
+const PUBLIC_PATHS = ["/login", "/landing", "/about", "/api/auth", "/api/health", "/api/status", "/api/admin/emails", "/api/email-response", "/api/telegram-webhook"];
+
+function isRootPath(pathname: string): boolean {
+  return pathname === "/";
+}
 
 function isPublic(pathname: string): boolean {
   return PUBLIC_PATHS.some(
@@ -47,8 +52,8 @@ async function verifyDemoToken(token: string): Promise<boolean> {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow assets and public routes
-  if (isAsset(pathname) || isPublic(pathname)) {
+  // Allow assets, public routes, and root landing page
+  if (isAsset(pathname) || isPublic(pathname) || isRootPath(pathname)) {
     return NextResponse.next();
   }
 
@@ -69,7 +74,10 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Not authenticated — redirect to login
+  // Not authenticated — redirect to login (but never redirect root /)
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
   const loginUrl = new URL("/login", request.url);
   return NextResponse.redirect(loginUrl);
 }

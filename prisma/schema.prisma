@@ -19,6 +19,8 @@ model User {
   preferredSkin   String @default("taras") @map("preferred_skin")
   preferredTheme  String @default("dark") @map("preferred_theme")
   applicationLimit Int    @default(10) @map("application_limit")
+  telegramUsername String? @map("telegram_username")
+  telegramChatId  String? @map("telegram_chat_id")
   createdAt DateTime @default(now()) @map("created_at")
 
   profile          UserProfile?
