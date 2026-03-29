@@ -334,7 +334,12 @@ export default function SearchesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            {profiles.length > 0 ? `${profiles.length} of ${MAX_PROFILES} profiles` : "Define your job search criteria"}
+          </p>
+        </div>
         <div className="relative group">
           <Button onClick={openCreate} disabled={hasReachedMax}>
             <Plus className="h-4 w-4 mr-1.5" /> {t("create")}
@@ -365,11 +370,16 @@ export default function SearchesPage() {
           ))}
         </div>
       ) : profiles.length === 0 ? (
-        <Card>
-          <CardContent className="p-12 text-center">
-            <p className="text-muted-foreground text-lg">{t("no_searches")}</p>
-            <p className="text-muted-foreground text-sm mt-1">{t("create")}</p>
-            <Button className="mt-4" onClick={openCreate}>
+        <Card className="border-dashed">
+          <CardContent className="py-16 px-6 text-center">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
+              <Sparkles className="h-8 w-8 text-muted-foreground/60" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-1.5">{t("no_searches")}</h3>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-5">
+              Create a search profile to define your ideal job criteria. AI will generate one from your resume, or you can set it up manually.
+            </p>
+            <Button onClick={openCreate}>
               <Plus className="h-4 w-4 mr-1.5" /> {t("create")}
             </Button>
           </CardContent>
@@ -377,8 +387,10 @@ export default function SearchesPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {profiles.map((profile) => (
-            <Card key={profile.id} className="hover:border-border transition-colors">
-              <CardContent className="p-5 space-y-3">
+            <Card key={profile.id} className={`transition-all hover:shadow-md hover:border-primary/20 ${
+              profile.isActive ? "border-l-3 border-l-primary" : "opacity-75"
+            }`}>
+              <CardContent className="p-5 space-y-3.5">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-foreground">{profile.name}</h3>

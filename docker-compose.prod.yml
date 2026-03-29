@@ -1,0 +1,36 @@
+# JF Production — JobFinder service
+
+networks:
+  backend:
+    external: true
+  frontend:
+    external: true
+
+services:
+  jobfinder:
+    image: jobfinder:latest
+    container_name: jobfinder
+    mem_limit: 1g
+    restart: unless-stopped
+    ports:
+      - "3456:3000"
+    # depends_on pg from infra compose
+    # ensure infra is running: cd /opt/docker && docker compose up -d
+    env_file:
+      - /opt/docker/secrets/.jobfinder.env
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - backend
+      - frontend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

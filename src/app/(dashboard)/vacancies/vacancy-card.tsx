@@ -76,35 +76,35 @@ export function VacancyCard({
 
   return (
     <Card
-      className={`transition-all cursor-pointer hover:shadow-md ${
+      className={`transition-all cursor-pointer hover:shadow-md hover:border-primary/20 ${
         v.dismissed ? "opacity-50" : ""
-      } ${!v.seen ? "border-l-2 border-l-primary" : ""}`}
+      } ${!v.seen ? "border-l-3 border-l-primary bg-primary/[0.02]" : ""}`}
     >
-      <CardContent className="p-4">
+      <CardContent className="p-4 sm:p-5">
         {/* Main card content */}
         <div
           onClick={() => onToggleExpand(v.id)}
           className="flex items-start gap-3"
         >
           {/* Platform icon */}
-          <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${platformColor(v.platform)}`}>
+          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xs font-bold shadow-sm ${platformColor(v.platform)}`}>
             {platformIcon(v.platform)}
           </div>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 {/* Title */}
-                <div className="flex items-center gap-1.5">
-                  <p className="font-medium text-foreground truncate">{v.title}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-foreground truncate leading-snug">{v.title}</p>
                   {!v.seen && (
-                    <span className="inline-flex h-2 w-2 rounded-full bg-primary shrink-0" />
+                    <span className="inline-flex h-2 w-2 rounded-full bg-primary shrink-0 animate-pulse" />
                   )}
                 </div>
 
                 {/* Company + Location */}
-                <div className="flex items-center gap-2 mt-0.5">
+                <div className="flex items-center gap-2 mt-1">
                   {v.company && (
                     <span className="text-sm text-muted-foreground truncate">{v.company}</span>
                   )}
@@ -117,22 +117,34 @@ export function VacancyCard({
                 </div>
               </div>
 
-              {/* Score badge */}
+              {/* Score badge - enhanced circular style */}
               <div className="flex items-center gap-2 shrink-0">
                 {v.matchScore !== null && v.matchScore > 0 ? (
-                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-bold ${scoreBadgeColor(v.matchScore)}`}>
-                    {v.matchScore}%
-                  </span>
+                  <div className={`relative flex items-center justify-center h-11 w-11 rounded-full border-2 ${
+                    v.matchScore >= 80 ? "border-green-500/40 bg-green-500/10" :
+                    v.matchScore >= 60 ? "border-yellow-500/40 bg-yellow-500/10" :
+                    "border-red-500/40 bg-red-500/10"
+                  }`}>
+                    <span className={`text-xs font-bold ${
+                      v.matchScore >= 80 ? "text-green-600 dark:text-green-400" :
+                      v.matchScore >= 60 ? "text-yellow-600 dark:text-yellow-400" :
+                      "text-red-600 dark:text-red-400"
+                    }`}>
+                      {v.matchScore}
+                    </span>
+                  </div>
                 ) : (
-                  <span className="text-xs text-muted-foreground/40">&mdash;</span>
+                  <div className="flex items-center justify-center h-11 w-11 rounded-full border-2 border-muted bg-muted/30">
+                    <span className="text-xs text-muted-foreground/40">&mdash;</span>
+                  </div>
                 )}
               </div>
             </div>
 
             {/* Bottom row: salary, badges, date */}
-            <div className="flex flex-wrap items-center gap-2 mt-1.5">
+            <div className="flex flex-wrap items-center gap-1.5 mt-2">
               {salaryDisplay && (
-                <span className="text-xs font-medium text-green-600 dark:text-green-400">
+                <span className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-500/10 rounded-md px-1.5 py-0.5">
                   {salaryDisplay}
                 </span>
               )}
@@ -151,20 +163,20 @@ export function VacancyCard({
                   )}
                 </span>
               )}
-              <span className="text-xs text-muted-foreground/60">{v.platform}</span>
-              <span className="text-xs text-muted-foreground/40">·</span>
-              <span className="text-xs text-muted-foreground/60">
+              <span className="text-[11px] text-muted-foreground/50">{v.platform}</span>
+              <span className="text-[11px] text-muted-foreground/30">/</span>
+              <span className="text-[11px] text-muted-foreground/50">
                 {formatRelativeDate(v.postedAt || v.scrapedAt)}
               </span>
               {v.url && (
                 <>
-                  <span className="text-xs text-muted-foreground/40">·</span>
+                  <span className="text-[11px] text-muted-foreground/30">/</span>
                   <a
                     href={v.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="text-xs text-primary hover:text-primary/80 flex items-center gap-0.5"
+                    className="text-[11px] text-primary/70 hover:text-primary flex items-center gap-0.5 transition-colors"
                   >
                     <ExternalLink className="h-3 w-3" />
                     <span className="hidden sm:inline">{t("open_original")}</span>
@@ -173,7 +185,7 @@ export function VacancyCard({
               )}
               <span className="ml-auto" />
               <ChevronDown
-                className={`h-3.5 w-3.5 text-muted-foreground/40 transition-transform duration-200 ${
+                className={`h-4 w-4 text-muted-foreground/30 transition-transform duration-200 ${
                   isExpanded ? "rotate-180" : ""
                 }`}
               />
@@ -188,54 +200,54 @@ export function VacancyCard({
           }`}
         >
           {isExpanded && (
-            <div className="border-t border-border pt-4 space-y-3">
-              {/* Match info */}
+            <div className="border-t border-border pt-4 space-y-4">
+              {/* Match info - pill layout */}
               {(v.matchScore !== null || v.matchNotes) && (
-                <div className="flex flex-wrap gap-3 text-sm">
+                <div className="flex flex-wrap gap-2">
                   {v.salaryFit !== null && (
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-muted-foreground text-xs">{t("salary_fit")}:</span>
-                      <Badge variant={v.salaryFit ? "green" : "red"} className="text-[10px]">
-                        {v.salaryFit ? "Yes" : "No"}
-                      </Badge>
+                    <div className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium ${
+                      v.salaryFit ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-red-500/10 text-red-600 dark:text-red-400"
+                    }`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${v.salaryFit ? "bg-green-500" : "bg-red-500"}`} />
+                      {t("salary_fit")}
                     </div>
                   )}
                   {v.remoteFit !== null && (
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-muted-foreground text-xs">{t("remote_fit")}:</span>
-                      <Badge variant={v.remoteFit ? "green" : "red"} className="text-[10px]">
-                        {v.remoteFit ? "Yes" : "No"}
-                      </Badge>
+                    <div className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium ${
+                      v.remoteFit ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-red-500/10 text-red-600 dark:text-red-400"
+                    }`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${v.remoteFit ? "bg-green-500" : "bg-red-500"}`} />
+                      {t("remote_fit")}
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Tags */}
+              {/* Tags - improved styling */}
               {(v.tagLevel || (v.tagStack && v.tagStack.length > 0) || v.tagIndustry) && (
-                <div className="flex flex-wrap gap-1">
-                  {v.tagLevel && <Badge variant="purple" className="text-[10px]">{v.tagLevel}</Badge>}
-                  {v.tagIndustry && v.tagIndustry !== "other" && <Badge variant="blue" className="text-[10px]">{v.tagIndustry}</Badge>}
+                <div className="flex flex-wrap gap-1.5">
+                  {v.tagLevel && <Badge variant="purple" className="text-[11px] px-2 py-0.5">{v.tagLevel}</Badge>}
+                  {v.tagIndustry && v.tagIndustry !== "other" && <Badge variant="blue" className="text-[11px] px-2 py-0.5">{v.tagIndustry}</Badge>}
                   {v.tagStack?.slice(0, 8).map((tech) => (
-                    <Badge key={tech} variant="default" className="text-[10px]">{tech}</Badge>
+                    <Badge key={tech} variant="secondary" className="text-[11px] px-2 py-0.5 font-mono">{tech}</Badge>
                   ))}
                   {(v.tagStack?.length ?? 0) > 8 && (
-                    <span className="text-[10px] text-muted-foreground">+{(v.tagStack?.length ?? 0) - 8}</span>
+                    <span className="text-[11px] text-muted-foreground self-center">+{(v.tagStack?.length ?? 0) - 8}</span>
                   )}
                 </div>
               )}
 
               {/* Match notes */}
               {v.matchNotes && (
-                <div className="rounded-lg bg-muted/50 p-3">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t("match_notes")}</p>
-                  <p className="text-sm text-foreground/80">{v.matchNotes}</p>
+                <div className="rounded-xl bg-muted/40 border border-border/50 p-3.5">
+                  <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">{t("match_notes")}</p>
+                  <p className="text-sm text-foreground/80 leading-relaxed">{v.matchNotes}</p>
                 </div>
               )}
 
               {/* Description preview */}
               {v.description && (
-                <p className="text-sm text-foreground/70 line-clamp-2">
+                <p className="text-sm text-foreground/60 line-clamp-2 leading-relaxed">
                   {v.description.replace(/<[^>]+>/g, "")}
                 </p>
               )}

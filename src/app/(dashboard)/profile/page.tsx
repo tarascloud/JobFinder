@@ -202,7 +202,12 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">
+          Manage your professional profile and resume details
+        </p>
+      </div>
 
       {/* JF Email Card */}
       {applyEmail && (
