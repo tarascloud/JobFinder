@@ -19,8 +19,6 @@ model User {
   preferredSkin   String @default("taras") @map("preferred_skin")
   preferredTheme  String @default("dark") @map("preferred_theme")
   applicationLimit Int    @default(10) @map("application_limit")
-  telegramUsername String? @map("telegram_username")
-  telegramChatId  String? @map("telegram_chat_id")
   createdAt DateTime @default(now()) @map("created_at")
 
   profile          UserProfile?
@@ -251,6 +249,9 @@ model PlatformAccount {
   sessionData       String?   @db.Text @map("session_data")
   lastLogin         DateTime? @map("last_login")
   status            String    @default("active")
+  // Auto-registration fields
+  registeredAt      DateTime? @map("registered_at")
+  registrationLog   String?   @db.Text @map("registration_log")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

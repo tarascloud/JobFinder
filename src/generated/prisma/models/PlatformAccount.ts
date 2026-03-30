@@ -46,6 +46,8 @@ export type PlatformAccountMinAggregateOutputType = {
   sessionData: string | null
   lastLogin: Date | null
   status: string | null
+  registeredAt: Date | null
+  registrationLog: string | null
 }
 
 export type PlatformAccountMaxAggregateOutputType = {
@@ -58,6 +60,8 @@ export type PlatformAccountMaxAggregateOutputType = {
   sessionData: string | null
   lastLogin: Date | null
   status: string | null
+  registeredAt: Date | null
+  registrationLog: string | null
 }
 
 export type PlatformAccountCountAggregateOutputType = {
@@ -70,6 +74,8 @@ export type PlatformAccountCountAggregateOutputType = {
   sessionData: number
   lastLogin: number
   status: number
+  registeredAt: number
+  registrationLog: number
   _all: number
 }
 
@@ -94,6 +100,8 @@ export type PlatformAccountMinAggregateInputType = {
   sessionData?: true
   lastLogin?: true
   status?: true
+  registeredAt?: true
+  registrationLog?: true
 }
 
 export type PlatformAccountMaxAggregateInputType = {
@@ -106,6 +114,8 @@ export type PlatformAccountMaxAggregateInputType = {
   sessionData?: true
   lastLogin?: true
   status?: true
+  registeredAt?: true
+  registrationLog?: true
 }
 
 export type PlatformAccountCountAggregateInputType = {
@@ -118,6 +128,8 @@ export type PlatformAccountCountAggregateInputType = {
   sessionData?: true
   lastLogin?: true
   status?: true
+  registeredAt?: true
+  registrationLog?: true
   _all?: true
 }
 
@@ -217,6 +229,8 @@ export type PlatformAccountGroupByOutputType = {
   sessionData: string | null
   lastLogin: Date | null
   status: string
+  registeredAt: Date | null
+  registrationLog: string | null
   _count: PlatformAccountCountAggregateOutputType | null
   _avg: PlatformAccountAvgAggregateOutputType | null
   _sum: PlatformAccountSumAggregateOutputType | null
@@ -252,6 +266,8 @@ export type PlatformAccountWhereInput = {
   sessionData?: Prisma.StringNullableFilter<"PlatformAccount"> | string | null
   lastLogin?: Prisma.DateTimeNullableFilter<"PlatformAccount"> | Date | string | null
   status?: Prisma.StringFilter<"PlatformAccount"> | string
+  registeredAt?: Prisma.DateTimeNullableFilter<"PlatformAccount"> | Date | string | null
+  registrationLog?: Prisma.StringNullableFilter<"PlatformAccount"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -265,6 +281,8 @@ export type PlatformAccountOrderByWithRelationInput = {
   sessionData?: Prisma.SortOrderInput | Prisma.SortOrder
   lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  registeredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationLog?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -281,6 +299,8 @@ export type PlatformAccountWhereUniqueInput = Prisma.AtLeast<{
   sessionData?: Prisma.StringNullableFilter<"PlatformAccount"> | string | null
   lastLogin?: Prisma.DateTimeNullableFilter<"PlatformAccount"> | Date | string | null
   status?: Prisma.StringFilter<"PlatformAccount"> | string
+  registeredAt?: Prisma.DateTimeNullableFilter<"PlatformAccount"> | Date | string | null
+  registrationLog?: Prisma.StringNullableFilter<"PlatformAccount"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -294,6 +314,8 @@ export type PlatformAccountOrderByWithAggregationInput = {
   sessionData?: Prisma.SortOrderInput | Prisma.SortOrder
   lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  registeredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationLog?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PlatformAccountCountOrderByAggregateInput
   _avg?: Prisma.PlatformAccountAvgOrderByAggregateInput
   _max?: Prisma.PlatformAccountMaxOrderByAggregateInput
@@ -314,6 +336,8 @@ export type PlatformAccountScalarWhereWithAggregatesInput = {
   sessionData?: Prisma.StringNullableWithAggregatesFilter<"PlatformAccount"> | string | null
   lastLogin?: Prisma.DateTimeNullableWithAggregatesFilter<"PlatformAccount"> | Date | string | null
   status?: Prisma.StringWithAggregatesFilter<"PlatformAccount"> | string
+  registeredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PlatformAccount"> | Date | string | null
+  registrationLog?: Prisma.StringNullableWithAggregatesFilter<"PlatformAccount"> | string | null
 }
 
 export type PlatformAccountCreateInput = {
@@ -324,6 +348,8 @@ export type PlatformAccountCreateInput = {
   sessionData?: string | null
   lastLogin?: Date | string | null
   status?: string
+  registeredAt?: Date | string | null
+  registrationLog?: string | null
   user: Prisma.UserCreateNestedOneWithoutPlatformAccountsInput
 }
 
@@ -337,6 +363,8 @@ export type PlatformAccountUncheckedCreateInput = {
   sessionData?: string | null
   lastLogin?: Date | string | null
   status?: string
+  registeredAt?: Date | string | null
+  registrationLog?: string | null
 }
 
 export type PlatformAccountUpdateInput = {
@@ -347,6 +375,8 @@ export type PlatformAccountUpdateInput = {
   sessionData?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  registeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutPlatformAccountsNestedInput
 }
 
@@ -360,6 +390,8 @@ export type PlatformAccountUncheckedUpdateInput = {
   sessionData?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  registeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PlatformAccountCreateManyInput = {
@@ -372,6 +404,8 @@ export type PlatformAccountCreateManyInput = {
   sessionData?: string | null
   lastLogin?: Date | string | null
   status?: string
+  registeredAt?: Date | string | null
+  registrationLog?: string | null
 }
 
 export type PlatformAccountUpdateManyMutationInput = {
@@ -382,6 +416,8 @@ export type PlatformAccountUpdateManyMutationInput = {
   sessionData?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  registeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PlatformAccountUncheckedUpdateManyInput = {
@@ -394,6 +430,8 @@ export type PlatformAccountUncheckedUpdateManyInput = {
   sessionData?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  registeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PlatformAccountListRelationFilter = {
@@ -416,6 +454,8 @@ export type PlatformAccountCountOrderByAggregateInput = {
   sessionData?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  registeredAt?: Prisma.SortOrder
+  registrationLog?: Prisma.SortOrder
 }
 
 export type PlatformAccountAvgOrderByAggregateInput = {
@@ -433,6 +473,8 @@ export type PlatformAccountMaxOrderByAggregateInput = {
   sessionData?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  registeredAt?: Prisma.SortOrder
+  registrationLog?: Prisma.SortOrder
 }
 
 export type PlatformAccountMinOrderByAggregateInput = {
@@ -445,6 +487,8 @@ export type PlatformAccountMinOrderByAggregateInput = {
   sessionData?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  registeredAt?: Prisma.SortOrder
+  registrationLog?: Prisma.SortOrder
 }
 
 export type PlatformAccountSumOrderByAggregateInput = {
@@ -502,6 +546,8 @@ export type PlatformAccountCreateWithoutUserInput = {
   sessionData?: string | null
   lastLogin?: Date | string | null
   status?: string
+  registeredAt?: Date | string | null
+  registrationLog?: string | null
 }
 
 export type PlatformAccountUncheckedCreateWithoutUserInput = {
@@ -513,6 +559,8 @@ export type PlatformAccountUncheckedCreateWithoutUserInput = {
   sessionData?: string | null
   lastLogin?: Date | string | null
   status?: string
+  registeredAt?: Date | string | null
+  registrationLog?: string | null
 }
 
 export type PlatformAccountCreateOrConnectWithoutUserInput = {
@@ -554,6 +602,8 @@ export type PlatformAccountScalarWhereInput = {
   sessionData?: Prisma.StringNullableFilter<"PlatformAccount"> | string | null
   lastLogin?: Prisma.DateTimeNullableFilter<"PlatformAccount"> | Date | string | null
   status?: Prisma.StringFilter<"PlatformAccount"> | string
+  registeredAt?: Prisma.DateTimeNullableFilter<"PlatformAccount"> | Date | string | null
+  registrationLog?: Prisma.StringNullableFilter<"PlatformAccount"> | string | null
 }
 
 export type PlatformAccountCreateManyUserInput = {
@@ -565,6 +615,8 @@ export type PlatformAccountCreateManyUserInput = {
   sessionData?: string | null
   lastLogin?: Date | string | null
   status?: string
+  registeredAt?: Date | string | null
+  registrationLog?: string | null
 }
 
 export type PlatformAccountUpdateWithoutUserInput = {
@@ -575,6 +627,8 @@ export type PlatformAccountUpdateWithoutUserInput = {
   sessionData?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  registeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PlatformAccountUncheckedUpdateWithoutUserInput = {
@@ -586,6 +640,8 @@ export type PlatformAccountUncheckedUpdateWithoutUserInput = {
   sessionData?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  registeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PlatformAccountUncheckedUpdateManyWithoutUserInput = {
@@ -597,6 +653,8 @@ export type PlatformAccountUncheckedUpdateManyWithoutUserInput = {
   sessionData?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  registeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationLog?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -611,6 +669,8 @@ export type PlatformAccountSelect<ExtArgs extends runtime.Types.Extensions.Inter
   sessionData?: boolean
   lastLogin?: boolean
   status?: boolean
+  registeredAt?: boolean
+  registrationLog?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platformAccount"]>
 
@@ -624,6 +684,8 @@ export type PlatformAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   sessionData?: boolean
   lastLogin?: boolean
   status?: boolean
+  registeredAt?: boolean
+  registrationLog?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platformAccount"]>
 
@@ -637,6 +699,8 @@ export type PlatformAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   sessionData?: boolean
   lastLogin?: boolean
   status?: boolean
+  registeredAt?: boolean
+  registrationLog?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platformAccount"]>
 
@@ -650,9 +714,11 @@ export type PlatformAccountSelectScalar = {
   sessionData?: boolean
   lastLogin?: boolean
   status?: boolean
+  registeredAt?: boolean
+  registrationLog?: boolean
 }
 
-export type PlatformAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "platform" | "authType" | "email" | "passwordEncrypted" | "sessionData" | "lastLogin" | "status", ExtArgs["result"]["platformAccount"]>
+export type PlatformAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "platform" | "authType" | "email" | "passwordEncrypted" | "sessionData" | "lastLogin" | "status" | "registeredAt" | "registrationLog", ExtArgs["result"]["platformAccount"]>
 export type PlatformAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -678,6 +744,8 @@ export type $PlatformAccountPayload<ExtArgs extends runtime.Types.Extensions.Int
     sessionData: string | null
     lastLogin: Date | null
     status: string
+    registeredAt: Date | null
+    registrationLog: string | null
   }, ExtArgs["result"]["platformAccount"]>
   composites: {}
 }
@@ -1111,6 +1179,8 @@ export interface PlatformAccountFieldRefs {
   readonly sessionData: Prisma.FieldRef<"PlatformAccount", 'String'>
   readonly lastLogin: Prisma.FieldRef<"PlatformAccount", 'DateTime'>
   readonly status: Prisma.FieldRef<"PlatformAccount", 'String'>
+  readonly registeredAt: Prisma.FieldRef<"PlatformAccount", 'DateTime'>
+  readonly registrationLog: Prisma.FieldRef<"PlatformAccount", 'String'>
 }
     
 

@@ -49,6 +49,7 @@ export type UserMinAggregateOutputType = {
   preferredTheme: string | null
   applicationLimit: number | null
   createdAt: Date | null
+  lastVacanciesSeenAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -64,6 +65,7 @@ export type UserMaxAggregateOutputType = {
   preferredTheme: string | null
   applicationLimit: number | null
   createdAt: Date | null
+  lastVacanciesSeenAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -79,6 +81,7 @@ export type UserCountAggregateOutputType = {
   preferredTheme: number
   applicationLimit: number
   createdAt: number
+  lastVacanciesSeenAt: number
   _all: number
 }
 
@@ -106,6 +109,7 @@ export type UserMinAggregateInputType = {
   preferredTheme?: true
   applicationLimit?: true
   createdAt?: true
+  lastVacanciesSeenAt?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -121,6 +125,7 @@ export type UserMaxAggregateInputType = {
   preferredTheme?: true
   applicationLimit?: true
   createdAt?: true
+  lastVacanciesSeenAt?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -136,6 +141,7 @@ export type UserCountAggregateInputType = {
   preferredTheme?: true
   applicationLimit?: true
   createdAt?: true
+  lastVacanciesSeenAt?: true
   _all?: true
 }
 
@@ -238,6 +244,7 @@ export type UserGroupByOutputType = {
   preferredTheme: string
   applicationLimit: number
   createdAt: Date
+  lastVacanciesSeenAt: Date | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -276,6 +283,7 @@ export type UserWhereInput = {
   preferredTheme?: Prisma.StringFilter<"User"> | string
   applicationLimit?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  lastVacanciesSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   searchProfiles?: Prisma.SearchProfileListRelationFilter
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
@@ -286,6 +294,7 @@ export type UserWhereInput = {
   aiSettings?: Prisma.XOR<Prisma.UserAISettingsNullableScalarRelationFilter, Prisma.UserAISettingsWhereInput> | null
   notifications?: Prisma.NotificationListRelationFilter
   companyResearch?: Prisma.CompanyResearchListRelationFilter
+  userVacancies?: Prisma.UserVacancyListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -301,6 +310,7 @@ export type UserOrderByWithRelationInput = {
   preferredTheme?: Prisma.SortOrder
   applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  lastVacanciesSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profile?: Prisma.UserProfileOrderByWithRelationInput
   searchProfiles?: Prisma.SearchProfileOrderByRelationAggregateInput
   vacancyScores?: Prisma.VacancyScoreOrderByRelationAggregateInput
@@ -311,6 +321,7 @@ export type UserOrderByWithRelationInput = {
   aiSettings?: Prisma.UserAISettingsOrderByWithRelationInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   companyResearch?: Prisma.CompanyResearchOrderByRelationAggregateInput
+  userVacancies?: Prisma.UserVacancyOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -329,6 +340,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   preferredTheme?: Prisma.StringFilter<"User"> | string
   applicationLimit?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  lastVacanciesSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   searchProfiles?: Prisma.SearchProfileListRelationFilter
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
@@ -339,6 +351,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   aiSettings?: Prisma.XOR<Prisma.UserAISettingsNullableScalarRelationFilter, Prisma.UserAISettingsWhereInput> | null
   notifications?: Prisma.NotificationListRelationFilter
   companyResearch?: Prisma.CompanyResearchListRelationFilter
+  userVacancies?: Prisma.UserVacancyListRelationFilter
 }, "id" | "email" | "googleId" | "jfEmail">
 
 export type UserOrderByWithAggregationInput = {
@@ -354,6 +367,7 @@ export type UserOrderByWithAggregationInput = {
   preferredTheme?: Prisma.SortOrder
   applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  lastVacanciesSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -377,6 +391,7 @@ export type UserScalarWhereWithAggregatesInput = {
   preferredTheme?: Prisma.StringWithAggregatesFilter<"User"> | string
   applicationLimit?: Prisma.IntWithAggregatesFilter<"User"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  lastVacanciesSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
 }
 
 export type UserCreateInput = {
@@ -391,6 +406,7 @@ export type UserCreateInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -401,6 +417,7 @@ export type UserCreateInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -416,6 +433,7 @@ export type UserUncheckedCreateInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -426,6 +444,7 @@ export type UserUncheckedCreateInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -440,6 +459,7 @@ export type UserUpdateInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -450,6 +470,7 @@ export type UserUpdateInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -465,6 +486,7 @@ export type UserUncheckedUpdateInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -475,6 +497,7 @@ export type UserUncheckedUpdateInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -490,6 +513,7 @@ export type UserCreateManyInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -504,6 +528,7 @@ export type UserUpdateManyMutationInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -519,6 +544,7 @@ export type UserUncheckedUpdateManyInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -534,6 +560,7 @@ export type UserCountOrderByAggregateInput = {
   preferredTheme?: Prisma.SortOrder
   applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  lastVacanciesSeenAt?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -554,6 +581,7 @@ export type UserMaxOrderByAggregateInput = {
   preferredTheme?: Prisma.SortOrder
   applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  lastVacanciesSeenAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -569,6 +597,7 @@ export type UserMinOrderByAggregateInput = {
   preferredTheme?: Prisma.SortOrder
   applicationLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  lastVacanciesSeenAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -599,6 +628,10 @@ export type IntFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type UserCreateNestedOneWithoutProfileInput = {
@@ -741,6 +774,20 @@ export type UserUpdateOneRequiredWithoutCompanyResearchNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCompanyResearchInput, Prisma.UserUpdateWithoutCompanyResearchInput>, Prisma.UserUncheckedUpdateWithoutCompanyResearchInput>
 }
 
+export type UserCreateNestedOneWithoutUserVacanciesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserVacanciesInput, Prisma.UserUncheckedCreateWithoutUserVacanciesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserVacanciesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUserVacanciesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserVacanciesInput, Prisma.UserUncheckedCreateWithoutUserVacanciesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserVacanciesInput
+  upsert?: Prisma.UserUpsertWithoutUserVacanciesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserVacanciesInput, Prisma.UserUpdateWithoutUserVacanciesInput>, Prisma.UserUncheckedUpdateWithoutUserVacanciesInput>
+}
+
 export type UserCreateWithoutProfileInput = {
   email: string
   name?: string | null
@@ -753,6 +800,7 @@ export type UserCreateWithoutProfileInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
@@ -762,6 +810,7 @@ export type UserCreateWithoutProfileInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -777,6 +826,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -786,6 +836,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -816,6 +867,7 @@ export type UserUpdateWithoutProfileInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
@@ -825,6 +877,7 @@ export type UserUpdateWithoutProfileInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -840,6 +893,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -849,6 +903,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSearchProfilesInput = {
@@ -863,6 +918,7 @@ export type UserCreateWithoutSearchProfilesInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
@@ -872,6 +928,7 @@ export type UserCreateWithoutSearchProfilesInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSearchProfilesInput = {
@@ -887,6 +944,7 @@ export type UserUncheckedCreateWithoutSearchProfilesInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -896,6 +954,7 @@ export type UserUncheckedCreateWithoutSearchProfilesInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSearchProfilesInput = {
@@ -926,6 +985,7 @@ export type UserUpdateWithoutSearchProfilesInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
@@ -935,6 +995,7 @@ export type UserUpdateWithoutSearchProfilesInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSearchProfilesInput = {
@@ -950,6 +1011,7 @@ export type UserUncheckedUpdateWithoutSearchProfilesInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -959,6 +1021,7 @@ export type UserUncheckedUpdateWithoutSearchProfilesInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVacancyScoresInput = {
@@ -973,6 +1036,7 @@ export type UserCreateWithoutVacancyScoresInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
@@ -982,6 +1046,7 @@ export type UserCreateWithoutVacancyScoresInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVacancyScoresInput = {
@@ -997,6 +1062,7 @@ export type UserUncheckedCreateWithoutVacancyScoresInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1006,6 +1072,7 @@ export type UserUncheckedCreateWithoutVacancyScoresInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVacancyScoresInput = {
@@ -1036,6 +1103,7 @@ export type UserUpdateWithoutVacancyScoresInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
@@ -1045,6 +1113,7 @@ export type UserUpdateWithoutVacancyScoresInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVacancyScoresInput = {
@@ -1060,6 +1129,7 @@ export type UserUncheckedUpdateWithoutVacancyScoresInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1069,6 +1139,7 @@ export type UserUncheckedUpdateWithoutVacancyScoresInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApplicationsInput = {
@@ -1083,6 +1154,7 @@ export type UserCreateWithoutApplicationsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -1092,6 +1164,7 @@ export type UserCreateWithoutApplicationsInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
@@ -1107,6 +1180,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -1116,6 +1190,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -1146,6 +1221,7 @@ export type UserUpdateWithoutApplicationsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -1155,6 +1231,7 @@ export type UserUpdateWithoutApplicationsInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
@@ -1170,6 +1247,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -1179,6 +1257,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQaPairsInput = {
@@ -1193,6 +1272,7 @@ export type UserCreateWithoutQaPairsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -1202,6 +1282,7 @@ export type UserCreateWithoutQaPairsInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQaPairsInput = {
@@ -1217,6 +1298,7 @@ export type UserUncheckedCreateWithoutQaPairsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -1226,6 +1308,7 @@ export type UserUncheckedCreateWithoutQaPairsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQaPairsInput = {
@@ -1256,6 +1339,7 @@ export type UserUpdateWithoutQaPairsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -1265,6 +1349,7 @@ export type UserUpdateWithoutQaPairsInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQaPairsInput = {
@@ -1280,6 +1365,7 @@ export type UserUncheckedUpdateWithoutQaPairsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -1289,6 +1375,7 @@ export type UserUncheckedUpdateWithoutQaPairsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlatformAccountsInput = {
@@ -1303,6 +1390,7 @@ export type UserCreateWithoutPlatformAccountsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -1312,6 +1400,7 @@ export type UserCreateWithoutPlatformAccountsInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlatformAccountsInput = {
@@ -1327,6 +1416,7 @@ export type UserUncheckedCreateWithoutPlatformAccountsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -1336,6 +1426,7 @@ export type UserUncheckedCreateWithoutPlatformAccountsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlatformAccountsInput = {
@@ -1366,6 +1457,7 @@ export type UserUpdateWithoutPlatformAccountsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -1375,6 +1467,7 @@ export type UserUpdateWithoutPlatformAccountsInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
@@ -1390,6 +1483,7 @@ export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -1399,6 +1493,7 @@ export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiFeedbackInput = {
@@ -1413,6 +1508,7 @@ export type UserCreateWithoutAiFeedbackInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -1422,6 +1518,7 @@ export type UserCreateWithoutAiFeedbackInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiFeedbackInput = {
@@ -1437,6 +1534,7 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -1446,6 +1544,7 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiFeedbackInput = {
@@ -1476,6 +1575,7 @@ export type UserUpdateWithoutAiFeedbackInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -1485,6 +1585,7 @@ export type UserUpdateWithoutAiFeedbackInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiFeedbackInput = {
@@ -1500,6 +1601,7 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -1509,6 +1611,7 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiSettingsInput = {
@@ -1523,6 +1626,7 @@ export type UserCreateWithoutAiSettingsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -1532,6 +1636,7 @@ export type UserCreateWithoutAiSettingsInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiSettingsInput = {
@@ -1547,6 +1652,7 @@ export type UserUncheckedCreateWithoutAiSettingsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -1556,6 +1662,7 @@ export type UserUncheckedCreateWithoutAiSettingsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiSettingsInput = {
@@ -1586,6 +1693,7 @@ export type UserUpdateWithoutAiSettingsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -1595,6 +1703,7 @@ export type UserUpdateWithoutAiSettingsInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiSettingsInput = {
@@ -1610,6 +1719,7 @@ export type UserUncheckedUpdateWithoutAiSettingsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -1619,6 +1729,7 @@ export type UserUncheckedUpdateWithoutAiSettingsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1633,6 +1744,7 @@ export type UserCreateWithoutNotificationsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -1642,6 +1754,7 @@ export type UserCreateWithoutNotificationsInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1657,6 +1770,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -1666,6 +1780,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1696,6 +1811,7 @@ export type UserUpdateWithoutNotificationsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -1705,6 +1821,7 @@ export type UserUpdateWithoutNotificationsInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1720,6 +1837,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -1729,6 +1847,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCompanyResearchInput = {
@@ -1743,6 +1862,7 @@ export type UserCreateWithoutCompanyResearchInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
@@ -1752,6 +1872,7 @@ export type UserCreateWithoutCompanyResearchInput = {
   aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanyResearchInput = {
@@ -1767,6 +1888,7 @@ export type UserUncheckedCreateWithoutCompanyResearchInput = {
   preferredTheme?: string
   applicationLimit?: number
   createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
@@ -1776,6 +1898,7 @@ export type UserUncheckedCreateWithoutCompanyResearchInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanyResearchInput = {
@@ -1806,6 +1929,7 @@ export type UserUpdateWithoutCompanyResearchInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
@@ -1815,6 +1939,7 @@ export type UserUpdateWithoutCompanyResearchInput = {
   aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyResearchInput = {
@@ -1830,6 +1955,7 @@ export type UserUncheckedUpdateWithoutCompanyResearchInput = {
   preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
@@ -1839,6 +1965,125 @@ export type UserUncheckedUpdateWithoutCompanyResearchInput = {
   aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUserVacanciesInput = {
+  email: string
+  name?: string | null
+  image?: string | null
+  googleId?: string | null
+  jfEmail?: string | null
+  role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
+  applicationLimit?: number
+  createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
+  vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  qaPairs?: Prisma.QaPairCreateNestedManyWithoutUserInput
+  platformAccounts?: Prisma.PlatformAccountCreateNestedManyWithoutUserInput
+  aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
+  aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutUserVacanciesInput = {
+  id?: number
+  email: string
+  name?: string | null
+  image?: string | null
+  googleId?: string | null
+  jfEmail?: string | null
+  role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
+  applicationLimit?: number
+  createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutUserInput
+  platformAccounts?: Prisma.PlatformAccountUncheckedCreateNestedManyWithoutUserInput
+  aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
+  aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutUserVacanciesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserVacanciesInput, Prisma.UserUncheckedCreateWithoutUserVacanciesInput>
+}
+
+export type UserUpsertWithoutUserVacanciesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserVacanciesInput, Prisma.UserUncheckedUpdateWithoutUserVacanciesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserVacanciesInput, Prisma.UserUncheckedCreateWithoutUserVacanciesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserVacanciesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserVacanciesInput, Prisma.UserUncheckedUpdateWithoutUserVacanciesInput>
+}
+
+export type UserUpdateWithoutUserVacanciesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
+  vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  qaPairs?: Prisma.QaPairUpdateManyWithoutUserNestedInput
+  platformAccounts?: Prisma.PlatformAccountUpdateManyWithoutUserNestedInput
+  aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
+  aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserVacanciesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutUserNestedInput
+  platformAccounts?: Prisma.PlatformAccountUncheckedUpdateManyWithoutUserNestedInput
+  aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1855,6 +2100,7 @@ export type UserCountOutputType = {
   aiFeedback: number
   notifications: number
   companyResearch: number
+  userVacancies: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1866,6 +2112,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   aiFeedback?: boolean | UserCountOutputTypeCountAiFeedbackArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   companyResearch?: boolean | UserCountOutputTypeCountCompanyResearchArgs
+  userVacancies?: boolean | UserCountOutputTypeCountUserVacanciesArgs
 }
 
 /**
@@ -1934,6 +2181,13 @@ export type UserCountOutputTypeCountCompanyResearchArgs<ExtArgs extends runtime.
   where?: Prisma.CompanyResearchWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserVacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserVacancyWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1948,6 +2202,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   preferredTheme?: boolean
   applicationLimit?: boolean
   createdAt?: boolean
+  lastVacanciesSeenAt?: boolean
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   searchProfiles?: boolean | Prisma.User$searchProfilesArgs<ExtArgs>
   vacancyScores?: boolean | Prisma.User$vacancyScoresArgs<ExtArgs>
@@ -1958,6 +2213,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   aiSettings?: boolean | Prisma.User$aiSettingsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   companyResearch?: boolean | Prisma.User$companyResearchArgs<ExtArgs>
+  userVacancies?: boolean | Prisma.User$userVacanciesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1974,6 +2230,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   preferredTheme?: boolean
   applicationLimit?: boolean
   createdAt?: boolean
+  lastVacanciesSeenAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1989,6 +2246,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   preferredTheme?: boolean
   applicationLimit?: boolean
   createdAt?: boolean
+  lastVacanciesSeenAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2004,9 +2262,10 @@ export type UserSelectScalar = {
   preferredTheme?: boolean
   applicationLimit?: boolean
   createdAt?: boolean
+  lastVacanciesSeenAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "jfEmail" | "role" | "preferredLocale" | "preferredSkin" | "preferredTheme" | "applicationLimit" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "jfEmail" | "role" | "preferredLocale" | "preferredSkin" | "preferredTheme" | "applicationLimit" | "createdAt" | "lastVacanciesSeenAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   searchProfiles?: boolean | Prisma.User$searchProfilesArgs<ExtArgs>
@@ -2018,6 +2277,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   aiSettings?: boolean | Prisma.User$aiSettingsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   companyResearch?: boolean | Prisma.User$companyResearchArgs<ExtArgs>
+  userVacancies?: boolean | Prisma.User$userVacanciesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2036,6 +2296,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     aiSettings: Prisma.$UserAISettingsPayload<ExtArgs> | null
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     companyResearch: Prisma.$CompanyResearchPayload<ExtArgs>[]
+    userVacancies: Prisma.$UserVacancyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2050,6 +2311,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     preferredTheme: string
     applicationLimit: number
     createdAt: Date
+    lastVacanciesSeenAt: Date | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2454,6 +2716,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   aiSettings<T extends Prisma.User$aiSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiSettingsArgs<ExtArgs>>): Prisma.Prisma__UserAISettingsClient<runtime.Types.Result.GetResult<Prisma.$UserAISettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   companyResearch<T extends Prisma.User$companyResearchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyResearchArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userVacancies<T extends Prisma.User$userVacanciesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userVacanciesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserVacancyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2495,6 +2758,7 @@ export interface UserFieldRefs {
   readonly preferredTheme: Prisma.FieldRef<"User", 'String'>
   readonly applicationLimit: Prisma.FieldRef<"User", 'Int'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly lastVacanciesSeenAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 
@@ -3115,6 +3379,30 @@ export type User$companyResearchArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.CompanyResearchScalarFieldEnum | Prisma.CompanyResearchScalarFieldEnum[]
+}
+
+/**
+ * User.userVacancies
+ */
+export type User$userVacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserVacancy
+   */
+  select?: Prisma.UserVacancySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserVacancy
+   */
+  omit?: Prisma.UserVacancyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserVacancyInclude<ExtArgs> | null
+  where?: Prisma.UserVacancyWhereInput
+  orderBy?: Prisma.UserVacancyOrderByWithRelationInput | Prisma.UserVacancyOrderByWithRelationInput[]
+  cursor?: Prisma.UserVacancyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserVacancyScalarFieldEnum | Prisma.UserVacancyScalarFieldEnum[]
 }
 
 /**

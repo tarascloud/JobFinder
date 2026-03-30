@@ -65,7 +65,8 @@ export const ModelName = {
   Notification: 'Notification',
   CompanyResearch: 'CompanyResearch',
   EmailResponse: 'EmailResponse',
-  AdminEmail: 'AdminEmail'
+  AdminEmail: 'AdminEmail',
+  UserVacancy: 'UserVacancy'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -96,7 +97,8 @@ export const UserScalarFieldEnum = {
   preferredSkin: 'preferredSkin',
   preferredTheme: 'preferredTheme',
   applicationLimit: 'applicationLimit',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  lastVacanciesSeenAt: 'lastVacanciesSeenAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -175,6 +177,10 @@ export const SearchProfileScalarFieldEnum = {
   autoApply: 'autoApply',
   scrapeSchedule: 'scrapeSchedule',
   source: 'source',
+  skills: 'skills',
+  preferredPlatforms: 'preferredPlatforms',
+  excludedKeywords: 'excludedKeywords',
+  lastScrapedAt: 'lastScrapedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -206,7 +212,9 @@ export const VacancyScalarFieldEnum = {
   tagStack: 'tagStack',
   tagLevel: 'tagLevel',
   tagIndustry: 'tagIndustry',
-  tagTeamSize: 'tagTeamSize'
+  tagTeamSize: 'tagTeamSize',
+  isArchived: 'isArchived',
+  archivedAt: 'archivedAt'
 } as const
 
 export type VacancyScalarFieldEnum = (typeof VacancyScalarFieldEnum)[keyof typeof VacancyScalarFieldEnum]
@@ -274,7 +282,9 @@ export const PlatformAccountScalarFieldEnum = {
   passwordEncrypted: 'passwordEncrypted',
   sessionData: 'sessionData',
   lastLogin: 'lastLogin',
-  status: 'status'
+  status: 'status',
+  registeredAt: 'registeredAt',
+  registrationLog: 'registrationLog'
 } as const
 
 export type PlatformAccountScalarFieldEnum = (typeof PlatformAccountScalarFieldEnum)[keyof typeof PlatformAccountScalarFieldEnum]
@@ -367,6 +377,26 @@ export const AdminEmailScalarFieldEnum = {
 } as const
 
 export type AdminEmailScalarFieldEnum = (typeof AdminEmailScalarFieldEnum)[keyof typeof AdminEmailScalarFieldEnum]
+
+
+export const UserVacancyScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  vacancyId: 'vacancyId',
+  searchProfileId: 'searchProfileId',
+  score: 'score',
+  salaryFit: 'salaryFit',
+  remoteFit: 'remoteFit',
+  scoreNotes: 'scoreNotes',
+  scoredAt: 'scoredAt',
+  scoredBy: 'scoredBy',
+  seen: 'seen',
+  dismissed: 'dismissed',
+  savedAt: 'savedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type UserVacancyScalarFieldEnum = (typeof UserVacancyScalarFieldEnum)[keyof typeof UserVacancyScalarFieldEnum]
 
 
 export const SortOrder = {

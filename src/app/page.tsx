@@ -1,17 +1,14 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { LandingPage } from "@/components/landing/landing-page";
+import { auth } from "@/lib/auth";
+import { isDemoMode } from "@/lib/current-user";
 
 export default async function RootPage() {
-  const cookieStore = await cookies();
-  const hasSession =
-    cookieStore.get("authjs.session-token")?.value ||
-    cookieStore.get("__Secure-authjs.session-token")?.value ||
-    cookieStore.get("demo_token")?.value;
-
-  if (hasSession) {
-    redirect("/profile");
+  const session = await auth();
+  if (session?.user) {
+    redirect("/vacancies");
   }
-
-  return <LandingPage />;
+  if (await isDemoMode()) {
+    redirect("/vacancies");
+  }
+  redirect("/login");
 }

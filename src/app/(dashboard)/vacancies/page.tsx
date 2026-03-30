@@ -265,17 +265,10 @@ export default function VacanciesPage() {
   const canQueue = !!(effectiveProfileId || profiles.length > 0);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-          {total > 0 && (
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {total} {total === 1 ? "vacancy" : "vacancies"} found
-            </p>
-          )}
-        </div>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
         <div className="flex items-center gap-2">
           {/* Mark all as read */}
           {unseenCount > 0 && (

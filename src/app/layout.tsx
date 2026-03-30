@@ -13,55 +13,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "JobFinder — AI-Powered Job Search & Auto-Apply",
-    template: "%s | JobFinder",
-  },
-  description:
-    "Open-source AI job search automation. Upload your resume, scrape 11+ job boards, get AI match scores, auto-generate cover letters, and auto-apply. Self-hosted, privacy-first.",
-  keywords: [
-    "job search automation",
-    "AI job matching",
-    "auto apply jobs",
-    "job scraper",
-    "resume parser",
-    "cover letter generator",
-    "open source job board",
-    "self-hosted job search",
-    "LinkedIn scraper",
-    "Indeed scraper",
-    "job application tracker",
-    "AI recruitment",
-    "remote jobs",
-  ],
+  title: "JobFinder — Auto Job Search & Apply",
+  description: "AI-powered job search automation. Find, score, and apply to jobs automatically.",
   manifest: "/manifest.json",
-  metadataBase: new URL("https://jobfinder.taras.cloud"),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    siteName: "JobFinder",
-    title: "JobFinder — AI-Powered Job Search & Auto-Apply",
-    description:
-      "Open-source AI job search automation. Scrape 11+ job boards, get AI match scores, auto-generate cover letters, and auto-apply. Self-hosted & privacy-first.",
-    url: "https://jobfinder.taras.cloud",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "JobFinder — AI-Powered Job Search Automation",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "JobFinder — AI-Powered Job Search & Auto-Apply",
-    description:
-      "Open-source AI job search automation. Scrape 11+ job boards, AI scoring, auto-apply. Self-hosted & privacy-first.",
-    images: ["/og-image.png"],
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -74,9 +28,6 @@ export const metadata: Metadata = {
     apple: [
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],
-  },
-  other: {
-    "application-name": "JobFinder",
   },
 };
 
@@ -93,71 +44,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const hasSession = cookieStore.get("authjs.session-token")?.value ||
-    cookieStore.get("__Secure-authjs.session-token")?.value ||
-    cookieStore.get("demo_token")?.value;
-
-  // Only restore preferences for authenticated users
-  let dbPrefs: Awaited<ReturnType<typeof restorePreferencesFromDB>> = null;
-  if (hasSession) {
-    try {
-      dbPrefs = await restorePreferencesFromDB();
-    } catch {
-      // ignore
-    }
-  }
+  // Restore preferences from DB if cookies are missing (e.g. cache cleared).
+  // Returns DB prefs so we can use them for theme default below.
+  const dbPrefs = await restorePreferencesFromDB();
 
   const locale = await getLocale();
   const messages = await getMessages();
+  const cookieStore = await cookies();
   const skin = cookieStore.get("jf-skin")?.value || "taras";
 
   // Use DB theme as defaultTheme so when localStorage is cleared,
   // next-themes falls back to the user's saved preference instead of "dark".
   const defaultTheme = dbPrefs?.theme || "dark";
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "JobFinder",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    description:
-      "Open-source AI-powered job search automation. Upload your resume, scrape 11+ job boards, get AI match scores, auto-generate cover letters, and auto-apply.",
-    url: "https://jobfinder.taras.cloud",
-    image: "https://jobfinder.taras.cloud/og-image.png",
-    author: {
-      "@type": "Organization",
-      name: "JobFinder",
-      url: "https://github.com/tarascloud/JobFinder",
-    },
-    license: "https://www.gnu.org/licenses/agpl-3.0.html",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    featureList: [
-      "AI resume analysis",
-      "11+ job board scraping",
-      "AI match scoring",
-      "Auto cover letter generation",
-      "Semi-auto and full-auto apply",
-      "Q&A knowledge base",
-      "Application tracking",
-      "Email response tracking",
-      "Analytics dashboard",
-    ],
-  };
-
   return (
     <html lang={locale} suppressHydrationWarning {...(skin !== "default" ? { "data-skin": skin } : {})}>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
       <body
         className={`${inter.variable} ${inter.className} antialiased`}
       >

@@ -69,6 +69,8 @@ export type VacancyMinAggregateOutputType = {
   tagLevel: string | null
   tagIndustry: string | null
   tagTeamSize: string | null
+  isArchived: boolean | null
+  archivedAt: Date | null
 }
 
 export type VacancyMaxAggregateOutputType = {
@@ -96,6 +98,8 @@ export type VacancyMaxAggregateOutputType = {
   tagLevel: string | null
   tagIndustry: string | null
   tagTeamSize: string | null
+  isArchived: boolean | null
+  archivedAt: Date | null
 }
 
 export type VacancyCountAggregateOutputType = {
@@ -124,6 +128,8 @@ export type VacancyCountAggregateOutputType = {
   tagLevel: number
   tagIndustry: number
   tagTeamSize: number
+  isArchived: number
+  archivedAt: number
   _all: number
 }
 
@@ -171,6 +177,8 @@ export type VacancyMinAggregateInputType = {
   tagLevel?: true
   tagIndustry?: true
   tagTeamSize?: true
+  isArchived?: true
+  archivedAt?: true
 }
 
 export type VacancyMaxAggregateInputType = {
@@ -198,6 +206,8 @@ export type VacancyMaxAggregateInputType = {
   tagLevel?: true
   tagIndustry?: true
   tagTeamSize?: true
+  isArchived?: true
+  archivedAt?: true
 }
 
 export type VacancyCountAggregateInputType = {
@@ -226,6 +236,8 @@ export type VacancyCountAggregateInputType = {
   tagLevel?: true
   tagIndustry?: true
   tagTeamSize?: true
+  isArchived?: true
+  archivedAt?: true
   _all?: true
 }
 
@@ -341,6 +353,8 @@ export type VacancyGroupByOutputType = {
   tagLevel: string | null
   tagIndustry: string | null
   tagTeamSize: string | null
+  isArchived: boolean
+  archivedAt: Date | null
   _count: VacancyCountAggregateOutputType | null
   _avg: VacancyAvgAggregateOutputType | null
   _sum: VacancySumAggregateOutputType | null
@@ -392,11 +406,14 @@ export type VacancyWhereInput = {
   tagLevel?: Prisma.StringNullableFilter<"Vacancy"> | string | null
   tagIndustry?: Prisma.StringNullableFilter<"Vacancy"> | string | null
   tagTeamSize?: Prisma.StringNullableFilter<"Vacancy"> | string | null
+  isArchived?: Prisma.BoolFilter<"Vacancy"> | boolean
+  archivedAt?: Prisma.DateTimeNullableFilter<"Vacancy"> | Date | string | null
   duplicateOf?: Prisma.XOR<Prisma.VacancyNullableScalarRelationFilter, Prisma.VacancyWhereInput> | null
   duplicates?: Prisma.VacancyListRelationFilter
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
   applications?: Prisma.ApplicationListRelationFilter
   qaPairs?: Prisma.QaPairListRelationFilter
+  userVacancies?: Prisma.UserVacancyListRelationFilter
 }
 
 export type VacancyOrderByWithRelationInput = {
@@ -425,11 +442,14 @@ export type VacancyOrderByWithRelationInput = {
   tagLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   tagIndustry?: Prisma.SortOrderInput | Prisma.SortOrder
   tagTeamSize?: Prisma.SortOrderInput | Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   duplicateOf?: Prisma.VacancyOrderByWithRelationInput
   duplicates?: Prisma.VacancyOrderByRelationAggregateInput
   vacancyScores?: Prisma.VacancyScoreOrderByRelationAggregateInput
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
   qaPairs?: Prisma.QaPairOrderByRelationAggregateInput
+  userVacancies?: Prisma.UserVacancyOrderByRelationAggregateInput
 }
 
 export type VacancyWhereUniqueInput = Prisma.AtLeast<{
@@ -462,11 +482,14 @@ export type VacancyWhereUniqueInput = Prisma.AtLeast<{
   tagLevel?: Prisma.StringNullableFilter<"Vacancy"> | string | null
   tagIndustry?: Prisma.StringNullableFilter<"Vacancy"> | string | null
   tagTeamSize?: Prisma.StringNullableFilter<"Vacancy"> | string | null
+  isArchived?: Prisma.BoolFilter<"Vacancy"> | boolean
+  archivedAt?: Prisma.DateTimeNullableFilter<"Vacancy"> | Date | string | null
   duplicateOf?: Prisma.XOR<Prisma.VacancyNullableScalarRelationFilter, Prisma.VacancyWhereInput> | null
   duplicates?: Prisma.VacancyListRelationFilter
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
   applications?: Prisma.ApplicationListRelationFilter
   qaPairs?: Prisma.QaPairListRelationFilter
+  userVacancies?: Prisma.UserVacancyListRelationFilter
 }, "id" | "platform_externalId">
 
 export type VacancyOrderByWithAggregationInput = {
@@ -495,6 +518,8 @@ export type VacancyOrderByWithAggregationInput = {
   tagLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   tagIndustry?: Prisma.SortOrderInput | Prisma.SortOrder
   tagTeamSize?: Prisma.SortOrderInput | Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.VacancyCountOrderByAggregateInput
   _avg?: Prisma.VacancyAvgOrderByAggregateInput
   _max?: Prisma.VacancyMaxOrderByAggregateInput
@@ -531,6 +556,8 @@ export type VacancyScalarWhereWithAggregatesInput = {
   tagLevel?: Prisma.StringNullableWithAggregatesFilter<"Vacancy"> | string | null
   tagIndustry?: Prisma.StringNullableWithAggregatesFilter<"Vacancy"> | string | null
   tagTeamSize?: Prisma.StringNullableWithAggregatesFilter<"Vacancy"> | string | null
+  isArchived?: Prisma.BoolWithAggregatesFilter<"Vacancy"> | boolean
+  archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Vacancy"> | Date | string | null
 }
 
 export type VacancyCreateInput = {
@@ -557,11 +584,14 @@ export type VacancyCreateInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicateOf?: Prisma.VacancyCreateNestedOneWithoutDuplicatesInput
   duplicates?: Prisma.VacancyCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyUncheckedCreateInput = {
@@ -590,10 +620,13 @@ export type VacancyUncheckedCreateInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicates?: Prisma.VacancyUncheckedCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyUpdateInput = {
@@ -620,11 +653,14 @@ export type VacancyUpdateInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicateOf?: Prisma.VacancyUpdateOneWithoutDuplicatesNestedInput
   duplicates?: Prisma.VacancyUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUncheckedUpdateInput = {
@@ -653,10 +689,13 @@ export type VacancyUncheckedUpdateInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicates?: Prisma.VacancyUncheckedUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyCreateManyInput = {
@@ -685,6 +724,8 @@ export type VacancyCreateManyInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
 }
 
 export type VacancyUpdateManyMutationInput = {
@@ -711,6 +752,8 @@ export type VacancyUpdateManyMutationInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type VacancyUncheckedUpdateManyInput = {
@@ -739,6 +782,8 @@ export type VacancyUncheckedUpdateManyInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type VacancyNullableScalarRelationFilter = {
@@ -787,6 +832,8 @@ export type VacancyCountOrderByAggregateInput = {
   tagLevel?: Prisma.SortOrder
   tagIndustry?: Prisma.SortOrder
   tagTeamSize?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
 }
 
 export type VacancyAvgOrderByAggregateInput = {
@@ -823,6 +870,8 @@ export type VacancyMaxOrderByAggregateInput = {
   tagLevel?: Prisma.SortOrder
   tagIndustry?: Prisma.SortOrder
   tagTeamSize?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
 }
 
 export type VacancyMinOrderByAggregateInput = {
@@ -850,6 +899,8 @@ export type VacancyMinOrderByAggregateInput = {
   tagLevel?: Prisma.SortOrder
   tagIndustry?: Prisma.SortOrder
   tagTeamSize?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
 }
 
 export type VacancySumOrderByAggregateInput = {
@@ -888,10 +939,6 @@ export type VacancyUncheckedCreateNestedManyWithoutDuplicateOfInput = {
   connectOrCreate?: Prisma.VacancyCreateOrConnectWithoutDuplicateOfInput | Prisma.VacancyCreateOrConnectWithoutDuplicateOfInput[]
   createMany?: Prisma.VacancyCreateManyDuplicateOfInputEnvelope
   connect?: Prisma.VacancyWhereUniqueInput | Prisma.VacancyWhereUniqueInput[]
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
 }
 
 export type VacancyUpdatetagStackInput = {
@@ -981,6 +1028,20 @@ export type VacancyUpdateOneWithoutQaPairsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VacancyUpdateToOneWithWhereWithoutQaPairsInput, Prisma.VacancyUpdateWithoutQaPairsInput>, Prisma.VacancyUncheckedUpdateWithoutQaPairsInput>
 }
 
+export type VacancyCreateNestedOneWithoutUserVacanciesInput = {
+  create?: Prisma.XOR<Prisma.VacancyCreateWithoutUserVacanciesInput, Prisma.VacancyUncheckedCreateWithoutUserVacanciesInput>
+  connectOrCreate?: Prisma.VacancyCreateOrConnectWithoutUserVacanciesInput
+  connect?: Prisma.VacancyWhereUniqueInput
+}
+
+export type VacancyUpdateOneRequiredWithoutUserVacanciesNestedInput = {
+  create?: Prisma.XOR<Prisma.VacancyCreateWithoutUserVacanciesInput, Prisma.VacancyUncheckedCreateWithoutUserVacanciesInput>
+  connectOrCreate?: Prisma.VacancyCreateOrConnectWithoutUserVacanciesInput
+  upsert?: Prisma.VacancyUpsertWithoutUserVacanciesInput
+  connect?: Prisma.VacancyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VacancyUpdateToOneWithWhereWithoutUserVacanciesInput, Prisma.VacancyUpdateWithoutUserVacanciesInput>, Prisma.VacancyUncheckedUpdateWithoutUserVacanciesInput>
+}
+
 export type VacancyCreateWithoutDuplicatesInput = {
   platform: string
   externalId: string
@@ -1005,10 +1066,13 @@ export type VacancyCreateWithoutDuplicatesInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicateOf?: Prisma.VacancyCreateNestedOneWithoutDuplicatesInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyUncheckedCreateWithoutDuplicatesInput = {
@@ -1037,9 +1101,12 @@ export type VacancyUncheckedCreateWithoutDuplicatesInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyCreateOrConnectWithoutDuplicatesInput = {
@@ -1071,10 +1138,13 @@ export type VacancyCreateWithoutDuplicateOfInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicates?: Prisma.VacancyCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyUncheckedCreateWithoutDuplicateOfInput = {
@@ -1102,10 +1172,13 @@ export type VacancyUncheckedCreateWithoutDuplicateOfInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicates?: Prisma.VacancyUncheckedCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyCreateOrConnectWithoutDuplicateOfInput = {
@@ -1153,10 +1226,13 @@ export type VacancyUpdateWithoutDuplicatesInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicateOf?: Prisma.VacancyUpdateOneWithoutDuplicatesNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUncheckedUpdateWithoutDuplicatesInput = {
@@ -1185,9 +1261,12 @@ export type VacancyUncheckedUpdateWithoutDuplicatesInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUpsertWithWhereUniqueWithoutDuplicateOfInput = {
@@ -1235,6 +1314,8 @@ export type VacancyScalarWhereInput = {
   tagLevel?: Prisma.StringNullableFilter<"Vacancy"> | string | null
   tagIndustry?: Prisma.StringNullableFilter<"Vacancy"> | string | null
   tagTeamSize?: Prisma.StringNullableFilter<"Vacancy"> | string | null
+  isArchived?: Prisma.BoolFilter<"Vacancy"> | boolean
+  archivedAt?: Prisma.DateTimeNullableFilter<"Vacancy"> | Date | string | null
 }
 
 export type VacancyCreateWithoutVacancyScoresInput = {
@@ -1261,10 +1342,13 @@ export type VacancyCreateWithoutVacancyScoresInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicateOf?: Prisma.VacancyCreateNestedOneWithoutDuplicatesInput
   duplicates?: Prisma.VacancyCreateNestedManyWithoutDuplicateOfInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyUncheckedCreateWithoutVacancyScoresInput = {
@@ -1293,9 +1377,12 @@ export type VacancyUncheckedCreateWithoutVacancyScoresInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicates?: Prisma.VacancyUncheckedCreateNestedManyWithoutDuplicateOfInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyCreateOrConnectWithoutVacancyScoresInput = {
@@ -1338,10 +1425,13 @@ export type VacancyUpdateWithoutVacancyScoresInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicateOf?: Prisma.VacancyUpdateOneWithoutDuplicatesNestedInput
   duplicates?: Prisma.VacancyUpdateManyWithoutDuplicateOfNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUncheckedUpdateWithoutVacancyScoresInput = {
@@ -1370,9 +1460,12 @@ export type VacancyUncheckedUpdateWithoutVacancyScoresInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicates?: Prisma.VacancyUncheckedUpdateManyWithoutDuplicateOfNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyCreateWithoutApplicationsInput = {
@@ -1399,10 +1492,13 @@ export type VacancyCreateWithoutApplicationsInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicateOf?: Prisma.VacancyCreateNestedOneWithoutDuplicatesInput
   duplicates?: Prisma.VacancyCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyUncheckedCreateWithoutApplicationsInput = {
@@ -1431,9 +1527,12 @@ export type VacancyUncheckedCreateWithoutApplicationsInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicates?: Prisma.VacancyUncheckedCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutVacancyInput
   qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutSourceVacancyInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyCreateOrConnectWithoutApplicationsInput = {
@@ -1476,10 +1575,13 @@ export type VacancyUpdateWithoutApplicationsInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicateOf?: Prisma.VacancyUpdateOneWithoutDuplicatesNestedInput
   duplicates?: Prisma.VacancyUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUncheckedUpdateWithoutApplicationsInput = {
@@ -1508,9 +1610,12 @@ export type VacancyUncheckedUpdateWithoutApplicationsInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicates?: Prisma.VacancyUncheckedUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyCreateWithoutQaPairsInput = {
@@ -1537,10 +1642,13 @@ export type VacancyCreateWithoutQaPairsInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicateOf?: Prisma.VacancyCreateNestedOneWithoutDuplicatesInput
   duplicates?: Prisma.VacancyCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutVacancyInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyUncheckedCreateWithoutQaPairsInput = {
@@ -1569,9 +1677,12 @@ export type VacancyUncheckedCreateWithoutQaPairsInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
   duplicates?: Prisma.VacancyUncheckedCreateNestedManyWithoutDuplicateOfInput
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutVacancyInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutVacancyInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutVacancyInput
 }
 
 export type VacancyCreateOrConnectWithoutQaPairsInput = {
@@ -1614,10 +1725,13 @@ export type VacancyUpdateWithoutQaPairsInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicateOf?: Prisma.VacancyUpdateOneWithoutDuplicatesNestedInput
   duplicates?: Prisma.VacancyUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUncheckedUpdateWithoutQaPairsInput = {
@@ -1646,9 +1760,162 @@ export type VacancyUncheckedUpdateWithoutQaPairsInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicates?: Prisma.VacancyUncheckedUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutVacancyNestedInput
+}
+
+export type VacancyCreateWithoutUserVacanciesInput = {
+  platform: string
+  externalId: string
+  url: string
+  title: string
+  company?: string | null
+  location?: string | null
+  salaryText?: string | null
+  salaryMin?: number | null
+  salaryMax?: number | null
+  salaryCurrency?: string | null
+  salaryMinEur?: number | null
+  salaryMaxEur?: number | null
+  remoteType?: string | null
+  employmentType?: string | null
+  description: string
+  language?: string | null
+  postedAt?: Date | string | null
+  scrapedAt?: Date | string
+  rawHtml?: string | null
+  tagStack?: Prisma.VacancyCreatetagStackInput | string[]
+  tagLevel?: string | null
+  tagIndustry?: string | null
+  tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
+  duplicateOf?: Prisma.VacancyCreateNestedOneWithoutDuplicatesInput
+  duplicates?: Prisma.VacancyCreateNestedManyWithoutDuplicateOfInput
+  vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutVacancyInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutVacancyInput
+  qaPairs?: Prisma.QaPairCreateNestedManyWithoutSourceVacancyInput
+}
+
+export type VacancyUncheckedCreateWithoutUserVacanciesInput = {
+  id?: number
+  platform: string
+  externalId: string
+  url: string
+  title: string
+  company?: string | null
+  location?: string | null
+  salaryText?: string | null
+  salaryMin?: number | null
+  salaryMax?: number | null
+  salaryCurrency?: string | null
+  salaryMinEur?: number | null
+  salaryMaxEur?: number | null
+  remoteType?: string | null
+  employmentType?: string | null
+  description: string
+  language?: string | null
+  postedAt?: Date | string | null
+  scrapedAt?: Date | string
+  rawHtml?: string | null
+  isDuplicateOf?: number | null
+  tagStack?: Prisma.VacancyCreatetagStackInput | string[]
+  tagLevel?: string | null
+  tagIndustry?: string | null
+  tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
+  duplicates?: Prisma.VacancyUncheckedCreateNestedManyWithoutDuplicateOfInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutVacancyInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutVacancyInput
+  qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutSourceVacancyInput
+}
+
+export type VacancyCreateOrConnectWithoutUserVacanciesInput = {
+  where: Prisma.VacancyWhereUniqueInput
+  create: Prisma.XOR<Prisma.VacancyCreateWithoutUserVacanciesInput, Prisma.VacancyUncheckedCreateWithoutUserVacanciesInput>
+}
+
+export type VacancyUpsertWithoutUserVacanciesInput = {
+  update: Prisma.XOR<Prisma.VacancyUpdateWithoutUserVacanciesInput, Prisma.VacancyUncheckedUpdateWithoutUserVacanciesInput>
+  create: Prisma.XOR<Prisma.VacancyCreateWithoutUserVacanciesInput, Prisma.VacancyUncheckedCreateWithoutUserVacanciesInput>
+  where?: Prisma.VacancyWhereInput
+}
+
+export type VacancyUpdateToOneWithWhereWithoutUserVacanciesInput = {
+  where?: Prisma.VacancyWhereInput
+  data: Prisma.XOR<Prisma.VacancyUpdateWithoutUserVacanciesInput, Prisma.VacancyUncheckedUpdateWithoutUserVacanciesInput>
+}
+
+export type VacancyUpdateWithoutUserVacanciesInput = {
+  platform?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salaryText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salaryMinEur?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryMaxEur?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rawHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagStack?: Prisma.VacancyUpdatetagStackInput | string[]
+  tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duplicateOf?: Prisma.VacancyUpdateOneWithoutDuplicatesNestedInput
+  duplicates?: Prisma.VacancyUpdateManyWithoutDuplicateOfNestedInput
+  vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutVacancyNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutVacancyNestedInput
+  qaPairs?: Prisma.QaPairUpdateManyWithoutSourceVacancyNestedInput
+}
+
+export type VacancyUncheckedUpdateWithoutUserVacanciesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  platform?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salaryText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salaryMinEur?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryMaxEur?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remoteType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rawHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDuplicateOf?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tagStack?: Prisma.VacancyUpdatetagStackInput | string[]
+  tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  duplicates?: Prisma.VacancyUncheckedUpdateManyWithoutDuplicateOfNestedInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutVacancyNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutVacancyNestedInput
+  qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutSourceVacancyNestedInput
 }
 
 export type VacancyCreateManyDuplicateOfInput = {
@@ -1676,6 +1943,8 @@ export type VacancyCreateManyDuplicateOfInput = {
   tagLevel?: string | null
   tagIndustry?: string | null
   tagTeamSize?: string | null
+  isArchived?: boolean
+  archivedAt?: Date | string | null
 }
 
 export type VacancyUpdateWithoutDuplicateOfInput = {
@@ -1702,10 +1971,13 @@ export type VacancyUpdateWithoutDuplicateOfInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicates?: Prisma.VacancyUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUncheckedUpdateWithoutDuplicateOfInput = {
@@ -1733,10 +2005,13 @@ export type VacancyUncheckedUpdateWithoutDuplicateOfInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duplicates?: Prisma.VacancyUncheckedUpdateManyWithoutDuplicateOfNestedInput
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutVacancyNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutVacancyNestedInput
   qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutSourceVacancyNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutVacancyNestedInput
 }
 
 export type VacancyUncheckedUpdateManyWithoutDuplicateOfInput = {
@@ -1764,6 +2039,8 @@ export type VacancyUncheckedUpdateManyWithoutDuplicateOfInput = {
   tagLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagIndustry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagTeamSize?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1776,6 +2053,7 @@ export type VacancyCountOutputType = {
   vacancyScores: number
   applications: number
   qaPairs: number
+  userVacancies: number
 }
 
 export type VacancyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1783,6 +2061,7 @@ export type VacancyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   vacancyScores?: boolean | VacancyCountOutputTypeCountVacancyScoresArgs
   applications?: boolean | VacancyCountOutputTypeCountApplicationsArgs
   qaPairs?: boolean | VacancyCountOutputTypeCountQaPairsArgs
+  userVacancies?: boolean | VacancyCountOutputTypeCountUserVacanciesArgs
 }
 
 /**
@@ -1823,6 +2102,13 @@ export type VacancyCountOutputTypeCountQaPairsArgs<ExtArgs extends runtime.Types
   where?: Prisma.QaPairWhereInput
 }
 
+/**
+ * VacancyCountOutputType without action
+ */
+export type VacancyCountOutputTypeCountUserVacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserVacancyWhereInput
+}
+
 
 export type VacancySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1850,11 +2136,14 @@ export type VacancySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   tagLevel?: boolean
   tagIndustry?: boolean
   tagTeamSize?: boolean
+  isArchived?: boolean
+  archivedAt?: boolean
   duplicateOf?: boolean | Prisma.Vacancy$duplicateOfArgs<ExtArgs>
   duplicates?: boolean | Prisma.Vacancy$duplicatesArgs<ExtArgs>
   vacancyScores?: boolean | Prisma.Vacancy$vacancyScoresArgs<ExtArgs>
   applications?: boolean | Prisma.Vacancy$applicationsArgs<ExtArgs>
   qaPairs?: boolean | Prisma.Vacancy$qaPairsArgs<ExtArgs>
+  userVacancies?: boolean | Prisma.Vacancy$userVacanciesArgs<ExtArgs>
   _count?: boolean | Prisma.VacancyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["vacancy"]>
 
@@ -1884,6 +2173,8 @@ export type VacancySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   tagLevel?: boolean
   tagIndustry?: boolean
   tagTeamSize?: boolean
+  isArchived?: boolean
+  archivedAt?: boolean
   duplicateOf?: boolean | Prisma.Vacancy$duplicateOfArgs<ExtArgs>
 }, ExtArgs["result"]["vacancy"]>
 
@@ -1913,6 +2204,8 @@ export type VacancySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   tagLevel?: boolean
   tagIndustry?: boolean
   tagTeamSize?: boolean
+  isArchived?: boolean
+  archivedAt?: boolean
   duplicateOf?: boolean | Prisma.Vacancy$duplicateOfArgs<ExtArgs>
 }, ExtArgs["result"]["vacancy"]>
 
@@ -1942,15 +2235,18 @@ export type VacancySelectScalar = {
   tagLevel?: boolean
   tagIndustry?: boolean
   tagTeamSize?: boolean
+  isArchived?: boolean
+  archivedAt?: boolean
 }
 
-export type VacancyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "platform" | "externalId" | "url" | "title" | "company" | "location" | "salaryText" | "salaryMin" | "salaryMax" | "salaryCurrency" | "salaryMinEur" | "salaryMaxEur" | "remoteType" | "employmentType" | "description" | "language" | "postedAt" | "scrapedAt" | "rawHtml" | "isDuplicateOf" | "tagStack" | "tagLevel" | "tagIndustry" | "tagTeamSize", ExtArgs["result"]["vacancy"]>
+export type VacancyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "platform" | "externalId" | "url" | "title" | "company" | "location" | "salaryText" | "salaryMin" | "salaryMax" | "salaryCurrency" | "salaryMinEur" | "salaryMaxEur" | "remoteType" | "employmentType" | "description" | "language" | "postedAt" | "scrapedAt" | "rawHtml" | "isDuplicateOf" | "tagStack" | "tagLevel" | "tagIndustry" | "tagTeamSize" | "isArchived" | "archivedAt", ExtArgs["result"]["vacancy"]>
 export type VacancyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   duplicateOf?: boolean | Prisma.Vacancy$duplicateOfArgs<ExtArgs>
   duplicates?: boolean | Prisma.Vacancy$duplicatesArgs<ExtArgs>
   vacancyScores?: boolean | Prisma.Vacancy$vacancyScoresArgs<ExtArgs>
   applications?: boolean | Prisma.Vacancy$applicationsArgs<ExtArgs>
   qaPairs?: boolean | Prisma.Vacancy$qaPairsArgs<ExtArgs>
+  userVacancies?: boolean | Prisma.Vacancy$userVacanciesArgs<ExtArgs>
   _count?: boolean | Prisma.VacancyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type VacancyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1968,6 +2264,7 @@ export type $VacancyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     vacancyScores: Prisma.$VacancyScorePayload<ExtArgs>[]
     applications: Prisma.$ApplicationPayload<ExtArgs>[]
     qaPairs: Prisma.$QaPairPayload<ExtArgs>[]
+    userVacancies: Prisma.$UserVacancyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1995,6 +2292,8 @@ export type $VacancyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     tagLevel: string | null
     tagIndustry: string | null
     tagTeamSize: string | null
+    isArchived: boolean
+    archivedAt: Date | null
   }, ExtArgs["result"]["vacancy"]>
   composites: {}
 }
@@ -2394,6 +2693,7 @@ export interface Prisma__VacancyClient<T, Null = never, ExtArgs extends runtime.
   vacancyScores<T extends Prisma.Vacancy$vacancyScoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vacancy$vacancyScoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VacancyScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   applications<T extends Prisma.Vacancy$applicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vacancy$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   qaPairs<T extends Prisma.Vacancy$qaPairsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vacancy$qaPairsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QaPairPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userVacancies<T extends Prisma.Vacancy$userVacanciesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vacancy$userVacanciesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserVacancyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2448,6 +2748,8 @@ export interface VacancyFieldRefs {
   readonly tagLevel: Prisma.FieldRef<"Vacancy", 'String'>
   readonly tagIndustry: Prisma.FieldRef<"Vacancy", 'String'>
   readonly tagTeamSize: Prisma.FieldRef<"Vacancy", 'String'>
+  readonly isArchived: Prisma.FieldRef<"Vacancy", 'Boolean'>
+  readonly archivedAt: Prisma.FieldRef<"Vacancy", 'DateTime'>
 }
     
 
@@ -2961,6 +3263,30 @@ export type Vacancy$qaPairsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.QaPairScalarFieldEnum | Prisma.QaPairScalarFieldEnum[]
+}
+
+/**
+ * Vacancy.userVacancies
+ */
+export type Vacancy$userVacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserVacancy
+   */
+  select?: Prisma.UserVacancySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserVacancy
+   */
+  omit?: Prisma.UserVacancyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserVacancyInclude<ExtArgs> | null
+  where?: Prisma.UserVacancyWhereInput
+  orderBy?: Prisma.UserVacancyOrderByWithRelationInput | Prisma.UserVacancyOrderByWithRelationInput[]
+  cursor?: Prisma.UserVacancyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserVacancyScalarFieldEnum | Prisma.UserVacancyScalarFieldEnum[]
 }
 
 /**

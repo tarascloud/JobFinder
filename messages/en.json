@@ -126,14 +126,7 @@
     "work_authorization": "Work Authorization",
     "select_option": "Select...",
     "rerun_onboarding": "Re-run Onboarding",
-    "rerun_onboarding_desc": "Start the onboarding wizard again. Your current profile will be reset.",
-    "telegram_title": "Telegram Notifications",
-    "telegram_username_placeholder": "your_telegram_username",
-    "telegram_save": "Save",
-    "telegram_saving": "Saving...",
-    "telegram_connected": "Connected to Telegram bot",
-    "telegram_disconnect": "Disconnect",
-    "telegram_connect_instruction": "Save your username, then find @jobfinder_bot on Telegram and send /start to connect."
+    "rerun_onboarding_desc": "Start the onboarding wizard again. Your current profile will be reset."
   },
   "searches": {
     "title": "Search Profiles",
@@ -469,8 +462,8 @@
     "ready_description": "Your JobFinder is configured. Start finding jobs!",
     "start_button": "Start Finding Jobs",
     "qa_count": "{count} interview Q&A pairs ready",
-    "ready_tip_qa": "Review your Q&A Bank — check your LinkedIn Easy Apply screening questions to improve auto-apply accuracy.",
-    "ready_tip_qa_link": "Go to Q&A Bank"
+    "ready_tip_qa": "Tip: Review your LinkedIn Easy Apply Q&A answers in the Q&A section to improve auto-apply accuracy.",
+    "ready_tip_qa_link": "Go to Q&A"
   },
   "analytics": {
     "title": "Analytics",
@@ -706,26 +699,7 @@
     "reliability_reliable": "Reliable",
     "reliability_moderate": "Moderate",
     "reliability_unreliable": "Unreliable",
-    "reliability_defunct": "Defunct",
-    "tab_telegram": "Telegram",
-    "telegram_bot_status": "Telegram Bot",
-    "telegram_token": "Bot Token",
-    "telegram_configured": "Configured",
-    "telegram_not_configured": "Not Configured",
-    "telegram_connection": "Connection",
-    "telegram_disconnected": "Disconnected",
-    "telegram_bot_username": "Bot",
-    "telegram_webhook": "Webhook",
-    "telegram_webhook_active": "Active",
-    "telegram_no_webhook": "Not Set",
-    "telegram_setup_webhook": "Setup Webhook",
-    "telegram_remove_webhook": "Remove",
-    "telegram_connected_users": "Connected Users",
-    "telegram_setup_hint": "Set TELEGRAM_BOT_TOKEN in environment variables to enable the Telegram bot.",
-    "telegram_refresh": "Refresh",
-    "telegram_users_title": "Telegram Users",
-    "telegram_linked": "Linked",
-    "telegram_pending": "Pending"
+    "reliability_defunct": "Defunct"
   },
   "emails": {
     "title": "Email Responses",
@@ -758,5 +732,31 @@
     "compose_placeholder": "Write your message...",
     "delete": "Delete",
     "delete_confirm": "Delete this email? This cannot be undone."
+  },
+  "platforms_auto": {
+    "title": "Auto-Registration",
+    "jf_email_label": "Your JobFinder email",
+    "jf_email_desc": "Registrations will use {email} as the account email",
+    "jf_email_missing": "JF email not set — contact support to enable auto-registration",
+    "no_platforms": "No platforms available for auto-registration",
+    "auto_register": "Auto-Register",
+    "registering": "Registering…",
+    "mark_verified": "Mark as Verified",
+    "retry": "Retry",
+    "show_log": "Show log",
+    "hide_log": "Hide log",
+    "captcha_warning": "May require CAPTCHA",
+    "email_verification_required": "Email verification required",
+    "phone_required_note": "Phone number required — manual registration needed",
+    "status_registered": "Registered",
+    "status_needs_verification": "Verify Email",
+    "status_needs_attention": "Needs Attention",
+    "status_pending": "Pending",
+    "status_failed": "Failed",
+    "result_success": "Registration Successful",
+    "result_needs_verification": "Check Your Email",
+    "result_captcha": "CAPTCHA Required",
+    "result_failed": "Registration Failed",
+    "manual_instructions_label": "Manual steps required:"
   }
 }

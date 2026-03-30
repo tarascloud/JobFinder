@@ -126,14 +126,7 @@
     "work_authorization": "Дозвіл на роботу",
     "select_option": "Оберіть...",
     "rerun_onboarding": "Пройти онбординг знову",
-    "rerun_onboarding_desc": "Запустити майстер онбордингу заново. Ваш поточний профіль буде скинуто.",
-    "telegram_title": "Telegram сповіщення",
-    "telegram_username_placeholder": "ваш_telegram_юзернейм",
-    "telegram_save": "Зберегти",
-    "telegram_saving": "Збереження...",
-    "telegram_connected": "Підключено до Telegram бота",
-    "telegram_disconnect": "Відключити",
-    "telegram_connect_instruction": "Збережіть юзернейм, потім знайдіть @jobfinder_bot в Telegram і відправте /start для підключення."
+    "rerun_onboarding_desc": "Запустити майстер онбордингу заново. Ваш поточний профіль буде скинуто."
   },
   "searches": {
     "title": "Профілі пошуку",
@@ -469,8 +462,8 @@
     "ready_description": "JobFinder налаштовано. Починайте шукати роботу!",
     "start_button": "Почати пошук",
     "qa_count": "{count} пар питань-відповідей готові",
-    "ready_tip_qa": "Перегляньте банк Q&A — перевірте відповіді на скринінгові питання LinkedIn Easy Apply для покращення точності авто-подачі.",
-    "ready_tip_qa_link": "Перейти до банку Q&A"
+    "ready_tip_qa": "Порада: Перегляньте відповіді на питання LinkedIn Easy Apply у розділі Q&A для покращення точності авто-подачі.",
+    "ready_tip_qa_link": "Перейти до Q&A"
   },
   "analytics": {
     "title": "Аналітика",
@@ -706,26 +699,7 @@
     "reliability_reliable": "Надійний",
     "reliability_moderate": "Помірний",
     "reliability_unreliable": "Ненадійний",
-    "reliability_defunct": "Не працює",
-    "tab_telegram": "Telegram",
-    "telegram_bot_status": "Telegram Бот",
-    "telegram_token": "Токен бота",
-    "telegram_configured": "Налаштовано",
-    "telegram_not_configured": "Не налаштовано",
-    "telegram_connection": "З'єднання",
-    "telegram_disconnected": "Відключено",
-    "telegram_bot_username": "Бот",
-    "telegram_webhook": "Webhook",
-    "telegram_webhook_active": "Активний",
-    "telegram_no_webhook": "Не встановлено",
-    "telegram_setup_webhook": "Налаштувати Webhook",
-    "telegram_remove_webhook": "Видалити",
-    "telegram_connected_users": "Підключені користувачі",
-    "telegram_setup_hint": "Встановіть TELEGRAM_BOT_TOKEN в змінних середовища для увімкнення Telegram бота.",
-    "telegram_refresh": "Оновити",
-    "telegram_users_title": "Користувачі Telegram",
-    "telegram_linked": "Підключено",
-    "telegram_pending": "Очікує"
+    "reliability_defunct": "Не працює"
   },
   "emails": {
     "title": "Відповіді на листи",
@@ -758,5 +732,31 @@
     "compose_placeholder": "Напишіть повідомлення...",
     "delete": "Видалити",
     "delete_confirm": "Видалити цей лист? Цю дію не можна скасувати."
+  },
+  "platforms_auto": {
+    "title": "Авто-реєстрація",
+    "jf_email_label": "Ваш JobFinder email",
+    "jf_email_desc": "Реєстрації використовуватимуть {email} як email акаунту",
+    "jf_email_missing": "JF email не налаштовано — зверніться до підтримки",
+    "no_platforms": "Немає платформ для авто-реєстрації",
+    "auto_register": "Авто-реєстрація",
+    "registering": "Реєстрація…",
+    "mark_verified": "Позначити як підтверджено",
+    "retry": "Повторити",
+    "show_log": "Показати лог",
+    "hide_log": "Сховати лог",
+    "captcha_warning": "Може потребувати CAPTCHA",
+    "email_verification_required": "Потрібне підтвердження email",
+    "phone_required_note": "Потрібен номер телефону — потрібна ручна реєстрація",
+    "status_registered": "Зареєстровано",
+    "status_needs_verification": "Підтвердіть email",
+    "status_needs_attention": "Потрібна увага",
+    "status_pending": "Очікує",
+    "status_failed": "Помилка",
+    "result_success": "Реєстрацію успішно виконано",
+    "result_needs_verification": "Перевірте пошту",
+    "result_captcha": "Потрібна CAPTCHA",
+    "result_failed": "Помилка реєстрації",
+    "manual_instructions_label": "Потрібні ручні кроки:"
   }
 }

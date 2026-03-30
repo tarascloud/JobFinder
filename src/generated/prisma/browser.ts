@@ -92,3 +92,8 @@ export type EmailResponse = Prisma.EmailResponseModel
  * 
  */
 export type AdminEmail = Prisma.AdminEmailModel
+/**
+ * Model UserVacancy
+ * 
+ */
+export type UserVacancy = Prisma.UserVacancyModel

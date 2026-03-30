@@ -40,6 +40,7 @@ import {
   User,
 } from "lucide-react";
 import SettingsTabs from "../settings-tabs";
+import { AutoRegisterSection } from "./auto-register-section";
 
 const ALL_PLATFORM_LABELS: Record<string, string> = {
   linkedin: "LinkedIn",
@@ -496,6 +497,9 @@ export default function PlatformsPage() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Auto-registration section */}
+      <AutoRegisterSection />
     </div>
   );
 }

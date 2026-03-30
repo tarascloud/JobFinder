@@ -59,6 +59,7 @@ export type SearchProfileMinAggregateOutputType = {
   autoApply: boolean | null
   scrapeSchedule: string | null
   source: string | null
+  lastScrapedAt: Date | null
   createdAt: Date | null
 }
 
@@ -77,6 +78,7 @@ export type SearchProfileMaxAggregateOutputType = {
   autoApply: boolean | null
   scrapeSchedule: string | null
   source: string | null
+  lastScrapedAt: Date | null
   createdAt: Date | null
 }
 
@@ -101,6 +103,10 @@ export type SearchProfileCountAggregateOutputType = {
   autoApply: number
   scrapeSchedule: number
   source: number
+  skills: number
+  preferredPlatforms: number
+  excludedKeywords: number
+  lastScrapedAt: number
   createdAt: number
   _all: number
 }
@@ -139,6 +145,7 @@ export type SearchProfileMinAggregateInputType = {
   autoApply?: true
   scrapeSchedule?: true
   source?: true
+  lastScrapedAt?: true
   createdAt?: true
 }
 
@@ -157,6 +164,7 @@ export type SearchProfileMaxAggregateInputType = {
   autoApply?: true
   scrapeSchedule?: true
   source?: true
+  lastScrapedAt?: true
   createdAt?: true
 }
 
@@ -181,6 +189,10 @@ export type SearchProfileCountAggregateInputType = {
   autoApply?: true
   scrapeSchedule?: true
   source?: true
+  skills?: true
+  preferredPlatforms?: true
+  excludedKeywords?: true
+  lastScrapedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -292,6 +304,10 @@ export type SearchProfileGroupByOutputType = {
   autoApply: boolean
   scrapeSchedule: string
   source: string
+  skills: string[]
+  preferredPlatforms: string[]
+  excludedKeywords: string[]
+  lastScrapedAt: Date | null
   createdAt: Date
   _count: SearchProfileCountAggregateOutputType | null
   _avg: SearchProfileAvgAggregateOutputType | null
@@ -339,10 +355,15 @@ export type SearchProfileWhereInput = {
   autoApply?: Prisma.BoolFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringFilter<"SearchProfile"> | string
   source?: Prisma.StringFilter<"SearchProfile"> | string
+  skills?: Prisma.StringNullableListFilter<"SearchProfile">
+  preferredPlatforms?: Prisma.StringNullableListFilter<"SearchProfile">
+  excludedKeywords?: Prisma.StringNullableListFilter<"SearchProfile">
+  lastScrapedAt?: Prisma.DateTimeNullableFilter<"SearchProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SearchProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
   applications?: Prisma.ApplicationListRelationFilter
+  userVacancies?: Prisma.UserVacancyListRelationFilter
 }
 
 export type SearchProfileOrderByWithRelationInput = {
@@ -366,10 +387,15 @@ export type SearchProfileOrderByWithRelationInput = {
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  skills?: Prisma.SortOrder
+  preferredPlatforms?: Prisma.SortOrder
+  excludedKeywords?: Prisma.SortOrder
+  lastScrapedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   vacancyScores?: Prisma.VacancyScoreOrderByRelationAggregateInput
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
+  userVacancies?: Prisma.UserVacancyOrderByRelationAggregateInput
 }
 
 export type SearchProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -396,10 +422,15 @@ export type SearchProfileWhereUniqueInput = Prisma.AtLeast<{
   autoApply?: Prisma.BoolFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringFilter<"SearchProfile"> | string
   source?: Prisma.StringFilter<"SearchProfile"> | string
+  skills?: Prisma.StringNullableListFilter<"SearchProfile">
+  preferredPlatforms?: Prisma.StringNullableListFilter<"SearchProfile">
+  excludedKeywords?: Prisma.StringNullableListFilter<"SearchProfile">
+  lastScrapedAt?: Prisma.DateTimeNullableFilter<"SearchProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SearchProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   vacancyScores?: Prisma.VacancyScoreListRelationFilter
   applications?: Prisma.ApplicationListRelationFilter
+  userVacancies?: Prisma.UserVacancyListRelationFilter
 }, "id">
 
 export type SearchProfileOrderByWithAggregationInput = {
@@ -423,6 +454,10 @@ export type SearchProfileOrderByWithAggregationInput = {
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  skills?: Prisma.SortOrder
+  preferredPlatforms?: Prisma.SortOrder
+  excludedKeywords?: Prisma.SortOrder
+  lastScrapedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SearchProfileCountOrderByAggregateInput
   _avg?: Prisma.SearchProfileAvgOrderByAggregateInput
@@ -455,6 +490,10 @@ export type SearchProfileScalarWhereWithAggregatesInput = {
   autoApply?: Prisma.BoolWithAggregatesFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringWithAggregatesFilter<"SearchProfile"> | string
   source?: Prisma.StringWithAggregatesFilter<"SearchProfile"> | string
+  skills?: Prisma.StringNullableListFilter<"SearchProfile">
+  preferredPlatforms?: Prisma.StringNullableListFilter<"SearchProfile">
+  excludedKeywords?: Prisma.StringNullableListFilter<"SearchProfile">
+  lastScrapedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SearchProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SearchProfile"> | Date | string
 }
 
@@ -477,10 +516,15 @@ export type SearchProfileCreateInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSearchProfilesInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutSearchProfileInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileUncheckedCreateInput = {
@@ -504,9 +548,14 @@ export type SearchProfileUncheckedCreateInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutSearchProfileInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileUpdateInput = {
@@ -528,10 +577,15 @@ export type SearchProfileUpdateInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSearchProfilesNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutSearchProfileNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileUncheckedUpdateInput = {
@@ -555,9 +609,14 @@ export type SearchProfileUncheckedUpdateInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutSearchProfileNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileCreateManyInput = {
@@ -581,6 +640,10 @@ export type SearchProfileCreateManyInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -603,6 +666,10 @@ export type SearchProfileUpdateManyMutationInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -627,6 +694,10 @@ export type SearchProfileUncheckedUpdateManyInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -661,6 +732,10 @@ export type SearchProfileCountOrderByAggregateInput = {
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  skills?: Prisma.SortOrder
+  preferredPlatforms?: Prisma.SortOrder
+  excludedKeywords?: Prisma.SortOrder
+  lastScrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -688,6 +763,7 @@ export type SearchProfileMaxOrderByAggregateInput = {
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  lastScrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -706,6 +782,7 @@ export type SearchProfileMinOrderByAggregateInput = {
   autoApply?: Prisma.SortOrder
   scrapeSchedule?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  lastScrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -721,6 +798,11 @@ export type SearchProfileSumOrderByAggregateInput = {
 export type SearchProfileScalarRelationFilter = {
   is?: Prisma.SearchProfileWhereInput
   isNot?: Prisma.SearchProfileWhereInput
+}
+
+export type SearchProfileNullableScalarRelationFilter = {
+  is?: Prisma.SearchProfileWhereInput | null
+  isNot?: Prisma.SearchProfileWhereInput | null
 }
 
 export type SearchProfileCreateNestedManyWithoutUserInput = {
@@ -789,6 +871,18 @@ export type SearchProfileCreatestackFilterInput = {
   set: string[]
 }
 
+export type SearchProfileCreateskillsInput = {
+  set: string[]
+}
+
+export type SearchProfileCreatepreferredPlatformsInput = {
+  set: string[]
+}
+
+export type SearchProfileCreateexcludedKeywordsInput = {
+  set: string[]
+}
+
 export type SearchProfileUpdatejobTitlesInput = {
   set?: string[]
   push?: string | string[]
@@ -815,6 +909,21 @@ export type SearchProfileUpdateexcludedIndustriesInput = {
 }
 
 export type SearchProfileUpdatestackFilterInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type SearchProfileUpdateskillsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type SearchProfileUpdatepreferredPlatformsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type SearchProfileUpdateexcludedKeywordsInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -847,6 +956,22 @@ export type SearchProfileUpdateOneRequiredWithoutApplicationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SearchProfileUpdateToOneWithWhereWithoutApplicationsInput, Prisma.SearchProfileUpdateWithoutApplicationsInput>, Prisma.SearchProfileUncheckedUpdateWithoutApplicationsInput>
 }
 
+export type SearchProfileCreateNestedOneWithoutUserVacanciesInput = {
+  create?: Prisma.XOR<Prisma.SearchProfileCreateWithoutUserVacanciesInput, Prisma.SearchProfileUncheckedCreateWithoutUserVacanciesInput>
+  connectOrCreate?: Prisma.SearchProfileCreateOrConnectWithoutUserVacanciesInput
+  connect?: Prisma.SearchProfileWhereUniqueInput
+}
+
+export type SearchProfileUpdateOneWithoutUserVacanciesNestedInput = {
+  create?: Prisma.XOR<Prisma.SearchProfileCreateWithoutUserVacanciesInput, Prisma.SearchProfileUncheckedCreateWithoutUserVacanciesInput>
+  connectOrCreate?: Prisma.SearchProfileCreateOrConnectWithoutUserVacanciesInput
+  upsert?: Prisma.SearchProfileUpsertWithoutUserVacanciesInput
+  disconnect?: Prisma.SearchProfileWhereInput | boolean
+  delete?: Prisma.SearchProfileWhereInput | boolean
+  connect?: Prisma.SearchProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SearchProfileUpdateToOneWithWhereWithoutUserVacanciesInput, Prisma.SearchProfileUpdateWithoutUserVacanciesInput>, Prisma.SearchProfileUncheckedUpdateWithoutUserVacanciesInput>
+}
+
 export type SearchProfileCreateWithoutUserInput = {
   name: string
   isActive?: boolean
@@ -866,9 +991,14 @@ export type SearchProfileCreateWithoutUserInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutSearchProfileInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileUncheckedCreateWithoutUserInput = {
@@ -891,9 +1021,14 @@ export type SearchProfileUncheckedCreateWithoutUserInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutSearchProfileInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileCreateOrConnectWithoutUserInput = {
@@ -946,6 +1081,10 @@ export type SearchProfileScalarWhereInput = {
   autoApply?: Prisma.BoolFilter<"SearchProfile"> | boolean
   scrapeSchedule?: Prisma.StringFilter<"SearchProfile"> | string
   source?: Prisma.StringFilter<"SearchProfile"> | string
+  skills?: Prisma.StringNullableListFilter<"SearchProfile">
+  preferredPlatforms?: Prisma.StringNullableListFilter<"SearchProfile">
+  excludedKeywords?: Prisma.StringNullableListFilter<"SearchProfile">
+  lastScrapedAt?: Prisma.DateTimeNullableFilter<"SearchProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SearchProfile"> | Date | string
 }
 
@@ -968,9 +1107,14 @@ export type SearchProfileCreateWithoutVacancyScoresInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSearchProfilesInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileUncheckedCreateWithoutVacancyScoresInput = {
@@ -994,8 +1138,13 @@ export type SearchProfileUncheckedCreateWithoutVacancyScoresInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileCreateOrConnectWithoutVacancyScoresInput = {
@@ -1033,9 +1182,14 @@ export type SearchProfileUpdateWithoutVacancyScoresInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSearchProfilesNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileUncheckedUpdateWithoutVacancyScoresInput = {
@@ -1059,8 +1213,13 @@ export type SearchProfileUncheckedUpdateWithoutVacancyScoresInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileCreateWithoutApplicationsInput = {
@@ -1082,9 +1241,14 @@ export type SearchProfileCreateWithoutApplicationsInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSearchProfilesInput
   vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileUncheckedCreateWithoutApplicationsInput = {
@@ -1108,8 +1272,13 @@ export type SearchProfileUncheckedCreateWithoutApplicationsInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutSearchProfileInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutSearchProfileInput
 }
 
 export type SearchProfileCreateOrConnectWithoutApplicationsInput = {
@@ -1147,9 +1316,14 @@ export type SearchProfileUpdateWithoutApplicationsInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSearchProfilesNestedInput
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileUncheckedUpdateWithoutApplicationsInput = {
@@ -1173,8 +1347,147 @@ export type SearchProfileUncheckedUpdateWithoutApplicationsInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutSearchProfileNestedInput
+}
+
+export type SearchProfileCreateWithoutUserVacanciesInput = {
+  name: string
+  isActive?: boolean
+  jobTitles?: Prisma.SearchProfileCreatejobTitlesInput | string[]
+  minSalary?: number | null
+  currency?: string | null
+  employmentTypes?: Prisma.SearchProfileCreateemploymentTypesInput | string[]
+  remoteOnly?: boolean
+  geographies?: Prisma.SearchProfileCreategeographiesInput | string[]
+  excludedCompanies?: Prisma.SearchProfileCreateexcludedCompaniesInput | string[]
+  excludedIndustries?: Prisma.SearchProfileCreateexcludedIndustriesInput | string[]
+  stackFilter?: Prisma.SearchProfileCreatestackFilterInput | string[]
+  applyHoursStart?: number
+  applyHoursEnd?: number
+  applyTimezone?: string
+  maxDailyApplies?: number
+  autoApply?: boolean
+  scrapeSchedule?: string
+  source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutSearchProfilesInput
+  vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutSearchProfileInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutSearchProfileInput
+}
+
+export type SearchProfileUncheckedCreateWithoutUserVacanciesInput = {
+  id?: number
+  userId: number
+  name: string
+  isActive?: boolean
+  jobTitles?: Prisma.SearchProfileCreatejobTitlesInput | string[]
+  minSalary?: number | null
+  currency?: string | null
+  employmentTypes?: Prisma.SearchProfileCreateemploymentTypesInput | string[]
+  remoteOnly?: boolean
+  geographies?: Prisma.SearchProfileCreategeographiesInput | string[]
+  excludedCompanies?: Prisma.SearchProfileCreateexcludedCompaniesInput | string[]
+  excludedIndustries?: Prisma.SearchProfileCreateexcludedIndustriesInput | string[]
+  stackFilter?: Prisma.SearchProfileCreatestackFilterInput | string[]
+  applyHoursStart?: number
+  applyHoursEnd?: number
+  applyTimezone?: string
+  maxDailyApplies?: number
+  autoApply?: boolean
+  scrapeSchedule?: string
+  source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
+  createdAt?: Date | string
+  vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutSearchProfileInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutSearchProfileInput
+}
+
+export type SearchProfileCreateOrConnectWithoutUserVacanciesInput = {
+  where: Prisma.SearchProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.SearchProfileCreateWithoutUserVacanciesInput, Prisma.SearchProfileUncheckedCreateWithoutUserVacanciesInput>
+}
+
+export type SearchProfileUpsertWithoutUserVacanciesInput = {
+  update: Prisma.XOR<Prisma.SearchProfileUpdateWithoutUserVacanciesInput, Prisma.SearchProfileUncheckedUpdateWithoutUserVacanciesInput>
+  create: Prisma.XOR<Prisma.SearchProfileCreateWithoutUserVacanciesInput, Prisma.SearchProfileUncheckedCreateWithoutUserVacanciesInput>
+  where?: Prisma.SearchProfileWhereInput
+}
+
+export type SearchProfileUpdateToOneWithWhereWithoutUserVacanciesInput = {
+  where?: Prisma.SearchProfileWhereInput
+  data: Prisma.XOR<Prisma.SearchProfileUpdateWithoutUserVacanciesInput, Prisma.SearchProfileUncheckedUpdateWithoutUserVacanciesInput>
+}
+
+export type SearchProfileUpdateWithoutUserVacanciesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  jobTitles?: Prisma.SearchProfileUpdatejobTitlesInput | string[]
+  minSalary?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentTypes?: Prisma.SearchProfileUpdateemploymentTypesInput | string[]
+  remoteOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  geographies?: Prisma.SearchProfileUpdategeographiesInput | string[]
+  excludedCompanies?: Prisma.SearchProfileUpdateexcludedCompaniesInput | string[]
+  excludedIndustries?: Prisma.SearchProfileUpdateexcludedIndustriesInput | string[]
+  stackFilter?: Prisma.SearchProfileUpdatestackFilterInput | string[]
+  applyHoursStart?: Prisma.IntFieldUpdateOperationsInput | number
+  applyHoursEnd?: Prisma.IntFieldUpdateOperationsInput | number
+  applyTimezone?: Prisma.StringFieldUpdateOperationsInput | string
+  maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
+  autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutSearchProfilesNestedInput
+  vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutSearchProfileNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutSearchProfileNestedInput
+}
+
+export type SearchProfileUncheckedUpdateWithoutUserVacanciesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  jobTitles?: Prisma.SearchProfileUpdatejobTitlesInput | string[]
+  minSalary?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentTypes?: Prisma.SearchProfileUpdateemploymentTypesInput | string[]
+  remoteOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  geographies?: Prisma.SearchProfileUpdategeographiesInput | string[]
+  excludedCompanies?: Prisma.SearchProfileUpdateexcludedCompaniesInput | string[]
+  excludedIndustries?: Prisma.SearchProfileUpdateexcludedIndustriesInput | string[]
+  stackFilter?: Prisma.SearchProfileUpdatestackFilterInput | string[]
+  applyHoursStart?: Prisma.IntFieldUpdateOperationsInput | number
+  applyHoursEnd?: Prisma.IntFieldUpdateOperationsInput | number
+  applyTimezone?: Prisma.StringFieldUpdateOperationsInput | string
+  maxDailyApplies?: Prisma.IntFieldUpdateOperationsInput | number
+  autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutSearchProfileNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileCreateManyUserInput = {
@@ -1197,6 +1510,10 @@ export type SearchProfileCreateManyUserInput = {
   autoApply?: boolean
   scrapeSchedule?: string
   source?: string
+  skills?: Prisma.SearchProfileCreateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileCreatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileCreateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -1219,9 +1536,14 @@ export type SearchProfileUpdateWithoutUserInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutSearchProfileNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileUncheckedUpdateWithoutUserInput = {
@@ -1244,9 +1566,14 @@ export type SearchProfileUncheckedUpdateWithoutUserInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutSearchProfileNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutSearchProfileNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutSearchProfileNestedInput
 }
 
 export type SearchProfileUncheckedUpdateManyWithoutUserInput = {
@@ -1269,6 +1596,10 @@ export type SearchProfileUncheckedUpdateManyWithoutUserInput = {
   autoApply?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scrapeSchedule?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  skills?: Prisma.SearchProfileUpdateskillsInput | string[]
+  preferredPlatforms?: Prisma.SearchProfileUpdatepreferredPlatformsInput | string[]
+  excludedKeywords?: Prisma.SearchProfileUpdateexcludedKeywordsInput | string[]
+  lastScrapedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1280,11 +1611,13 @@ export type SearchProfileUncheckedUpdateManyWithoutUserInput = {
 export type SearchProfileCountOutputType = {
   vacancyScores: number
   applications: number
+  userVacancies: number
 }
 
 export type SearchProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   vacancyScores?: boolean | SearchProfileCountOutputTypeCountVacancyScoresArgs
   applications?: boolean | SearchProfileCountOutputTypeCountApplicationsArgs
+  userVacancies?: boolean | SearchProfileCountOutputTypeCountUserVacanciesArgs
 }
 
 /**
@@ -1311,6 +1644,13 @@ export type SearchProfileCountOutputTypeCountApplicationsArgs<ExtArgs extends ru
   where?: Prisma.ApplicationWhereInput
 }
 
+/**
+ * SearchProfileCountOutputType without action
+ */
+export type SearchProfileCountOutputTypeCountUserVacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserVacancyWhereInput
+}
+
 
 export type SearchProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1333,10 +1673,15 @@ export type SearchProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   autoApply?: boolean
   scrapeSchedule?: boolean
   source?: boolean
+  skills?: boolean
+  preferredPlatforms?: boolean
+  excludedKeywords?: boolean
+  lastScrapedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancyScores?: boolean | Prisma.SearchProfile$vacancyScoresArgs<ExtArgs>
   applications?: boolean | Prisma.SearchProfile$applicationsArgs<ExtArgs>
+  userVacancies?: boolean | Prisma.SearchProfile$userVacanciesArgs<ExtArgs>
   _count?: boolean | Prisma.SearchProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["searchProfile"]>
 
@@ -1361,6 +1706,10 @@ export type SearchProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   autoApply?: boolean
   scrapeSchedule?: boolean
   source?: boolean
+  skills?: boolean
+  preferredPlatforms?: boolean
+  excludedKeywords?: boolean
+  lastScrapedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["searchProfile"]>
@@ -1386,6 +1735,10 @@ export type SearchProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   autoApply?: boolean
   scrapeSchedule?: boolean
   source?: boolean
+  skills?: boolean
+  preferredPlatforms?: boolean
+  excludedKeywords?: boolean
+  lastScrapedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["searchProfile"]>
@@ -1411,14 +1764,19 @@ export type SearchProfileSelectScalar = {
   autoApply?: boolean
   scrapeSchedule?: boolean
   source?: boolean
+  skills?: boolean
+  preferredPlatforms?: boolean
+  excludedKeywords?: boolean
+  lastScrapedAt?: boolean
   createdAt?: boolean
 }
 
-export type SearchProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "isActive" | "jobTitles" | "minSalary" | "currency" | "employmentTypes" | "remoteOnly" | "geographies" | "excludedCompanies" | "excludedIndustries" | "stackFilter" | "applyHoursStart" | "applyHoursEnd" | "applyTimezone" | "maxDailyApplies" | "autoApply" | "scrapeSchedule" | "source" | "createdAt", ExtArgs["result"]["searchProfile"]>
+export type SearchProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "isActive" | "jobTitles" | "minSalary" | "currency" | "employmentTypes" | "remoteOnly" | "geographies" | "excludedCompanies" | "excludedIndustries" | "stackFilter" | "applyHoursStart" | "applyHoursEnd" | "applyTimezone" | "maxDailyApplies" | "autoApply" | "scrapeSchedule" | "source" | "skills" | "preferredPlatforms" | "excludedKeywords" | "lastScrapedAt" | "createdAt", ExtArgs["result"]["searchProfile"]>
 export type SearchProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   vacancyScores?: boolean | Prisma.SearchProfile$vacancyScoresArgs<ExtArgs>
   applications?: boolean | Prisma.SearchProfile$applicationsArgs<ExtArgs>
+  userVacancies?: boolean | Prisma.SearchProfile$userVacanciesArgs<ExtArgs>
   _count?: boolean | Prisma.SearchProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SearchProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1434,6 +1792,7 @@ export type $SearchProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     user: Prisma.$UserPayload<ExtArgs>
     vacancyScores: Prisma.$VacancyScorePayload<ExtArgs>[]
     applications: Prisma.$ApplicationPayload<ExtArgs>[]
+    userVacancies: Prisma.$UserVacancyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1456,6 +1815,10 @@ export type $SearchProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     autoApply: boolean
     scrapeSchedule: string
     source: string
+    skills: string[]
+    preferredPlatforms: string[]
+    excludedKeywords: string[]
+    lastScrapedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["searchProfile"]>
   composites: {}
@@ -1854,6 +2217,7 @@ export interface Prisma__SearchProfileClient<T, Null = never, ExtArgs extends ru
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   vacancyScores<T extends Prisma.SearchProfile$vacancyScoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SearchProfile$vacancyScoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VacancyScorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   applications<T extends Prisma.SearchProfile$applicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SearchProfile$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userVacancies<T extends Prisma.SearchProfile$userVacanciesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SearchProfile$userVacanciesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserVacancyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1903,6 +2267,10 @@ export interface SearchProfileFieldRefs {
   readonly autoApply: Prisma.FieldRef<"SearchProfile", 'Boolean'>
   readonly scrapeSchedule: Prisma.FieldRef<"SearchProfile", 'String'>
   readonly source: Prisma.FieldRef<"SearchProfile", 'String'>
+  readonly skills: Prisma.FieldRef<"SearchProfile", 'String[]'>
+  readonly preferredPlatforms: Prisma.FieldRef<"SearchProfile", 'String[]'>
+  readonly excludedKeywords: Prisma.FieldRef<"SearchProfile", 'String[]'>
+  readonly lastScrapedAt: Prisma.FieldRef<"SearchProfile", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"SearchProfile", 'DateTime'>
 }
     
@@ -2350,6 +2718,30 @@ export type SearchProfile$applicationsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.ApplicationScalarFieldEnum | Prisma.ApplicationScalarFieldEnum[]
+}
+
+/**
+ * SearchProfile.userVacancies
+ */
+export type SearchProfile$userVacanciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserVacancy
+   */
+  select?: Prisma.UserVacancySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserVacancy
+   */
+  omit?: Prisma.UserVacancyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserVacancyInclude<ExtArgs> | null
+  where?: Prisma.UserVacancyWhereInput
+  orderBy?: Prisma.UserVacancyOrderByWithRelationInput | Prisma.UserVacancyOrderByWithRelationInput[]
+  cursor?: Prisma.UserVacancyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserVacancyScalarFieldEnum | Prisma.UserVacancyScalarFieldEnum[]
 }
 
 /**

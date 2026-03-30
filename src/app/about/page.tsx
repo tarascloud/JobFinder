@@ -19,16 +19,12 @@ import {
   Target,
   GitBranch,
   Code,
-  Smartphone,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About — JobFinder",
   description:
-    "Open-source, self-hosted AI-powered job search automation. Scrape 11+ job boards, AI match scoring, auto-apply. Privacy-first.",
-  alternates: {
-    canonical: "/about",
-  },
+    "Open-source, self-hosted AI-powered job search automation. Find, score, and apply to jobs automatically.",
 };
 
 /* ------------------------------------------------------------------ */
@@ -715,33 +711,6 @@ export default function AboutPage() {
               <T en="Get Started" ua="Почати" es="Empezar" />
               <ChevronRight className="h-4 w-4" />
             </a>
-          </div>
-        </section>
-
-        {/* ==================== PWA BADGE ==================== */}
-        <section className="px-4 pb-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl">
-            <div className="flex items-center gap-4 rounded-2xl border border-blue-400/20 bg-blue-500/[0.04] px-6 py-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-500/10">
-                <Smartphone className="h-6 w-6 text-blue-400" />
-              </div>
-              <div>
-                <T
-                  as="p"
-                  en="Works as a native app"
-                  ua="Працює як нативний додаток"
-                  es="Funciona como app nativa"
-                  className="font-semibold text-white/90"
-                />
-                <T
-                  as="p"
-                  en="Install from your browser, no app store needed. Works offline on any device."
-                  ua="Встановлюйте з браузера, без магазину додатків. Працює офлайн на будь-якому пристрої."
-                  es="Instala desde tu navegador, sin tienda de apps. Funciona offline en cualquier dispositivo."
-                  className="text-sm text-[#9a9ea6]"
-                />
-              </div>
-            </div>
           </div>
         </section>
 

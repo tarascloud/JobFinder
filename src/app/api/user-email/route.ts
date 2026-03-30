@@ -3,7 +3,8 @@ import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/db";
 
 function verifyApiToken(request: NextRequest): boolean {
-  const secret = process.env.JOBFINDER_EMAIL_API_TOKEN;
+  // Accept either token name for backwards compatibility
+  const secret = process.env.JF_INBOX_TOKEN || process.env.JOBFINDER_EMAIL_API_TOKEN;
   if (!secret) return false;
   const auth = request.headers.get("authorization");
   if (!auth) return false;
