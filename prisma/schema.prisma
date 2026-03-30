@@ -19,6 +19,8 @@ model User {
   preferredSkin   String @default("taras") @map("preferred_skin")
   preferredTheme  String @default("dark") @map("preferred_theme")
   applicationLimit Int    @default(10) @map("application_limit")
+  telegramUsername String? @map("telegram_username")
+  telegramChatId  String? @map("telegram_chat_id")
   createdAt DateTime @default(now()) @map("created_at")
 
   profile          UserProfile?
@@ -230,6 +232,7 @@ model QaPair {
   timesUsed       Int       @default(0) @map("times_used")
   category        String?
   source          String    @default("manual") // "manual", "ai", "ai_edited"
+  aiConfidence    Int?      @map("ai_confidence") // 0-100, set when source="ai", null for manual
 
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   sourceVacancy Vacancy? @relation(fields: [sourceVacancyId], references: [id], onDelete: SetNull)

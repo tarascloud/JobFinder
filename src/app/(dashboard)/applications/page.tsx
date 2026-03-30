@@ -338,19 +338,55 @@ export default function ApplicationsPage() {
     return "text-muted-foreground";
   }
 
+  // Compute pipeline stats
+  const pipelineStats = {
+    queued: queueItems.filter(q => q.status === "queued").length,
+    approved: queueItems.filter(q => q.status === "approved").length,
+    applied: appliedItems.length,
+    interview: allItems.filter(a => a.status === "interview").length,
+    offer: allItems.filter(a => a.status === "offer").length,
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{tq("title")}</h1>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">{tq("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            {allItems.length > 0 ? `${allItems.length} total applications` : "Manage your application pipeline"}
+          </p>
+        </div>
         {rateLimit && (
           <div className="flex items-center gap-2 text-sm">
-            <Gauge className="h-4 w-4 text-muted-foreground" />
-            <span className={rateLimit.remaining === 0 ? "text-red-400 font-medium" : "text-muted-foreground"}>
-              {t("rate_limit_status", { used: rateLimit.used, limit: rateLimit.limit })}
-            </span>
+            <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 ${
+              rateLimit.remaining === 0 ? "bg-red-500/10 text-red-400" : "bg-muted text-muted-foreground"
+            }`}>
+              <Gauge className="h-4 w-4" />
+              <span className={rateLimit.remaining === 0 ? "font-medium" : ""}>
+                {t("rate_limit_status", { used: rateLimit.used, limit: rateLimit.limit })}
+              </span>
+            </div>
           </div>
         )}
       </div>
+
+      {/* Pipeline summary stats */}
+      {allItems.length > 0 && (
+        <div className="grid grid-cols-5 gap-3">
+          {[
+            { label: "Queued", value: pipelineStats.queued, color: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20" },
+            { label: "Approved", value: pipelineStats.approved, color: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20" },
+            { label: "Applied", value: pipelineStats.applied, color: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20" },
+            { label: "Interview", value: pipelineStats.interview, color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20" },
+            { label: "Offer", value: pipelineStats.offer, color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" },
+          ].map(stat => (
+            <div key={stat.label} className={`rounded-xl border p-3 text-center ${stat.color}`}>
+              <p className="text-2xl font-bold">{stat.value}</p>
+              <p className="text-[11px] font-medium uppercase tracking-wider mt-0.5 opacity-80">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {error && (
         <div className="rounded-md bg-red-900/30 border border-red-700/40 px-4 py-2 text-sm text-red-300">
@@ -363,22 +399,41 @@ export default function ApplicationsPage() {
           <TabsTrigger value="queue">
             {tq("queue_tab")}
             {queueItems.length > 0 && (
-              <span className="ml-2 rounded-full bg-yellow-900/60 px-2 py-0.5 text-xs text-yellow-300">
+              <span className="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-1.5 text-[11px] font-bold">
                 {queueItems.length}
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="applied">{tq("applied_tab")}</TabsTrigger>
-          <TabsTrigger value="all">{tq("all_tab")}</TabsTrigger>
+          <TabsTrigger value="applied">
+            {tq("applied_tab")}
+            {appliedItems.length > 0 && (
+              <span className="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-green-500/20 text-green-600 dark:text-green-400 px-1.5 text-[11px] font-bold">
+                {appliedItems.length}
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="all">
+            {tq("all_tab")}
+            {allItems.length > 0 && (
+              <span className="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-muted text-muted-foreground px-1.5 text-[11px] font-bold">
+                {allItems.length}
+              </span>
+            )}
+          </TabsTrigger>
         </TabsList>
 
         {/* Queue Tab */}
         <TabsContent value="queue">
           {queueItems.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <Send className="h-12 w-12 text-muted-foreground/60 mx-auto mb-3" />
-                <p className="text-muted-foreground text-lg">{tq("no_queued")}</p>
+            <Card className="border-dashed">
+              <CardContent className="py-16 px-6 text-center">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
+                  <Send className="h-8 w-8 text-muted-foreground/60" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-1.5">{tq("no_queued")}</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                  Go to Vacancies to find and queue jobs for application
+                </p>
               </CardContent>
             </Card>
           ) : (
@@ -438,15 +493,17 @@ export default function ApplicationsPage() {
               )}
 
               {queueItems.map((item) => (
-                <Card key={item.id} className="overflow-hidden">
-                  <CardContent className="p-4">
+                <Card key={item.id} className={`overflow-hidden transition-all hover:shadow-sm ${
+                  item.status === "approved" ? "border-l-3 border-l-blue-500" : ""
+                }`}>
+                  <CardContent className="p-4 sm:p-5">
                     {/* Main row */}
                     <div className="flex items-start gap-4">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1.5">
                           <Link
                             href={`/vacancies/${item.vacancy.id}`}
-                            className="font-medium text-foreground hover:text-primary transition-colors"
+                            className="font-semibold text-foreground hover:text-primary transition-colors"
                           >
                             {item.vacancy.title}
                           </Link>
@@ -463,13 +520,13 @@ export default function ApplicationsPage() {
                           </Badge>
                         </div>
                         <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                          {item.vacancy.company && <span>{item.vacancy.company}</span>}
-                          <span>{item.vacancy.platform}</span>
+                          {item.vacancy.company && <span className="font-medium">{item.vacancy.company}</span>}
+                          <span className="text-muted-foreground/60">{item.vacancy.platform}</span>
                           {item.vacancy.salaryText && (
-                            <span className="text-foreground/80">{item.vacancy.salaryText}</span>
+                            <span className="text-green-600 dark:text-green-400 font-medium">{item.vacancy.salaryText}</span>
                           )}
                           {item.matchScore !== null && (
-                            <span className={`font-semibold ${scoreColor(item.matchScore)}`}>
+                            <span className={`font-bold ${scoreColor(item.matchScore)}`}>
                               {item.matchScore}%
                             </span>
                           )}
@@ -658,15 +715,20 @@ export default function ApplicationsPage() {
         {/* Applied Tab */}
         <TabsContent value="applied">
           {appliedItems.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <Send className="h-12 w-12 text-muted-foreground/60 mx-auto mb-3" />
-                <p className="text-muted-foreground text-lg">{t("no_applications")}</p>
+            <Card className="border-dashed">
+              <CardContent className="py-16 px-6 text-center">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
+                  <CheckCircle2 className="h-8 w-8 text-muted-foreground/60" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-1.5">{t("no_applications")}</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                  Approve queued applications and they will appear here after applying
+                </p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-2">
-              <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-2.5 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
                 <div className="col-span-4">Position</div>
                 <div className="col-span-3">Company</div>
                 <div className="col-span-2 text-center">Status</div>
@@ -675,8 +737,8 @@ export default function ApplicationsPage() {
               </div>
 
               {appliedItems.map((app) => (
-                <Card key={app.id} className="hover:border-border transition-colors">
-                  <CardContent className="p-4">
+                <Card key={app.id} className="transition-all hover:shadow-sm hover:border-primary/15">
+                  <CardContent className="p-4 sm:p-5">
                     {app.appliedWithPersonalAccount && (
                       <div className="mb-2 flex items-center gap-2 rounded-md bg-yellow-900/30 border border-yellow-700/40 px-3 py-1.5 text-xs text-yellow-300">
                         <span>⚠️</span>
@@ -782,15 +844,20 @@ export default function ApplicationsPage() {
         {/* All Tab */}
         <TabsContent value="all">
           {allItems.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <Send className="h-12 w-12 text-muted-foreground/60 mx-auto mb-3" />
-                <p className="text-muted-foreground text-lg">{t("no_applications")}</p>
+            <Card className="border-dashed">
+              <CardContent className="py-16 px-6 text-center">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
+                  <Send className="h-8 w-8 text-muted-foreground/60" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-1.5">{t("no_applications")}</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                  Start by queuing vacancies and approving them for application
+                </p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-2">
-              <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-2.5 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
                 <div className="col-span-4">Position</div>
                 <div className="col-span-3">Company</div>
                 <div className="col-span-2 text-center">Status</div>
@@ -799,8 +866,8 @@ export default function ApplicationsPage() {
               </div>
 
               {allItems.map((app) => (
-                <Card key={app.id} className="hover:border-border transition-colors">
-                  <CardContent className="p-4">
+                <Card key={app.id} className="transition-all hover:shadow-sm hover:border-primary/15">
+                  <CardContent className="p-4 sm:p-5">
                     {app.appliedWithPersonalAccount && (
                       <div className="mb-2 flex items-center gap-2 rounded-md bg-yellow-900/30 border border-yellow-700/40 px-3 py-1.5 text-xs text-yellow-300">
                         <span>⚠️</span>

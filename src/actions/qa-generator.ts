@@ -7,6 +7,7 @@ interface GeneratedQaPair {
   question: string;
   answer: string;
   category: string;
+  confidence?: number;
 }
 
 export async function generateMoreQA(
@@ -52,7 +53,8 @@ Types of questions to generate:
 DO NOT repeat these existing questions:
 - ${existingQuestions || "none yet"}
 
-Return ONLY JSON: {"qaPairs":[{"question":"...","answer":"...short...","category":"linkedin_apply"}]}`,
+Return ONLY JSON: {"qaPairs":[{"question":"...","answer":"...short...","category":"linkedin_apply","confidence":0-100}]}
+- "confidence": integer 0-100 how confident you are the answer is correct for this candidate (80-100 clear, 50-79 reasonable, 0-49 uncertain)`,
       { userId: user.id }
     );
 
@@ -62,6 +64,10 @@ Return ONLY JSON: {"qaPairs":[{"question":"...","answer":"...short...","category
     const existingSet = new Set(existingQa.map((q) => q.question));
     for (const qa of qaPairs) {
       if (existingSet.has(qa.question)) continue;
+      const confidence =
+        typeof qa.confidence === "number"
+          ? Math.max(0, Math.min(100, Math.round(qa.confidence)))
+          : null;
       await prisma.qaPair.create({
         data: {
           userId: user.id,
@@ -70,6 +76,7 @@ Return ONLY JSON: {"qaPairs":[{"question":"...","answer":"...short...","category
           category: "linkedin_apply",
           answeredAt: new Date(),
           source: "ai",
+          aiConfidence: confidence,
         },
       });
     }

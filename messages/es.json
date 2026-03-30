@@ -126,7 +126,14 @@
     "work_authorization": "Autorización de trabajo",
     "select_option": "Seleccionar...",
     "rerun_onboarding": "Repetir onboarding",
-    "rerun_onboarding_desc": "Iniciar el asistente de onboarding de nuevo. Tu perfil actual se restablecerá."
+    "rerun_onboarding_desc": "Iniciar el asistente de onboarding de nuevo. Tu perfil actual se restablecerá.",
+    "telegram_title": "Notificaciones de Telegram",
+    "telegram_username_placeholder": "tu_nombre_de_telegram",
+    "telegram_save": "Guardar",
+    "telegram_saving": "Guardando...",
+    "telegram_connected": "Conectado al bot de Telegram",
+    "telegram_disconnect": "Desconectar",
+    "telegram_connect_instruction": "Guarda tu nombre de usuario, luego busca @jobfinder_bot en Telegram y envía /start para conectar."
   },
   "searches": {
     "title": "Perfiles de búsqueda",
@@ -295,8 +302,11 @@
     "generate_more": "Generar mas",
     "col_question": "Pregunta",
     "col_answer": "Respuesta",
+    "col_confidence": "Confianza",
     "question_singular": "pregunta",
-    "question_plural": "preguntas"
+    "question_plural": "preguntas",
+    "auto_answer": "Respuesta automatica con IA",
+    "needs_review": "requiere revision"
   },
   "ai_settings": {
     "title": "Proveedor de IA",
@@ -462,8 +472,8 @@
     "ready_description": "JobFinder está configurado. ¡Empieza a buscar trabajo!",
     "start_button": "Empezar a buscar",
     "qa_count": "{count} pares de preguntas y respuestas listos",
-    "ready_tip_qa": "Consejo: Revisa tus respuestas de LinkedIn Easy Apply en la sección Q&A para mejorar la precisión del auto envío.",
-    "ready_tip_qa_link": "Ir a Q&A"
+    "ready_tip_qa": "Revisa tu banco de Q&A — verifica tus respuestas a las preguntas de selección de LinkedIn Easy Apply para mejorar la precisión del auto envío.",
+    "ready_tip_qa_link": "Ir al banco de Q&A"
   },
   "analytics": {
     "title": "Analítica",
@@ -699,7 +709,26 @@
     "reliability_reliable": "Fiable",
     "reliability_moderate": "Moderado",
     "reliability_unreliable": "No fiable",
-    "reliability_defunct": "Obsoleto"
+    "reliability_defunct": "Obsoleto",
+    "tab_telegram": "Telegram",
+    "telegram_bot_status": "Bot de Telegram",
+    "telegram_token": "Token del bot",
+    "telegram_configured": "Configurado",
+    "telegram_not_configured": "No configurado",
+    "telegram_connection": "Conexión",
+    "telegram_disconnected": "Desconectado",
+    "telegram_bot_username": "Bot",
+    "telegram_webhook": "Webhook",
+    "telegram_webhook_active": "Activo",
+    "telegram_no_webhook": "No configurado",
+    "telegram_setup_webhook": "Configurar Webhook",
+    "telegram_remove_webhook": "Eliminar",
+    "telegram_connected_users": "Usuarios conectados",
+    "telegram_setup_hint": "Establece TELEGRAM_BOT_TOKEN en las variables de entorno para habilitar el bot de Telegram.",
+    "telegram_refresh": "Actualizar",
+    "telegram_users_title": "Usuarios de Telegram",
+    "telegram_linked": "Vinculado",
+    "telegram_pending": "Pendiente"
   },
   "emails": {
     "title": "Respuestas por correo",

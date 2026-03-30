@@ -97,6 +97,8 @@ export const UserScalarFieldEnum = {
   preferredSkin: 'preferredSkin',
   preferredTheme: 'preferredTheme',
   applicationLimit: 'applicationLimit',
+  telegramUsername: 'telegramUsername',
+  telegramChatId: 'telegramChatId',
   createdAt: 'createdAt',
   lastVacanciesSeenAt: 'lastVacanciesSeenAt'
 } as const
@@ -267,7 +269,8 @@ export const QaPairScalarFieldEnum = {
   answeredAt: 'answeredAt',
   timesUsed: 'timesUsed',
   category: 'category',
-  source: 'source'
+  source: 'source',
+  aiConfidence: 'aiConfidence'
 } as const
 
 export type QaPairScalarFieldEnum = (typeof QaPairScalarFieldEnum)[keyof typeof QaPairScalarFieldEnum]

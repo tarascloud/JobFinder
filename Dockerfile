@@ -6,7 +6,7 @@ COPY . .
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 RUN npx prisma generate
-RUN npm run build
+RUN rm -rf .next node_modules/.cache && npm run build
 
 FROM node:22-alpine AS runner
 WORKDIR /app

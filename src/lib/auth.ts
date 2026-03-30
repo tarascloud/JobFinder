@@ -11,10 +11,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    ...(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET
+    ...((process.env.GITHUB_CLIENT_ID || process.env.GITHUB_ID) && (process.env.GITHUB_CLIENT_SECRET || process.env.GITHUB_SECRET)
       ? [GitHub({
-          clientId: process.env.GITHUB_CLIENT_ID!,
-          clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+          clientId: (process.env.GITHUB_CLIENT_ID || process.env.GITHUB_ID)!,
+          clientSecret: (process.env.GITHUB_CLIENT_SECRET || process.env.GITHUB_SECRET)!,
         })]
       : []),
   ],
@@ -62,7 +62,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }, { isolationLevel: "Serializable" });
       if (created) return true;
 
-      // Check guest invite
+      // Check guest invite (priority: invited users get "guest" role)
       const invite = await prisma.guestInvite.findUnique({ where: { email: user.email } });
       if (invite) {
         const jfEmail = await generateJfEmail(user.name, user.email!);
@@ -79,7 +79,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return true;
       }
 
-      // Not invited — deny access
+      // Open registration: allow if free spots remaining (first 10 users)
+      const MAX_FREE_USERS = 10;
+      const totalUsers = await prisma.user.count();
+      if (totalUsers < MAX_FREE_USERS) {
+        const jfEmail = await generateJfEmail(user.name, user.email!);
+        await prisma.user.create({
+          data: {
+            email: user.email!,
+            name: user.name,
+            image: user.image,
+            ...(isGoogle && user.id ? { googleId: user.id } : {}),
+            role: "user",
+            jfEmail,
+          },
+        });
+        return true;
+      }
+
+      // No free spots remaining — deny access
       return false;
     },
     async session({ session }) {

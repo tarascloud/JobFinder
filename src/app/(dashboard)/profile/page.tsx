@@ -4,13 +4,14 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Mail, Copy, Check, Plus, Trash2, Settings, RefreshCw } from "lucide-react";
+import { Mail, Copy, Check, Plus, Trash2, Settings, RefreshCw, MessageCircle, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { updateProfile, type AnalyzedProfile, type ExperienceEntry, type EducationEntry } from "@/actions/profile";
 import { getApplyEmailInfo } from "@/actions/apply-email";
 import { resetOnboarding } from "@/actions/onboarding";
+import { getTelegramSettings, updateTelegramUsername, disconnectTelegram } from "@/actions/telegram-profile";
 import ResumeSection from "./resume-section";
 import SkillsSection from "./skills-section";
 import LanguagesSection, {
@@ -63,6 +64,12 @@ export default function ProfilePage() {
   // Track which fields have accepted AI changes (for feedback buttons)
   const [acceptedChanges, setAcceptedChanges] = useState<Set<string>>(new Set());
 
+  // Telegram state
+  const [telegramUsername, setTelegramUsername] = useState("");
+  const [telegramConnected, setTelegramConnected] = useState(false);
+  const [telegramSaving, setTelegramSaving] = useState(false);
+  const [telegramError, setTelegramError] = useState("");
+
   // Re-onboarding state
   const [resettingOnboarding, setResettingOnboarding] = useState(false);
 
@@ -108,6 +115,12 @@ export default function ProfilePage() {
     getApplyEmailInfo().then((info) => {
       setApplyEmail(info.applyEmail);
       setForwardEmail(info.forwardEmail);
+    }).catch(() => {});
+
+    // Load Telegram settings
+    getTelegramSettings().then((settings) => {
+      setTelegramUsername(settings.telegramUsername);
+      setTelegramConnected(settings.isConnected);
     }).catch(() => {});
   }, []);
 
@@ -189,7 +202,12 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">
+          Manage your professional profile and resume details
+        </p>
+      </div>
 
       {/* JF Email Card */}
       {applyEmail && (
@@ -226,6 +244,76 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       )}
+
+      {/* Telegram Card */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <MessageCircle className="h-4 w-4" />
+            {t("telegram_title")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground shrink-0">@</span>
+            <Input
+              value={telegramUsername}
+              onChange={(e) => {
+                setTelegramUsername(e.target.value.replace(/^@/, ""));
+                setTelegramError("");
+              }}
+              placeholder={t("telegram_username_placeholder")}
+              className="flex-1"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={telegramSaving}
+              onClick={async () => {
+                setTelegramSaving(true);
+                setTelegramError("");
+                const result = await updateTelegramUsername(telegramUsername);
+                if ("error" in result) {
+                  setTelegramError(result.error ?? "");
+                } else {
+                  // If username changed, connection is reset
+                  setTelegramConnected(false);
+                }
+                setTelegramSaving(false);
+              }}
+            >
+              {telegramSaving ? t("telegram_saving") : t("telegram_save")}
+            </Button>
+          </div>
+          {telegramError && (
+            <p className="text-xs text-red-400">{telegramError}</p>
+          )}
+          {telegramConnected ? (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-green-500">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                {t("telegram_connected")}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-muted-foreground"
+                onClick={async () => {
+                  await disconnectTelegram();
+                  setTelegramConnected(false);
+                }}
+              >
+                {t("telegram_disconnect")}
+              </Button>
+            </div>
+          ) : telegramUsername ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <AlertCircle className="h-3.5 w-3.5 text-orange-400" />
+              {t("telegram_connect_instruction")}
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
 
       <ResumeSection
         resumeUrl={resumeUrl}

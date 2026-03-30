@@ -31,6 +31,7 @@ export type QaPairAvgAggregateOutputType = {
   userId: number | null
   sourceVacancyId: number | null
   timesUsed: number | null
+  aiConfidence: number | null
 }
 
 export type QaPairSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type QaPairSumAggregateOutputType = {
   userId: number | null
   sourceVacancyId: number | null
   timesUsed: number | null
+  aiConfidence: number | null
 }
 
 export type QaPairMinAggregateOutputType = {
@@ -50,6 +52,7 @@ export type QaPairMinAggregateOutputType = {
   timesUsed: number | null
   category: string | null
   source: string | null
+  aiConfidence: number | null
 }
 
 export type QaPairMaxAggregateOutputType = {
@@ -62,6 +65,7 @@ export type QaPairMaxAggregateOutputType = {
   timesUsed: number | null
   category: string | null
   source: string | null
+  aiConfidence: number | null
 }
 
 export type QaPairCountAggregateOutputType = {
@@ -74,6 +78,7 @@ export type QaPairCountAggregateOutputType = {
   timesUsed: number
   category: number
   source: number
+  aiConfidence: number
   _all: number
 }
 
@@ -83,6 +88,7 @@ export type QaPairAvgAggregateInputType = {
   userId?: true
   sourceVacancyId?: true
   timesUsed?: true
+  aiConfidence?: true
 }
 
 export type QaPairSumAggregateInputType = {
@@ -90,6 +96,7 @@ export type QaPairSumAggregateInputType = {
   userId?: true
   sourceVacancyId?: true
   timesUsed?: true
+  aiConfidence?: true
 }
 
 export type QaPairMinAggregateInputType = {
@@ -102,6 +109,7 @@ export type QaPairMinAggregateInputType = {
   timesUsed?: true
   category?: true
   source?: true
+  aiConfidence?: true
 }
 
 export type QaPairMaxAggregateInputType = {
@@ -114,6 +122,7 @@ export type QaPairMaxAggregateInputType = {
   timesUsed?: true
   category?: true
   source?: true
+  aiConfidence?: true
 }
 
 export type QaPairCountAggregateInputType = {
@@ -126,6 +135,7 @@ export type QaPairCountAggregateInputType = {
   timesUsed?: true
   category?: true
   source?: true
+  aiConfidence?: true
   _all?: true
 }
 
@@ -225,6 +235,7 @@ export type QaPairGroupByOutputType = {
   timesUsed: number
   category: string | null
   source: string
+  aiConfidence: number | null
   _count: QaPairCountAggregateOutputType | null
   _avg: QaPairAvgAggregateOutputType | null
   _sum: QaPairSumAggregateOutputType | null
@@ -260,6 +271,7 @@ export type QaPairWhereInput = {
   timesUsed?: Prisma.IntFilter<"QaPair"> | number
   category?: Prisma.StringNullableFilter<"QaPair"> | string | null
   source?: Prisma.StringFilter<"QaPair"> | string
+  aiConfidence?: Prisma.IntNullableFilter<"QaPair"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sourceVacancy?: Prisma.XOR<Prisma.VacancyNullableScalarRelationFilter, Prisma.VacancyWhereInput> | null
 }
@@ -274,6 +286,7 @@ export type QaPairOrderByWithRelationInput = {
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrder
+  aiConfidence?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   sourceVacancy?: Prisma.VacancyOrderByWithRelationInput
 }
@@ -291,6 +304,7 @@ export type QaPairWhereUniqueInput = Prisma.AtLeast<{
   timesUsed?: Prisma.IntFilter<"QaPair"> | number
   category?: Prisma.StringNullableFilter<"QaPair"> | string | null
   source?: Prisma.StringFilter<"QaPair"> | string
+  aiConfidence?: Prisma.IntNullableFilter<"QaPair"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sourceVacancy?: Prisma.XOR<Prisma.VacancyNullableScalarRelationFilter, Prisma.VacancyWhereInput> | null
 }, "id">
@@ -305,6 +319,7 @@ export type QaPairOrderByWithAggregationInput = {
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrder
+  aiConfidence?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.QaPairCountOrderByAggregateInput
   _avg?: Prisma.QaPairAvgOrderByAggregateInput
   _max?: Prisma.QaPairMaxOrderByAggregateInput
@@ -325,6 +340,7 @@ export type QaPairScalarWhereWithAggregatesInput = {
   timesUsed?: Prisma.IntWithAggregatesFilter<"QaPair"> | number
   category?: Prisma.StringNullableWithAggregatesFilter<"QaPair"> | string | null
   source?: Prisma.StringWithAggregatesFilter<"QaPair"> | string
+  aiConfidence?: Prisma.IntNullableWithAggregatesFilter<"QaPair"> | number | null
 }
 
 export type QaPairCreateInput = {
@@ -334,6 +350,7 @@ export type QaPairCreateInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
   user: Prisma.UserCreateNestedOneWithoutQaPairsInput
   sourceVacancy?: Prisma.VacancyCreateNestedOneWithoutQaPairsInput
 }
@@ -348,6 +365,7 @@ export type QaPairUncheckedCreateInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
 }
 
 export type QaPairUpdateInput = {
@@ -357,6 +375,7 @@ export type QaPairUpdateInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutQaPairsNestedInput
   sourceVacancy?: Prisma.VacancyUpdateOneWithoutQaPairsNestedInput
 }
@@ -371,6 +390,7 @@ export type QaPairUncheckedUpdateInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type QaPairCreateManyInput = {
@@ -383,6 +403,7 @@ export type QaPairCreateManyInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
 }
 
 export type QaPairUpdateManyMutationInput = {
@@ -392,6 +413,7 @@ export type QaPairUpdateManyMutationInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type QaPairUncheckedUpdateManyInput = {
@@ -404,6 +426,7 @@ export type QaPairUncheckedUpdateManyInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type QaPairListRelationFilter = {
@@ -426,6 +449,7 @@ export type QaPairCountOrderByAggregateInput = {
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  aiConfidence?: Prisma.SortOrder
 }
 
 export type QaPairAvgOrderByAggregateInput = {
@@ -433,6 +457,7 @@ export type QaPairAvgOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   sourceVacancyId?: Prisma.SortOrder
   timesUsed?: Prisma.SortOrder
+  aiConfidence?: Prisma.SortOrder
 }
 
 export type QaPairMaxOrderByAggregateInput = {
@@ -445,6 +470,7 @@ export type QaPairMaxOrderByAggregateInput = {
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  aiConfidence?: Prisma.SortOrder
 }
 
 export type QaPairMinOrderByAggregateInput = {
@@ -457,6 +483,7 @@ export type QaPairMinOrderByAggregateInput = {
   timesUsed?: Prisma.SortOrder
   category?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  aiConfidence?: Prisma.SortOrder
 }
 
 export type QaPairSumOrderByAggregateInput = {
@@ -464,6 +491,7 @@ export type QaPairSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   sourceVacancyId?: Prisma.SortOrder
   timesUsed?: Prisma.SortOrder
+  aiConfidence?: Prisma.SortOrder
 }
 
 export type QaPairCreateNestedManyWithoutUserInput = {
@@ -557,6 +585,7 @@ export type QaPairCreateWithoutUserInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
   sourceVacancy?: Prisma.VacancyCreateNestedOneWithoutQaPairsInput
 }
 
@@ -569,6 +598,7 @@ export type QaPairUncheckedCreateWithoutUserInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
 }
 
 export type QaPairCreateOrConnectWithoutUserInput = {
@@ -610,6 +640,7 @@ export type QaPairScalarWhereInput = {
   timesUsed?: Prisma.IntFilter<"QaPair"> | number
   category?: Prisma.StringNullableFilter<"QaPair"> | string | null
   source?: Prisma.StringFilter<"QaPair"> | string
+  aiConfidence?: Prisma.IntNullableFilter<"QaPair"> | number | null
 }
 
 export type QaPairCreateWithoutSourceVacancyInput = {
@@ -619,6 +650,7 @@ export type QaPairCreateWithoutSourceVacancyInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
   user: Prisma.UserCreateNestedOneWithoutQaPairsInput
 }
 
@@ -631,6 +663,7 @@ export type QaPairUncheckedCreateWithoutSourceVacancyInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
 }
 
 export type QaPairCreateOrConnectWithoutSourceVacancyInput = {
@@ -668,6 +701,7 @@ export type QaPairCreateManyUserInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
 }
 
 export type QaPairUpdateWithoutUserInput = {
@@ -677,6 +711,7 @@ export type QaPairUpdateWithoutUserInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sourceVacancy?: Prisma.VacancyUpdateOneWithoutQaPairsNestedInput
 }
 
@@ -689,6 +724,7 @@ export type QaPairUncheckedUpdateWithoutUserInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type QaPairUncheckedUpdateManyWithoutUserInput = {
@@ -700,6 +736,7 @@ export type QaPairUncheckedUpdateManyWithoutUserInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type QaPairCreateManySourceVacancyInput = {
@@ -711,6 +748,7 @@ export type QaPairCreateManySourceVacancyInput = {
   timesUsed?: number
   category?: string | null
   source?: string
+  aiConfidence?: number | null
 }
 
 export type QaPairUpdateWithoutSourceVacancyInput = {
@@ -720,6 +758,7 @@ export type QaPairUpdateWithoutSourceVacancyInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutQaPairsNestedInput
 }
 
@@ -732,6 +771,7 @@ export type QaPairUncheckedUpdateWithoutSourceVacancyInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type QaPairUncheckedUpdateManyWithoutSourceVacancyInput = {
@@ -743,6 +783,7 @@ export type QaPairUncheckedUpdateManyWithoutSourceVacancyInput = {
   timesUsed?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  aiConfidence?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -757,6 +798,7 @@ export type QaPairSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   timesUsed?: boolean
   category?: boolean
   source?: boolean
+  aiConfidence?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
 }, ExtArgs["result"]["qaPair"]>
@@ -771,6 +813,7 @@ export type QaPairSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   timesUsed?: boolean
   category?: boolean
   source?: boolean
+  aiConfidence?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
 }, ExtArgs["result"]["qaPair"]>
@@ -785,6 +828,7 @@ export type QaPairSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   timesUsed?: boolean
   category?: boolean
   source?: boolean
+  aiConfidence?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
 }, ExtArgs["result"]["qaPair"]>
@@ -799,9 +843,10 @@ export type QaPairSelectScalar = {
   timesUsed?: boolean
   category?: boolean
   source?: boolean
+  aiConfidence?: boolean
 }
 
-export type QaPairOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "question" | "answer" | "sourceVacancyId" | "answeredAt" | "timesUsed" | "category" | "source", ExtArgs["result"]["qaPair"]>
+export type QaPairOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "question" | "answer" | "sourceVacancyId" | "answeredAt" | "timesUsed" | "category" | "source" | "aiConfidence", ExtArgs["result"]["qaPair"]>
 export type QaPairInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sourceVacancy?: boolean | Prisma.QaPair$sourceVacancyArgs<ExtArgs>
@@ -831,6 +876,7 @@ export type $QaPairPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     timesUsed: number
     category: string | null
     source: string
+    aiConfidence: number | null
   }, ExtArgs["result"]["qaPair"]>
   composites: {}
 }
@@ -1265,6 +1311,7 @@ export interface QaPairFieldRefs {
   readonly timesUsed: Prisma.FieldRef<"QaPair", 'Int'>
   readonly category: Prisma.FieldRef<"QaPair", 'String'>
   readonly source: Prisma.FieldRef<"QaPair", 'String'>
+  readonly aiConfidence: Prisma.FieldRef<"QaPair", 'Int'>
 }
     
 

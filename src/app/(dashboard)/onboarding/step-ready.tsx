@@ -5,7 +5,7 @@ import {
   Loader2,
   ChevronLeft,
   Rocket,
-  Info,
+  Lightbulb,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -138,12 +138,12 @@ export default function StepReady({
         </CardContent>
       </Card>
 
-      {/* Tip: review Q&A */}
-      <div className="rounded-lg border border-blue-700/40 bg-blue-900/20 p-4 flex items-start gap-3">
-        <Info className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
-        <p className="text-sm text-blue-200">
+      {/* Tip: review Q&A bank */}
+      <div className="rounded-lg border border-border bg-muted/50 p-4 flex items-start gap-3">
+        <Lightbulb className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
+        <p className="text-sm text-muted-foreground">
           {t("ready_tip_qa")}{" "}
-          <Link href="/qa" className="font-medium text-blue-400 hover:text-blue-300 underline underline-offset-2">
+          <Link href="/qa" className="font-medium text-primary hover:text-primary/80 underline underline-offset-2">
             {t("ready_tip_qa_link")}
           </Link>
         </p>
