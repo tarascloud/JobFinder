@@ -79,25 +79,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return true;
       }
 
-      // Open registration: allow if free spots remaining (first 10 users)
-      const MAX_FREE_USERS = 10;
-      const totalUsers = await prisma.user.count();
-      if (totalUsers < MAX_FREE_USERS) {
-        const jfEmail = await generateJfEmail(user.name, user.email!);
-        await prisma.user.create({
-          data: {
-            email: user.email!,
-            name: user.name,
-            image: user.image,
-            ...(isGoogle && user.id ? { googleId: user.id } : {}),
-            role: "user",
-            jfEmail,
-          },
-        });
-        return true;
-      }
-
-      // No free spots remaining — deny access
+      // Access denied — invite code required for all new users
       return false;
     },
     async session({ session }) {

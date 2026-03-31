@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFile, stat } from "fs/promises";
 import path from "path";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/db";
+import { verifyDemoToken, DEMO_COOKIE } from "@/lib/demo-token";
 
 /** Persistent data directory — matches upload-resume route */
 const DATA_RESUMES_DIR = path.join(
@@ -10,13 +12,31 @@ const DATA_RESUMES_DIR = path.join(
 );
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Determine the requesting user's ID
+    let userId: number | null = null;
+
+    // Check demo mode
+    const demoToken = request.cookies.get(DEMO_COOKIE)?.value;
+    if (demoToken && (await verifyDemoToken(demoToken))) {
+      // Demo user has id = 0 (no real resumes)
+      userId = 0;
+    } else {
+      const session = await auth();
+      if (!session?.user?.email) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      const dbUser = await prisma.user.findUnique({
+        where: { email: session.user.email },
+        select: { id: true },
+      });
+      if (!dbUser) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      userId = dbUser.id;
     }
 
     const { filename } = await params;
@@ -26,10 +46,16 @@ export async function GET(
       return NextResponse.json({ error: "Invalid filename" }, { status: 400 });
     }
 
+    // Verify ownership: filename must start with "{userId}-"
+    // Upload route names files as "{user.id}-{timestamp}.pdf"
+    if (!filename.startsWith(`${userId}-`)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const filePath = path.join(DATA_RESUMES_DIR, filename);
 
     // Prevent path traversal
-    if (!filePath.startsWith(DATA_RESUMES_DIR)) {
+    if (!filePath.startsWith(DATA_RESUMES_DIR + path.sep) && filePath !== DATA_RESUMES_DIR) {
       return NextResponse.json({ error: "Invalid path" }, { status: 400 });
     }
 

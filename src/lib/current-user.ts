@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { auth } from "./auth";
 import { prisma } from "./db";
-import { isValidDemoToken } from "@/lib/demo-token";
+import { verifyDemoToken, DEMO_COOKIE } from "@/lib/demo-token";
 
 /** Fake demo user returned when browsing in demo mode */
 const DEMO_USER = {
@@ -18,8 +18,8 @@ const DEMO_USER = {
 
 export async function isDemoMode(): Promise<boolean> {
   const jar = await cookies();
-  const token = jar.get("demo_token")?.value;
-  return !!token && isValidDemoToken(token);
+  const token = jar.get(DEMO_COOKIE)?.value;
+  return verifyDemoToken(token);
 }
 
 export async function getCurrentUser() {

@@ -1,3 +1,5 @@
+const GROQ_RETRY_DELAYS_MS = [1000, 2000, 4000, 8000];
+
 export async function callGroq(
   prompt: string,
   options?: { model?: string; apiKey?: string; systemPrompt?: string }
@@ -12,25 +14,42 @@ export async function callGroq(
   }
   messages.push({ role: "user", content: prompt });
 
-  const resp = await fetch(
-    "https://api.groq.com/openai/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${key}`,
-      },
-      body: JSON.stringify({
-        model: modelName,
-        messages,
-        temperature: 0.3,
-      }),
-    }
-  );
+  let lastError: Error | null = null;
 
-  if (!resp.ok) throw new Error(`Groq API error: ${resp.status}`);
-  const data = await resp.json();
-  return data.choices?.[0]?.message?.content || "";
+  for (let attempt = 0; attempt <= GROQ_RETRY_DELAYS_MS.length; attempt++) {
+    const resp = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${key}`,
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages,
+          temperature: 0.3,
+        }),
+      }
+    );
+
+    if (resp.status === 429) {
+      const delayMs = GROQ_RETRY_DELAYS_MS[attempt];
+      if (delayMs === undefined) {
+        throw new Error(`Groq API rate limit (429) after ${attempt} retries`);
+      }
+      console.warn(`[groq] 429 rate limit, retrying in ${delayMs}ms (attempt ${attempt + 1}/${GROQ_RETRY_DELAYS_MS.length})`);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      lastError = new Error(`Groq API rate limit (429)`);
+      continue;
+    }
+
+    if (!resp.ok) throw new Error(`Groq API error: ${resp.status}`);
+    const data = await resp.json();
+    return data.choices?.[0]?.message?.content || "";
+  }
+
+  throw lastError || new Error("Groq API rate limit exceeded");
 }
 
 export async function callGroqJSON<T>(

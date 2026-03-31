@@ -2,20 +2,16 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import crypto from "crypto";
-
-const DEMO_SECRET = process.env.NEXTAUTH_SECRET || "demo-secret";
+import { createDemoToken, DEMO_COOKIE, DEMO_TTL_SECONDS } from "@/lib/demo-token";
 
 export async function enterDemoMode() {
-  const token = crypto
-    .createHmac("sha256", DEMO_SECRET)
-    .update("demo")
-    .digest("hex");
+  const token = await createDemoToken();
   const jar = await cookies();
-  jar.set("demo_token", token, {
+  jar.set(DEMO_COOKIE, token, {
     path: "/",
-    maxAge: 3600,
+    maxAge: DEMO_TTL_SECONDS,
     httpOnly: true,
+    secure: true,
     sameSite: "lax",
   });
   redirect("/profile");
@@ -23,7 +19,6 @@ export async function enterDemoMode() {
 
 export async function exitDemoMode() {
   const jar = await cookies();
-  jar.delete("demo_token");
+  jar.delete(DEMO_COOKIE);
   redirect("/login");
 }
-
