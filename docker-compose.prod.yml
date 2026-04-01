@@ -13,15 +13,20 @@ services:
     mem_limit: 1g
     restart: unless-stopped
     ports:
-      - "3456:3000"
+      - "3456:3456"
     # depends_on pg from infra compose
     # ensure infra is running: cd /opt/docker && docker compose up -d
     env_file:
       - /opt/docker/secrets/.jobfinder.env
     environment:
       - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+      # Fix: cloudflared "stream canceled by remote with error code 0"
+      # Next.js default keepAliveTimeout=5s causes CF to reuse dead connections → CANCEL
+      # Set to 120s > cloudflared originRequest.keepAliveTimeout=90s so CF closes idle first
+      - KEEP_ALIVE_TIMEOUT=120000
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      test: ["CMD", "wget", "-qO-", "http://0.0.0.0:3456/"]
       interval: 30s
       timeout: 5s
       retries: 3
