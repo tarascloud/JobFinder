@@ -11,7 +11,6 @@ const PUBLIC_PATHS = [
   "/api/auth",
   "/api/health",
   "/api/status",
-  "/api/admin/emails",
   "/api/email-response",
   "/api/telegram-webhook",
 ];

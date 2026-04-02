@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFile, stat } from "fs/promises";
 import path from "path";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 
 /** Persistent data directory — matches helpers.ts SCREENSHOTS_DIR */
 const DATA_SCREENSHOTS_DIR = path.join(
@@ -15,9 +16,11 @@ export async function GET(
 ) {
   try {
     const session = await auth();
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const userId = Number(session.user.id);
 
     const { filename } = await params;
 
@@ -31,6 +34,17 @@ export async function GET(
     // Prevent path traversal
     if (!filePath.startsWith(DATA_SCREENSHOTS_DIR)) {
       return NextResponse.json({ error: "Invalid path" }, { status: 400 });
+    }
+
+    // Verify ownership: the screenshot must belong to an application owned by the current user
+    const screenshotRef = `/api/screenshots/${filename}`;
+    const ownerCheck = await prisma.application.findFirst({
+      where: { userId, screenshotPath: screenshotRef },
+      select: { id: true },
+    });
+
+    if (!ownerCheck) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
     const fileStat = await stat(filePath).catch(() => null);

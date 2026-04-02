@@ -29,13 +29,15 @@ interface EmailFilters {
 
 export async function getEmailResponses(filters?: EmailFilters) {
   try {
-    await requireUser();
+    const user = await requireUser();
 
     const page = filters?.page ?? 1;
     const limit = filters?.limit ?? 20;
     const skip = (page - 1) * limit;
 
-    const where: { matched?: boolean; responseType?: string } = {};
+    const where: { userId: number; matched?: boolean; responseType?: string } = {
+      userId: user.id,
+    };
     if (filters?.matched !== undefined) {
       where.matched = filters.matched;
     }
@@ -61,7 +63,7 @@ export async function getEmailResponses(filters?: EmailFilters) {
     const vacancyMap = new Map<number, { title: string | null; company: string | null }>();
     if (applicationIds.length > 0) {
       const applications = await prisma.application.findMany({
-        where: { id: { in: applicationIds } },
+        where: { id: { in: applicationIds }, userId: user.id },
         select: { id: true, vacancy: { select: { title: true, company: true } } },
       });
       for (const app of applications) {
@@ -103,7 +105,19 @@ export async function getEmailResponses(filters?: EmailFilters) {
 
 export async function linkEmailToApplication(emailId: number, applicationId: number) {
   try {
-    await requireUser();
+    const user = await requireUser();
+
+    // Verify the email belongs to this user before linking
+    const email = await prisma.emailResponse.findFirst({
+      where: { id: emailId, userId: user.id },
+    });
+    if (!email) return { error: "Email not found" };
+
+    // Verify the application belongs to this user
+    const application = await prisma.application.findFirst({
+      where: { id: applicationId, userId: user.id },
+    });
+    if (!application) return { error: "Application not found" };
 
     await prisma.emailResponse.update({
       where: { id: emailId },
@@ -118,10 +132,10 @@ export async function linkEmailToApplication(emailId: number, applicationId: num
 
 export async function getUnmatchedEmailCount() {
   try {
-    await requireUser();
+    const user = await requireUser();
 
     const count = await prisma.emailResponse.count({
-      where: { matched: false },
+      where: { userId: user.id, matched: false },
     });
 
     return { count };
@@ -132,10 +146,10 @@ export async function getUnmatchedEmailCount() {
 
 export async function getUnreadEmailCount() {
   try {
-    await requireUser();
+    const user = await requireUser();
 
     const count = await prisma.emailResponse.count({
-      where: { read: false },
+      where: { userId: user.id, read: false },
     });
 
     return { count };
@@ -189,7 +203,13 @@ export async function sendUserEmail(data: {
 
 export async function deleteUserEmail(id: number) {
   try {
-    await requireUser();
+    const user = await requireUser();
+
+    // Verify the email belongs to this user before deleting
+    const email = await prisma.emailResponse.findFirst({
+      where: { id, userId: user.id },
+    });
+    if (!email) return { error: "Email not found" };
 
     await prisma.emailResponse.delete({
       where: { id },
@@ -203,7 +223,13 @@ export async function deleteUserEmail(id: number) {
 
 export async function markEmailAsRead(emailId: number) {
   try {
-    await requireUser();
+    const user = await requireUser();
+
+    // Verify the email belongs to this user before updating
+    const email = await prisma.emailResponse.findFirst({
+      where: { id: emailId, userId: user.id },
+    });
+    if (!email) return { error: "Email not found" };
 
     await prisma.emailResponse.update({
       where: { id: emailId },

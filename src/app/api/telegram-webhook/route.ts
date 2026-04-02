@@ -1,13 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { sendTelegramMessage } from "@/lib/telegram-bot";
+import { timingSafeEqual } from "crypto";
 
 /**
  * Telegram Bot Webhook endpoint.
  * When a user sends /start to the bot, we try to link their Telegram chat_id
  * to their account by matching the Telegram username.
+ *
+ * Security: requests must include a valid X-Telegram-Bot-Api-Secret-Token header
+ * matching the TELEGRAM_WEBHOOK_SECRET environment variable.
  */
 export async function POST(req: NextRequest) {
+  // Verify Telegram webhook secret token
+  const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error("[telegram-webhook] TELEGRAM_WEBHOOK_SECRET is not set");
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+
+  const incomingToken = req.headers.get("x-telegram-bot-api-secret-token");
+  if (!incomingToken) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
+
+  let isValid = false;
+  try {
+    const expected = Buffer.from(webhookSecret, "utf8");
+    const incoming = Buffer.from(incomingToken, "utf8");
+    isValid = expected.length === incoming.length && timingSafeEqual(expected, incoming);
+  } catch {
+    isValid = false;
+  }
+
+  if (!isValid) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
 
