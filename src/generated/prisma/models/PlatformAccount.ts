@@ -238,7 +238,7 @@ export type PlatformAccountGroupByOutputType = {
   _max: PlatformAccountMaxAggregateOutputType | null
 }
 
-type GetPlatformAccountGroupByPayload<T extends PlatformAccountGroupByArgs> = Prisma.PrismaPromise<
+export type GetPlatformAccountGroupByPayload<T extends PlatformAccountGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PlatformAccountGroupByOutputType, T['by']> &
       {

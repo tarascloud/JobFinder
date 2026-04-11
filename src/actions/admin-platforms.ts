@@ -150,6 +150,11 @@ const PLATFORM_METADATA: Record<string, PlatformMeta> = {
     reliability: "moderate",
     note: "EU remote jobs. WordPress-based, HTML scraping.",
   },
+  "career-pages": {
+    requiresAuth: false,
+    reliability: "reliable",
+    note: "111 company career pages via Greenhouse/Ashby/Lever/Workable public APIs. AI labs, fintech, dev tools, infra, European tech.",
+  },
 };
 
 /**

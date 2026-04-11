@@ -13,7 +13,7 @@ services:
     mem_limit: 1g
     restart: unless-stopped
     ports:
-      - "3456:3456"
+      - "127.0.0.1:3456:3456"
     # depends_on pg from infra compose
     # ensure infra is running: cd /opt/docker && docker compose up -d
     env_file:

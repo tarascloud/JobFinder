@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
-import type { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import { scoreVacancy } from "@/lib/ai/scorer";
 import { generateCoverLetter as generateCoverLetterAI } from "@/lib/ai/cover-letter";
 
@@ -314,6 +314,7 @@ export async function batchScoreVacancies(
             salaryFit: result.salaryFit,
             remoteFit: result.remoteFit,
             notes: result.notes,
+            detailedAnalysis: (result.detailedAnalysis as Prisma.InputJsonValue | undefined) ?? Prisma.JsonNull,
             scoredBy: "gemini-2.0-flash",
           },
         });

@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.5.0
- * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+ * Prisma Client JS version: 7.6.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.5.0",
-  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
+  client: "7.6.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 /**
@@ -399,6 +399,7 @@ export const ModelName = {
   CompanyResearch: 'CompanyResearch',
   EmailResponse: 'EmailResponse',
   AdminEmail: 'AdminEmail',
+  InterviewStory: 'InterviewStory',
   UserVacancy: 'UserVacancy'
 } as const
 
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "guestInvite" | "userProfile" | "searchProfile" | "vacancy" | "vacancyScore" | "application" | "qaPair" | "platformAccount" | "aiFeedback" | "userAISettings" | "notification" | "companyResearch" | "emailResponse" | "adminEmail" | "userVacancy"
+    modelProps: "user" | "guestInvite" | "userProfile" | "searchProfile" | "vacancy" | "vacancyScore" | "application" | "qaPair" | "platformAccount" | "aiFeedback" | "userAISettings" | "notification" | "companyResearch" | "emailResponse" | "adminEmail" | "interviewStory" | "userVacancy"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1529,6 +1530,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InterviewStory: {
+      payload: Prisma.$InterviewStoryPayload<ExtArgs>
+      fields: Prisma.InterviewStoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InterviewStoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InterviewStoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>
+        }
+        findFirst: {
+          args: Prisma.InterviewStoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InterviewStoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>
+        }
+        findMany: {
+          args: Prisma.InterviewStoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>[]
+        }
+        create: {
+          args: Prisma.InterviewStoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>
+        }
+        createMany: {
+          args: Prisma.InterviewStoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InterviewStoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>[]
+        }
+        delete: {
+          args: Prisma.InterviewStoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>
+        }
+        update: {
+          args: Prisma.InterviewStoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.InterviewStoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InterviewStoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InterviewStoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.InterviewStoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InterviewStoryPayload>
+        }
+        aggregate: {
+          args: Prisma.InterviewStoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInterviewStory>
+        }
+        groupBy: {
+          args: Prisma.InterviewStoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InterviewStoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InterviewStoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InterviewStoryCountAggregateOutputType> | number
+        }
+      }
+    }
     UserVacancy: {
       payload: Prisma.$UserVacancyPayload<ExtArgs>
       fields: Prisma.UserVacancyFieldRefs
@@ -1788,6 +1863,7 @@ export const VacancyScoreScalarFieldEnum = {
   salaryFit: 'salaryFit',
   remoteFit: 'remoteFit',
   notes: 'notes',
+  detailedAnalysis: 'detailedAnalysis',
   dismissed: 'dismissed',
   scoredAt: 'scoredAt',
   scoredBy: 'scoredBy'
@@ -1939,6 +2015,24 @@ export const AdminEmailScalarFieldEnum = {
 export type AdminEmailScalarFieldEnum = (typeof AdminEmailScalarFieldEnum)[keyof typeof AdminEmailScalarFieldEnum]
 
 
+export const InterviewStoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  theme: 'theme',
+  situation: 'situation',
+  task: 'task',
+  action: 'action',
+  result: 'result',
+  reflection: 'reflection',
+  tags: 'tags',
+  usedCount: 'usedCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InterviewStoryScalarFieldEnum = (typeof InterviewStoryScalarFieldEnum)[keyof typeof InterviewStoryScalarFieldEnum]
+
+
 export const UserVacancyScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1967,6 +2061,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -1981,6 +2083,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -2035,6 +2146,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -2161,6 +2286,7 @@ export type GlobalOmitConfig = {
   companyResearch?: Prisma.CompanyResearchOmit
   emailResponse?: Prisma.EmailResponseOmit
   adminEmail?: Prisma.AdminEmailOmit
+  interviewStory?: Prisma.InterviewStoryOmit
   userVacancy?: Prisma.UserVacancyOmit
 }
 

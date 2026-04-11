@@ -67,6 +67,7 @@ const ALL_PLATFORM_LABELS: Record<string, string> = {
   relocateme: "RelocateMe",
   "4dayweek": "4 Day Week",
   euroremotejobs: "EuroRemoteJobs",
+  "career-pages": "Career Pages (111 companies)",
 };
 
 const AUTH_TYPES = [

@@ -266,7 +266,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -311,6 +311,7 @@ export type UserWhereInput = {
   notifications?: Prisma.NotificationListRelationFilter
   companyResearch?: Prisma.CompanyResearchListRelationFilter
   userVacancies?: Prisma.UserVacancyListRelationFilter
+  interviewStories?: Prisma.InterviewStoryListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -340,6 +341,7 @@ export type UserOrderByWithRelationInput = {
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   companyResearch?: Prisma.CompanyResearchOrderByRelationAggregateInput
   userVacancies?: Prisma.UserVacancyOrderByRelationAggregateInput
+  interviewStories?: Prisma.InterviewStoryOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -372,6 +374,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   notifications?: Prisma.NotificationListRelationFilter
   companyResearch?: Prisma.CompanyResearchListRelationFilter
   userVacancies?: Prisma.UserVacancyListRelationFilter
+  interviewStories?: Prisma.InterviewStoryListRelationFilter
 }, "id" | "email" | "googleId" | "jfEmail">
 
 export type UserOrderByWithAggregationInput = {
@@ -444,6 +447,7 @@ export type UserCreateInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -473,6 +477,7 @@ export type UserUncheckedCreateInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -501,6 +506,7 @@ export type UserUpdateInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -530,6 +536,7 @@ export type UserUncheckedUpdateInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -818,6 +825,20 @@ export type UserUpdateOneRequiredWithoutCompanyResearchNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCompanyResearchInput, Prisma.UserUpdateWithoutCompanyResearchInput>, Prisma.UserUncheckedUpdateWithoutCompanyResearchInput>
 }
 
+export type UserCreateNestedOneWithoutInterviewStoriesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInterviewStoriesInput, Prisma.UserUncheckedCreateWithoutInterviewStoriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInterviewStoriesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutInterviewStoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInterviewStoriesInput, Prisma.UserUncheckedCreateWithoutInterviewStoriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInterviewStoriesInput
+  upsert?: Prisma.UserUpsertWithoutInterviewStoriesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInterviewStoriesInput, Prisma.UserUpdateWithoutInterviewStoriesInput>, Prisma.UserUncheckedUpdateWithoutInterviewStoriesInput>
+}
+
 export type UserCreateNestedOneWithoutUserVacanciesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutUserVacanciesInput, Prisma.UserUncheckedCreateWithoutUserVacanciesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserVacanciesInput
@@ -857,6 +878,7 @@ export type UserCreateWithoutProfileInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -885,6 +907,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -928,6 +951,7 @@ export type UserUpdateWithoutProfileInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -956,6 +980,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSearchProfilesInput = {
@@ -983,6 +1008,7 @@ export type UserCreateWithoutSearchProfilesInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSearchProfilesInput = {
@@ -1011,6 +1037,7 @@ export type UserUncheckedCreateWithoutSearchProfilesInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSearchProfilesInput = {
@@ -1054,6 +1081,7 @@ export type UserUpdateWithoutSearchProfilesInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSearchProfilesInput = {
@@ -1082,6 +1110,7 @@ export type UserUncheckedUpdateWithoutSearchProfilesInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVacancyScoresInput = {
@@ -1109,6 +1138,7 @@ export type UserCreateWithoutVacancyScoresInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVacancyScoresInput = {
@@ -1137,6 +1167,7 @@ export type UserUncheckedCreateWithoutVacancyScoresInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVacancyScoresInput = {
@@ -1180,6 +1211,7 @@ export type UserUpdateWithoutVacancyScoresInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVacancyScoresInput = {
@@ -1208,6 +1240,7 @@ export type UserUncheckedUpdateWithoutVacancyScoresInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApplicationsInput = {
@@ -1235,6 +1268,7 @@ export type UserCreateWithoutApplicationsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
@@ -1263,6 +1297,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -1306,6 +1341,7 @@ export type UserUpdateWithoutApplicationsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
@@ -1334,6 +1370,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQaPairsInput = {
@@ -1361,6 +1398,7 @@ export type UserCreateWithoutQaPairsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQaPairsInput = {
@@ -1389,6 +1427,7 @@ export type UserUncheckedCreateWithoutQaPairsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQaPairsInput = {
@@ -1432,6 +1471,7 @@ export type UserUpdateWithoutQaPairsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQaPairsInput = {
@@ -1460,6 +1500,7 @@ export type UserUncheckedUpdateWithoutQaPairsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlatformAccountsInput = {
@@ -1487,6 +1528,7 @@ export type UserCreateWithoutPlatformAccountsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlatformAccountsInput = {
@@ -1515,6 +1557,7 @@ export type UserUncheckedCreateWithoutPlatformAccountsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlatformAccountsInput = {
@@ -1558,6 +1601,7 @@ export type UserUpdateWithoutPlatformAccountsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
@@ -1586,6 +1630,7 @@ export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiFeedbackInput = {
@@ -1613,6 +1658,7 @@ export type UserCreateWithoutAiFeedbackInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiFeedbackInput = {
@@ -1641,6 +1687,7 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiFeedbackInput = {
@@ -1684,6 +1731,7 @@ export type UserUpdateWithoutAiFeedbackInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiFeedbackInput = {
@@ -1712,6 +1760,7 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiSettingsInput = {
@@ -1739,6 +1788,7 @@ export type UserCreateWithoutAiSettingsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiSettingsInput = {
@@ -1767,6 +1817,7 @@ export type UserUncheckedCreateWithoutAiSettingsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiSettingsInput = {
@@ -1810,6 +1861,7 @@ export type UserUpdateWithoutAiSettingsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiSettingsInput = {
@@ -1838,6 +1890,7 @@ export type UserUncheckedUpdateWithoutAiSettingsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1865,6 +1918,7 @@ export type UserCreateWithoutNotificationsInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1893,6 +1947,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1936,6 +1991,7 @@ export type UserUpdateWithoutNotificationsInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1964,6 +2020,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCompanyResearchInput = {
@@ -1991,6 +2048,7 @@ export type UserCreateWithoutCompanyResearchInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanyResearchInput = {
@@ -2019,6 +2077,7 @@ export type UserUncheckedCreateWithoutCompanyResearchInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanyResearchInput = {
@@ -2062,6 +2121,7 @@ export type UserUpdateWithoutCompanyResearchInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyResearchInput = {
@@ -2090,6 +2150,137 @@ export type UserUncheckedUpdateWithoutCompanyResearchInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutInterviewStoriesInput = {
+  email: string
+  name?: string | null
+  image?: string | null
+  googleId?: string | null
+  jfEmail?: string | null
+  role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
+  applicationLimit?: number
+  telegramUsername?: string | null
+  telegramChatId?: string | null
+  createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
+  vacancyScores?: Prisma.VacancyScoreCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  qaPairs?: Prisma.QaPairCreateNestedManyWithoutUserInput
+  platformAccounts?: Prisma.PlatformAccountCreateNestedManyWithoutUserInput
+  aiFeedback?: Prisma.AiFeedbackCreateNestedManyWithoutUserInput
+  aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutInterviewStoriesInput = {
+  id?: number
+  email: string
+  name?: string | null
+  image?: string | null
+  googleId?: string | null
+  jfEmail?: string | null
+  role?: string
+  preferredLocale?: string
+  preferredSkin?: string
+  preferredTheme?: string
+  applicationLimit?: number
+  telegramUsername?: string | null
+  telegramChatId?: string | null
+  createdAt?: Date | string
+  lastVacanciesSeenAt?: Date | string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  qaPairs?: Prisma.QaPairUncheckedCreateNestedManyWithoutUserInput
+  platformAccounts?: Prisma.PlatformAccountUncheckedCreateNestedManyWithoutUserInput
+  aiFeedback?: Prisma.AiFeedbackUncheckedCreateNestedManyWithoutUserInput
+  aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  userVacancies?: Prisma.UserVacancyUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutInterviewStoriesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInterviewStoriesInput, Prisma.UserUncheckedCreateWithoutInterviewStoriesInput>
+}
+
+export type UserUpsertWithoutInterviewStoriesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInterviewStoriesInput, Prisma.UserUncheckedUpdateWithoutInterviewStoriesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInterviewStoriesInput, Prisma.UserUncheckedCreateWithoutInterviewStoriesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInterviewStoriesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInterviewStoriesInput, Prisma.UserUncheckedUpdateWithoutInterviewStoriesInput>
+}
+
+export type UserUpdateWithoutInterviewStoriesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
+  vacancyScores?: Prisma.VacancyScoreUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  qaPairs?: Prisma.QaPairUpdateManyWithoutUserNestedInput
+  platformAccounts?: Prisma.PlatformAccountUpdateManyWithoutUserNestedInput
+  aiFeedback?: Prisma.AiFeedbackUpdateManyWithoutUserNestedInput
+  aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInterviewStoriesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jfEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredLocale?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredSkin?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
+  vacancyScores?: Prisma.VacancyScoreUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qaPairs?: Prisma.QaPairUncheckedUpdateManyWithoutUserNestedInput
+  platformAccounts?: Prisma.PlatformAccountUncheckedUpdateManyWithoutUserNestedInput
+  aiFeedback?: Prisma.AiFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  userVacancies?: Prisma.UserVacancyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserVacanciesInput = {
@@ -2117,6 +2308,7 @@ export type UserCreateWithoutUserVacanciesInput = {
   aiSettings?: Prisma.UserAISettingsCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserVacanciesInput = {
@@ -2145,6 +2337,7 @@ export type UserUncheckedCreateWithoutUserVacanciesInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedCreateNestedOneWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   companyResearch?: Prisma.CompanyResearchUncheckedCreateNestedManyWithoutUserInput
+  interviewStories?: Prisma.InterviewStoryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserVacanciesInput = {
@@ -2188,6 +2381,7 @@ export type UserUpdateWithoutUserVacanciesInput = {
   aiSettings?: Prisma.UserAISettingsUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserVacanciesInput = {
@@ -2216,6 +2410,7 @@ export type UserUncheckedUpdateWithoutUserVacanciesInput = {
   aiSettings?: Prisma.UserAISettingsUncheckedUpdateOneWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   companyResearch?: Prisma.CompanyResearchUncheckedUpdateManyWithoutUserNestedInput
+  interviewStories?: Prisma.InterviewStoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2233,6 +2428,7 @@ export type UserCountOutputType = {
   notifications: number
   companyResearch: number
   userVacancies: number
+  interviewStories: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2245,6 +2441,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   companyResearch?: boolean | UserCountOutputTypeCountCompanyResearchArgs
   userVacancies?: boolean | UserCountOutputTypeCountUserVacanciesArgs
+  interviewStories?: boolean | UserCountOutputTypeCountInterviewStoriesArgs
 }
 
 /**
@@ -2320,6 +2517,13 @@ export type UserCountOutputTypeCountUserVacanciesArgs<ExtArgs extends runtime.Ty
   where?: Prisma.UserVacancyWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInterviewStoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InterviewStoryWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2348,6 +2552,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   companyResearch?: boolean | Prisma.User$companyResearchArgs<ExtArgs>
   userVacancies?: boolean | Prisma.User$userVacanciesArgs<ExtArgs>
+  interviewStories?: boolean | Prisma.User$interviewStoriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2418,6 +2623,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   companyResearch?: boolean | Prisma.User$companyResearchArgs<ExtArgs>
   userVacancies?: boolean | Prisma.User$userVacanciesArgs<ExtArgs>
+  interviewStories?: boolean | Prisma.User$interviewStoriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2437,6 +2643,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     companyResearch: Prisma.$CompanyResearchPayload<ExtArgs>[]
     userVacancies: Prisma.$UserVacancyPayload<ExtArgs>[]
+    interviewStories: Prisma.$InterviewStoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2859,6 +3066,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   companyResearch<T extends Prisma.User$companyResearchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companyResearchArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userVacancies<T extends Prisma.User$userVacanciesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userVacanciesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserVacancyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  interviewStories<T extends Prisma.User$interviewStoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$interviewStoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InterviewStoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3547,6 +3755,30 @@ export type User$userVacanciesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.UserVacancyScalarFieldEnum | Prisma.UserVacancyScalarFieldEnum[]
+}
+
+/**
+ * User.interviewStories
+ */
+export type User$interviewStoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InterviewStory
+   */
+  select?: Prisma.InterviewStorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InterviewStory
+   */
+  omit?: Prisma.InterviewStoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InterviewStoryInclude<ExtArgs> | null
+  where?: Prisma.InterviewStoryWhereInput
+  orderBy?: Prisma.InterviewStoryOrderByWithRelationInput | Prisma.InterviewStoryOrderByWithRelationInput[]
+  cursor?: Prisma.InterviewStoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InterviewStoryScalarFieldEnum | Prisma.InterviewStoryScalarFieldEnum[]
 }
 
 /**

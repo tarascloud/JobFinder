@@ -128,6 +128,20 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Sanitize and truncate bodyHtml to prevent stored-XSS and limit bloat
+    const MAX_BODY_HTML = 20 * 1024; // 20KB
+    let sanitizedBodyHtml: string | null = null;
+    if (bodyHtml) {
+      // Strip all HTML tags to extract plain text for storage — avoids stored-XSS entirely
+      const stripped = bodyHtml
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      sanitizedBodyHtml = stripped.substring(0, MAX_BODY_HTML);
+    }
+
     // Save the email response (include userId when provided by per-user email worker)
     const savedEmail = await prisma.emailResponse.create({
       data: {
@@ -136,7 +150,7 @@ export async function POST(request: NextRequest) {
         subject,
         body: emailBody?.substring(0, 10000) || null,
         bodyText: bodyText ? bodyText.substring(0, 10000) : null,
-        bodyHtml: bodyHtml ? bodyHtml.substring(0, 50000) : null,
+        bodyHtml: sanitizedBodyHtml,
         messageId: messageId || null,
         responseType: validatedResponseType,
         matched: !!matchedApplication,

@@ -274,7 +274,7 @@ export type ApplicationGroupByOutputType = {
   _max: ApplicationMaxAggregateOutputType | null
 }
 
-type GetApplicationGroupByPayload<T extends ApplicationGroupByArgs> = Prisma.PrismaPromise<
+export type GetApplicationGroupByPayload<T extends ApplicationGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ApplicationGroupByOutputType, T['by']> &
       {

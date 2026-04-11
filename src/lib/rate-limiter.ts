@@ -1,6 +1,35 @@
 // In-memory rate limiter (per user, per action)
 const limits = new Map<string, { count: number; resetAt: number }>();
 
+// IP-based rate limiter (per IP, per action, per minute window)
+const ipLimits = new Map<string, { count: number; resetAt: number }>();
+
+export function checkIpRateLimit(
+  ip: string,
+  action: string,
+  maxPerMinute: number
+): { allowed: boolean; retryAfter?: number } {
+  const key = `${ip}:${action}`;
+  const now = Date.now();
+
+  if (ipLimits.size > 2000) {
+    for (const [k, v] of ipLimits) {
+      if (now > v.resetAt) ipLimits.delete(k);
+    }
+  }
+
+  const entry = ipLimits.get(key);
+  if (!entry || now > entry.resetAt) {
+    ipLimits.set(key, { count: 1, resetAt: now + 60000 });
+    return { allowed: true };
+  }
+  if (entry.count >= maxPerMinute) {
+    return { allowed: false, retryAfter: Math.ceil((entry.resetAt - now) / 1000) };
+  }
+  entry.count++;
+  return { allowed: true };
+}
+
 export function checkRateLimit(
   userId: number,
   action: string,

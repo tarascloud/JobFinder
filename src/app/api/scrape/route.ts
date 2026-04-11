@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeEqual } from "crypto";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { scrapeAll } from "@/lib/scrapers";
 import { scoreVacancy } from "@/lib/ai/scorer";
@@ -107,6 +108,7 @@ export async function POST(request: NextRequest) {
                   salaryFit: score.salaryFit,
                   remoteFit: score.remoteFit,
                   notes: score.notes,
+                  detailedAnalysis: (score.detailedAnalysis as Prisma.InputJsonValue | undefined) ?? Prisma.JsonNull,
                   scoredBy: "gemini-auto",
                   scoredAt: new Date(),
                 },

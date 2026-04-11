@@ -271,7 +271,7 @@ export type UserVacancyGroupByOutputType = {
   _max: UserVacancyMaxAggregateOutputType | null
 }
 
-type GetUserVacancyGroupByPayload<T extends UserVacancyGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserVacancyGroupByPayload<T extends UserVacancyGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserVacancyGroupByOutputType, T['by']> &
       {

@@ -11,17 +11,12 @@ import {
   Pencil,
   Trash2,
   Sparkles,
-  Loader2,
   Zap,
-  X,
   Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
@@ -38,7 +33,7 @@ import {
   generateSearchFromProfile,
 } from "@/actions/search-profiles";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ALL_PLATFORMS } from "@/lib/platforms";
+import { SearchProfileDialog } from "./search-profile-dialog";
 
 interface SearchProfile {
   id: number;
@@ -134,66 +129,6 @@ function splitComma(s: string): string[] {
     .split(",")
     .map((x) => x.trim())
     .filter(Boolean);
-}
-
-function TagInput({
-  value,
-  onChange,
-  placeholder,
-}: {
-  value: string[];
-  onChange: (tags: string[]) => void;
-  placeholder?: string;
-}) {
-  const [input, setInput] = useState("");
-
-  const addTag = (tag: string) => {
-    const trimmed = tag.trim();
-    if (trimmed && !value.includes(trimmed)) {
-      onChange([...value, trimmed]);
-    }
-    setInput("");
-  };
-
-  const removeTag = (tag: string) => {
-    onChange(value.filter((t) => t !== tag));
-  };
-
-  return (
-    <div>
-      <div className="flex flex-wrap gap-1.5 mb-1.5">
-        {value.map((tag) => (
-          <span
-            key={tag}
-            className="inline-flex items-center gap-1 rounded-full bg-primary/15 border border-primary/40 text-primary px-2.5 py-0.5 text-sm"
-          >
-            {tag}
-            <button
-              type="button"
-              onClick={() => removeTag(tag)}
-              className="text-primary/60 hover:text-primary cursor-pointer"
-            >
-              <X className="h-3 w-3" />
-            </button>
-          </span>
-        ))}
-      </div>
-      <Input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            addTag(input);
-          }
-        }}
-        placeholder={placeholder}
-      />
-      <p className="text-xs text-muted-foreground mt-1">
-        Press Enter to add
-      </p>
-    </div>
-  );
 }
 
 export default function SearchesPage() {
@@ -331,6 +266,13 @@ export default function SearchesPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const updateFormTags = (
+    field: "skills" | "excludedCompanies" | "preferredPlatforms" | "excludedKeywords",
+    tags: string[]
+  ) => {
+    setForm((prev) => ({ ...prev, [field]: tags }));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -352,7 +294,6 @@ export default function SearchesPage() {
         </div>
       </div>
 
-      {/* Loading */}
       {loading ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -486,261 +427,25 @@ export default function SearchesPage() {
         </div>
       )}
 
-      {/* Info block */}
       <div className="flex items-start gap-2 text-sm text-muted-foreground">
         <Info className="h-4 w-4 shrink-0 mt-0.5" />
         <p>{t("info_block")}</p>
       </div>
 
-      {/* Create/Edit Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {editingId ? tCommon("edit") : t("create")}
-            </DialogTitle>
-          </DialogHeader>
+      <SearchProfileDialog
+        open={dialogOpen}
+        editingId={editingId}
+        form={form}
+        saving={saving}
+        generating={generating}
+        error={error}
+        onClose={() => { setDialogOpen(false); setError(null); }}
+        onSave={handleSave}
+        onGenerate={handleGenerate}
+        onFormChange={updateForm}
+        onFormTagChange={updateFormTags}
+      />
 
-          <div className="space-y-4 mt-4">
-            {/* Generate button */}
-            {!editingId && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleGenerate}
-                disabled={generating}
-                className="w-full"
-              >
-                {generating ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="h-4 w-4" />
-                )}
-                {generating ? t("generating") : t("generate_from_profile")}
-              </Button>
-            )}
-
-            <div>
-              <Label>{t("name")}</Label>
-              <Input
-                value={form.name}
-                onChange={(e) => updateForm("name", e.target.value)}
-                placeholder="Senior Frontend Remote"
-              />
-            </div>
-
-            <div>
-              <Label>{t("job_titles")}</Label>
-              <Input
-                value={form.jobTitles}
-                onChange={(e) => updateForm("jobTitles", e.target.value)}
-                placeholder="Senior Frontend Engineer, Staff Engineer"
-              />
-              <p className="text-xs text-muted-foreground mt-1">Comma-separated</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>{t("min_salary")}</Label>
-                <Input
-                  type="number"
-                  value={form.minSalary}
-                  onChange={(e) => updateForm("minSalary", e.target.value)}
-                  placeholder="100000"
-                />
-              </div>
-              <div>
-                <Label>{t("currency")}</Label>
-                <Input
-                  value={form.currency}
-                  onChange={(e) => updateForm("currency", e.target.value)}
-                  placeholder="EUR"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label>{t("geography")}</Label>
-              <Input
-                value={form.geographies}
-                onChange={(e) => updateForm("geographies", e.target.value)}
-                placeholder="Remote (EU), Spain, Germany"
-              />
-            </div>
-
-            <div>
-              <Label>{t("skills")}</Label>
-              <TagInput
-                value={form.skills}
-                onChange={(tags) => setForm((prev) => ({ ...prev, skills: tags }))}
-                placeholder="React, TypeScript, Node.js"
-              />
-            </div>
-
-            <div>
-              <Label>{t("employment_types")}</Label>
-              <div className="flex flex-wrap gap-2 mt-1.5">
-                {EMPLOYMENT_TYPE_OPTIONS.map((type) => {
-                  const isSelected = form.employmentTypes.includes(type);
-                  return (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => {
-                        setForm((prev) => ({
-                          ...prev,
-                          employmentTypes: isSelected
-                            ? prev.employmentTypes.filter((t) => t !== type)
-                            : [...prev.employmentTypes, type],
-                        }));
-                      }}
-                      className={`
-                        inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium
-                        border cursor-pointer transition-colors
-                        ${
-                          isSelected
-                            ? "bg-primary/15 border-primary/40 text-primary"
-                            : "bg-muted border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                        }
-                      `}
-                    >
-                      {t(`employment_type_options.${type}`)}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <Label>{t("remote_only")}</Label>
-              <Switch
-                checked={form.remoteOnly}
-                onCheckedChange={(checked) => updateForm("remoteOnly", checked)}
-              />
-            </div>
-
-            <div>
-              <Label>{t("preferred_platforms")}</Label>
-              <p className="text-xs text-muted-foreground mb-1.5">{t("preferred_platforms_hint")}</p>
-              <div className="flex flex-wrap gap-2">
-                {ALL_PLATFORMS.map((platform) => {
-                  const isSelected = form.preferredPlatforms.includes(platform);
-                  return (
-                    <button
-                      key={platform}
-                      type="button"
-                      onClick={() => {
-                        setForm((prev) => ({
-                          ...prev,
-                          preferredPlatforms: isSelected
-                            ? prev.preferredPlatforms.filter((p) => p !== platform)
-                            : [...prev.preferredPlatforms, platform],
-                        }));
-                      }}
-                      className={`
-                        inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium
-                        border cursor-pointer transition-colors
-                        ${
-                          isSelected
-                            ? "bg-primary/15 border-primary/40 text-primary"
-                            : "bg-muted border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                        }
-                      `}
-                    >
-                      {platform}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label className="flex items-center gap-1.5">
-                  <Zap className="h-4 w-4" />
-                  {t("auto_apply.label")}
-                </Label>
-                <Switch
-                  checked={form.autoApply}
-                  onCheckedChange={(checked) => updateForm("autoApply", checked)}
-                />
-              </div>
-              {form.autoApply && (
-                <p className="text-xs text-amber-400/80 bg-amber-400/10 rounded-md px-3 py-2">
-                  {t("auto_apply.warning")}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label>{t("excluded_companies")}</Label>
-              <TagInput
-                value={form.excludedCompanies}
-                onChange={(tags) => setForm((prev) => ({ ...prev, excludedCompanies: tags }))}
-                placeholder="Acme Corp, Evil Inc"
-              />
-            </div>
-
-            <div>
-              <Label>{t("excluded_keywords")}</Label>
-              <TagInput
-                value={form.excludedKeywords}
-                onChange={(tags) => setForm((prev) => ({ ...prev, excludedKeywords: tags }))}
-                placeholder="senior, manager, lead"
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <Label>{t("apply_hours")} (start)</Label>
-                <Input
-                  type="number"
-                  min={0}
-                  max={23}
-                  value={form.applyHoursStart}
-                  onChange={(e) => updateForm("applyHoursStart", e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>{t("apply_hours")} (end)</Label>
-                <Input
-                  type="number"
-                  min={0}
-                  max={23}
-                  value={form.applyHoursEnd}
-                  onChange={(e) => updateForm("applyHoursEnd", e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>{t("max_daily")}</Label>
-                <Input
-                  type="number"
-                  value={form.maxDailyApplies}
-                  onChange={(e) => updateForm("maxDailyApplies", e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          {error && (
-            <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">
-              {error}
-            </p>
-          )}
-
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => { setDialogOpen(false); setError(null); }}>
-              {tCommon("cancel")}
-            </Button>
-            <Button onClick={handleSave} disabled={saving || !form.name.trim()}>
-              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              {tCommon("save")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Confirmation Dialog */}
       <Dialog
         open={deleteConfirmId !== null}
         onOpenChange={(open) => !open && setDeleteConfirmId(null)}

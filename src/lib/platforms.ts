@@ -24,6 +24,7 @@ export const ALL_PLATFORMS = [
   "relocateme",
   "4dayweek",
   "euroremotejobs",
+  "career-pages",
 ] as const;
 
 export type PlatformName = (typeof ALL_PLATFORMS)[number];

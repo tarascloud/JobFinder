@@ -206,7 +206,7 @@ export type UserAISettingsGroupByOutputType = {
   _max: UserAISettingsMaxAggregateOutputType | null
 }
 
-type GetUserAISettingsGroupByPayload<T extends UserAISettingsGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserAISettingsGroupByPayload<T extends UserAISettingsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserAISettingsGroupByOutputType, T['by']> &
       {

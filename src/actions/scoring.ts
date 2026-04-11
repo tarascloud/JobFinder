@@ -1,5 +1,6 @@
 "use server";
 
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { scoreVacancy } from "@/lib/ai/scorer";
@@ -75,6 +76,7 @@ export async function scoreVacancies(
             salaryFit: result.salaryFit,
             remoteFit: result.remoteFit,
             notes: result.notes,
+            detailedAnalysis: (result.detailedAnalysis as Prisma.InputJsonValue | undefined) ?? Prisma.JsonNull,
             scoredBy: "groq",
             scoredAt: new Date(),
           },
@@ -89,6 +91,7 @@ export async function scoreVacancies(
             salaryFit: result.salaryFit,
             remoteFit: result.remoteFit,
             notes: result.notes,
+            detailedAnalysis: (result.detailedAnalysis as Prisma.InputJsonValue | undefined) ?? Prisma.JsonNull,
             scoredBy: "groq",
           },
         });

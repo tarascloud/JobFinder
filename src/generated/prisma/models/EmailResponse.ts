@@ -256,7 +256,7 @@ export type EmailResponseGroupByOutputType = {
   _max: EmailResponseMaxAggregateOutputType | null
 }
 
-type GetEmailResponseGroupByPayload<T extends EmailResponseGroupByArgs> = Prisma.PrismaPromise<
+export type GetEmailResponseGroupByPayload<T extends EmailResponseGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<EmailResponseGroupByOutputType, T['by']> &
       {

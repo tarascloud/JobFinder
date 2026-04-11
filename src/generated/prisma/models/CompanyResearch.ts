@@ -196,7 +196,7 @@ export type CompanyResearchGroupByOutputType = {
   _max: CompanyResearchMaxAggregateOutputType | null
 }
 
-type GetCompanyResearchGroupByPayload<T extends CompanyResearchGroupByArgs> = Prisma.PrismaPromise<
+export type GetCompanyResearchGroupByPayload<T extends CompanyResearchGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CompanyResearchGroupByOutputType, T['by']> &
       {

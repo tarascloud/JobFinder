@@ -217,7 +217,7 @@ export type AiFeedbackGroupByOutputType = {
   _max: AiFeedbackMaxAggregateOutputType | null
 }
 
-type GetAiFeedbackGroupByPayload<T extends AiFeedbackGroupByArgs> = Prisma.PrismaPromise<
+export type GetAiFeedbackGroupByPayload<T extends AiFeedbackGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AiFeedbackGroupByOutputType, T['by']> &
       {

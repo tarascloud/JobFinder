@@ -83,8 +83,57 @@ function isAsset(pathname: string): boolean {
   );
 }
 
+
+// Routes that authenticate via bearer tokens / signed webhooks, not
+// cookie sessions — exempt from CSRF Origin check.
+const CSRF_EXEMPT_PREFIXES = [
+  "/api/auth",          // next-auth (has its own CSRF token)
+  "/api/health",
+  "/api/status",
+  "/api/email-response",
+  "/api/telegram-webhook",
+];
+
+function csrfExempt(pathname: string): boolean {
+  return CSRF_EXEMPT_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
+/**
+ * Defence-in-depth CSRF check for state-changing API routes that rely
+ * on cookie sessions. SameSite=Lax already blocks cross-site POSTs
+ * from browsers, but we additionally verify that the Origin header
+ * matches the request Host to defeat compromised subdomains or
+ * misconfigured SameSite=None cookies.
+ */
+function csrfBlocked(request: NextRequest): boolean {
+  const method = request.method.toUpperCase();
+  if (method === "GET" || method === "HEAD" || method === "OPTIONS") return false;
+  if (!request.nextUrl.pathname.startsWith("/api/")) return false;
+  if (csrfExempt(request.nextUrl.pathname)) return false;
+
+  const origin = request.headers.get("origin");
+  const host = request.headers.get("host");
+  if (!origin || !host) return true;
+  try {
+    const originHost = new URL(origin).host;
+    if (originHost !== host) return true;
+  } catch {
+    return true;
+  }
+  return false;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // CSRF Origin check (before auth so unauthenticated cross-site POSTs
+  // are rejected consistently).
+  if (csrfBlocked(request)) {
+    return NextResponse.json(
+      { error: "CSRF: Origin header missing or does not match Host" },
+      { status: 403 },
+    );
+  }
 
   // Allow assets, root, and public routes
   if (isAsset(pathname) || pathname === "/" || isPublic(pathname)) {

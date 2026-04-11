@@ -362,7 +362,7 @@ export type VacancyGroupByOutputType = {
   _max: VacancyMaxAggregateOutputType | null
 }
 
-type GetVacancyGroupByPayload<T extends VacancyGroupByArgs> = Prisma.PrismaPromise<
+export type GetVacancyGroupByPayload<T extends VacancyGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<VacancyGroupByOutputType, T['by']> &
       {

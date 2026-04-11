@@ -243,7 +243,7 @@ export type QaPairGroupByOutputType = {
   _max: QaPairMaxAggregateOutputType | null
 }
 
-type GetQaPairGroupByPayload<T extends QaPairGroupByArgs> = Prisma.PrismaPromise<
+export type GetQaPairGroupByPayload<T extends QaPairGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<QaPairGroupByOutputType, T['by']> &
       {

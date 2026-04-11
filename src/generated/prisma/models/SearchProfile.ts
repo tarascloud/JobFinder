@@ -316,7 +316,7 @@ export type SearchProfileGroupByOutputType = {
   _max: SearchProfileMaxAggregateOutputType | null
 }
 
-type GetSearchProfileGroupByPayload<T extends SearchProfileGroupByArgs> = Prisma.PrismaPromise<
+export type GetSearchProfileGroupByPayload<T extends SearchProfileGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SearchProfileGroupByOutputType, T['by']> &
       {

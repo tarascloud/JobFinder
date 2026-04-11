@@ -79,6 +79,7 @@ export type VacancyScoreCountAggregateOutputType = {
   salaryFit: number
   remoteFit: number
   notes: number
+  detailedAnalysis: number
   dismissed: number
   scoredAt: number
   scoredBy: number
@@ -139,6 +140,7 @@ export type VacancyScoreCountAggregateInputType = {
   salaryFit?: true
   remoteFit?: true
   notes?: true
+  detailedAnalysis?: true
   dismissed?: true
   scoredAt?: true
   scoredBy?: true
@@ -240,6 +242,7 @@ export type VacancyScoreGroupByOutputType = {
   salaryFit: boolean | null
   remoteFit: boolean | null
   notes: string | null
+  detailedAnalysis: runtime.JsonValue | null
   dismissed: boolean
   scoredAt: Date
   scoredBy: string | null
@@ -250,7 +253,7 @@ export type VacancyScoreGroupByOutputType = {
   _max: VacancyScoreMaxAggregateOutputType | null
 }
 
-type GetVacancyScoreGroupByPayload<T extends VacancyScoreGroupByArgs> = Prisma.PrismaPromise<
+export type GetVacancyScoreGroupByPayload<T extends VacancyScoreGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<VacancyScoreGroupByOutputType, T['by']> &
       {
@@ -277,6 +280,7 @@ export type VacancyScoreWhereInput = {
   salaryFit?: Prisma.BoolNullableFilter<"VacancyScore"> | boolean | null
   remoteFit?: Prisma.BoolNullableFilter<"VacancyScore"> | boolean | null
   notes?: Prisma.StringNullableFilter<"VacancyScore"> | string | null
+  detailedAnalysis?: Prisma.JsonNullableFilter<"VacancyScore">
   dismissed?: Prisma.BoolFilter<"VacancyScore"> | boolean
   scoredAt?: Prisma.DateTimeFilter<"VacancyScore"> | Date | string
   scoredBy?: Prisma.StringNullableFilter<"VacancyScore"> | string | null
@@ -294,6 +298,7 @@ export type VacancyScoreOrderByWithRelationInput = {
   salaryFit?: Prisma.SortOrderInput | Prisma.SortOrder
   remoteFit?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  detailedAnalysis?: Prisma.SortOrderInput | Prisma.SortOrder
   dismissed?: Prisma.SortOrder
   scoredAt?: Prisma.SortOrder
   scoredBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -314,6 +319,7 @@ export type VacancyScoreWhereUniqueInput = Prisma.AtLeast<{
   salaryFit?: Prisma.BoolNullableFilter<"VacancyScore"> | boolean | null
   remoteFit?: Prisma.BoolNullableFilter<"VacancyScore"> | boolean | null
   notes?: Prisma.StringNullableFilter<"VacancyScore"> | string | null
+  detailedAnalysis?: Prisma.JsonNullableFilter<"VacancyScore">
   dismissed?: Prisma.BoolFilter<"VacancyScore"> | boolean
   scoredAt?: Prisma.DateTimeFilter<"VacancyScore"> | Date | string
   scoredBy?: Prisma.StringNullableFilter<"VacancyScore"> | string | null
@@ -331,6 +337,7 @@ export type VacancyScoreOrderByWithAggregationInput = {
   salaryFit?: Prisma.SortOrderInput | Prisma.SortOrder
   remoteFit?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  detailedAnalysis?: Prisma.SortOrderInput | Prisma.SortOrder
   dismissed?: Prisma.SortOrder
   scoredAt?: Prisma.SortOrder
   scoredBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -353,6 +360,7 @@ export type VacancyScoreScalarWhereWithAggregatesInput = {
   salaryFit?: Prisma.BoolNullableWithAggregatesFilter<"VacancyScore"> | boolean | null
   remoteFit?: Prisma.BoolNullableWithAggregatesFilter<"VacancyScore"> | boolean | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"VacancyScore"> | string | null
+  detailedAnalysis?: Prisma.JsonNullableWithAggregatesFilter<"VacancyScore">
   dismissed?: Prisma.BoolWithAggregatesFilter<"VacancyScore"> | boolean
   scoredAt?: Prisma.DateTimeWithAggregatesFilter<"VacancyScore"> | Date | string
   scoredBy?: Prisma.StringNullableWithAggregatesFilter<"VacancyScore"> | string | null
@@ -363,6 +371,7 @@ export type VacancyScoreCreateInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -380,6 +389,7 @@ export type VacancyScoreUncheckedCreateInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -390,6 +400,7 @@ export type VacancyScoreUpdateInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -407,6 +418,7 @@ export type VacancyScoreUncheckedUpdateInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -421,6 +433,7 @@ export type VacancyScoreCreateManyInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -431,6 +444,7 @@ export type VacancyScoreUpdateManyMutationInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -445,6 +459,7 @@ export type VacancyScoreUncheckedUpdateManyInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -469,6 +484,7 @@ export type VacancyScoreCountOrderByAggregateInput = {
   salaryFit?: Prisma.SortOrder
   remoteFit?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  detailedAnalysis?: Prisma.SortOrder
   dismissed?: Prisma.SortOrder
   scoredAt?: Prisma.SortOrder
   scoredBy?: Prisma.SortOrder
@@ -653,6 +669,7 @@ export type VacancyScoreCreateWithoutUserInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -668,6 +685,7 @@ export type VacancyScoreUncheckedCreateWithoutUserInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -711,6 +729,7 @@ export type VacancyScoreScalarWhereInput = {
   salaryFit?: Prisma.BoolNullableFilter<"VacancyScore"> | boolean | null
   remoteFit?: Prisma.BoolNullableFilter<"VacancyScore"> | boolean | null
   notes?: Prisma.StringNullableFilter<"VacancyScore"> | string | null
+  detailedAnalysis?: Prisma.JsonNullableFilter<"VacancyScore">
   dismissed?: Prisma.BoolFilter<"VacancyScore"> | boolean
   scoredAt?: Prisma.DateTimeFilter<"VacancyScore"> | Date | string
   scoredBy?: Prisma.StringNullableFilter<"VacancyScore"> | string | null
@@ -721,6 +740,7 @@ export type VacancyScoreCreateWithoutSearchProfileInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -736,6 +756,7 @@ export type VacancyScoreUncheckedCreateWithoutSearchProfileInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -772,6 +793,7 @@ export type VacancyScoreCreateWithoutVacancyInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -787,6 +809,7 @@ export type VacancyScoreUncheckedCreateWithoutVacancyInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -826,6 +849,7 @@ export type VacancyScoreCreateManyUserInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -836,6 +860,7 @@ export type VacancyScoreUpdateWithoutUserInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -851,6 +876,7 @@ export type VacancyScoreUncheckedUpdateWithoutUserInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -864,6 +890,7 @@ export type VacancyScoreUncheckedUpdateManyWithoutUserInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -877,6 +904,7 @@ export type VacancyScoreCreateManySearchProfileInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -887,6 +915,7 @@ export type VacancyScoreUpdateWithoutSearchProfileInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -902,6 +931,7 @@ export type VacancyScoreUncheckedUpdateWithoutSearchProfileInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -915,6 +945,7 @@ export type VacancyScoreUncheckedUpdateManyWithoutSearchProfileInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -928,6 +959,7 @@ export type VacancyScoreCreateManyVacancyInput = {
   salaryFit?: boolean | null
   remoteFit?: boolean | null
   notes?: string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: boolean
   scoredAt?: Date | string
   scoredBy?: string | null
@@ -938,6 +970,7 @@ export type VacancyScoreUpdateWithoutVacancyInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -953,6 +986,7 @@ export type VacancyScoreUncheckedUpdateWithoutVacancyInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -966,6 +1000,7 @@ export type VacancyScoreUncheckedUpdateManyWithoutVacancyInput = {
   salaryFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   remoteFit?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detailedAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dismissed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   scoredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -982,6 +1017,7 @@ export type VacancyScoreSelect<ExtArgs extends runtime.Types.Extensions.Internal
   salaryFit?: boolean
   remoteFit?: boolean
   notes?: boolean
+  detailedAnalysis?: boolean
   dismissed?: boolean
   scoredAt?: boolean
   scoredBy?: boolean
@@ -999,6 +1035,7 @@ export type VacancyScoreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   salaryFit?: boolean
   remoteFit?: boolean
   notes?: boolean
+  detailedAnalysis?: boolean
   dismissed?: boolean
   scoredAt?: boolean
   scoredBy?: boolean
@@ -1016,6 +1053,7 @@ export type VacancyScoreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   salaryFit?: boolean
   remoteFit?: boolean
   notes?: boolean
+  detailedAnalysis?: boolean
   dismissed?: boolean
   scoredAt?: boolean
   scoredBy?: boolean
@@ -1033,12 +1071,13 @@ export type VacancyScoreSelectScalar = {
   salaryFit?: boolean
   remoteFit?: boolean
   notes?: boolean
+  detailedAnalysis?: boolean
   dismissed?: boolean
   scoredAt?: boolean
   scoredBy?: boolean
 }
 
-export type VacancyScoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vacancyId" | "userId" | "searchProfileId" | "matchScore" | "salaryFit" | "remoteFit" | "notes" | "dismissed" | "scoredAt" | "scoredBy", ExtArgs["result"]["vacancyScore"]>
+export type VacancyScoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "vacancyId" | "userId" | "searchProfileId" | "matchScore" | "salaryFit" | "remoteFit" | "notes" | "detailedAnalysis" | "dismissed" | "scoredAt" | "scoredBy", ExtArgs["result"]["vacancyScore"]>
 export type VacancyScoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   vacancy?: boolean | Prisma.VacancyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1071,6 +1110,7 @@ export type $VacancyScorePayload<ExtArgs extends runtime.Types.Extensions.Intern
     salaryFit: boolean | null
     remoteFit: boolean | null
     notes: string | null
+    detailedAnalysis: runtime.JsonValue | null
     dismissed: boolean
     scoredAt: Date
     scoredBy: string | null
@@ -1508,6 +1548,7 @@ export interface VacancyScoreFieldRefs {
   readonly salaryFit: Prisma.FieldRef<"VacancyScore", 'Boolean'>
   readonly remoteFit: Prisma.FieldRef<"VacancyScore", 'Boolean'>
   readonly notes: Prisma.FieldRef<"VacancyScore", 'String'>
+  readonly detailedAnalysis: Prisma.FieldRef<"VacancyScore", 'Json'>
   readonly dismissed: Prisma.FieldRef<"VacancyScore", 'Boolean'>
   readonly scoredAt: Prisma.FieldRef<"VacancyScore", 'DateTime'>
   readonly scoredBy: Prisma.FieldRef<"VacancyScore", 'String'>

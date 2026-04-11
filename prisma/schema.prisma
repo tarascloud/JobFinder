@@ -34,6 +34,7 @@ model User {
   notifications    Notification[]
   companyResearch  CompanyResearch[]
   userVacancies    UserVacancy[]
+  interviewStories InterviewStory[]
   lastVacanciesSeenAt DateTime? @map("last_vacancies_seen_at")
 
   @@map("users")
@@ -173,17 +174,18 @@ model Vacancy {
 }
 
 model VacancyScore {
-  id              Int      @id @default(autoincrement())
-  vacancyId       Int      @map("vacancy_id")
-  userId          Int      @map("user_id")
-  searchProfileId Int      @map("search_profile_id")
-  matchScore      Int      @map("match_score")
-  salaryFit       Boolean? @map("salary_fit")
-  remoteFit       Boolean? @map("remote_fit")
-  notes           String?
-  dismissed       Boolean  @default(false)
-  scoredAt        DateTime @default(now()) @map("scored_at")
-  scoredBy        String?  @map("scored_by")
+  id               Int      @id @default(autoincrement())
+  vacancyId        Int      @map("vacancy_id")
+  userId           Int      @map("user_id")
+  searchProfileId  Int      @map("search_profile_id")
+  matchScore       Int      @map("match_score")
+  salaryFit        Boolean? @map("salary_fit")
+  remoteFit        Boolean? @map("remote_fit")
+  notes            String?
+  detailedAnalysis Json?    @map("detailed_analysis")
+  dismissed        Boolean  @default(false)
+  scoredAt         DateTime @default(now()) @map("scored_at")
+  scoredBy         String?  @map("scored_by")
 
   vacancy       Vacancy       @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -356,6 +358,25 @@ model AdminEmail {
   @@index([createdAt])
   @@index([category])
   @@map("admin_emails")
+}
+
+model InterviewStory {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme      String
+  situation  String   @db.Text
+  task       String   @db.Text
+  action     String   @db.Text
+  result     String   @db.Text
+  reflection String   @db.Text
+  tags       String[]
+  usedCount  Int      @default(0) @map("used_count")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("interview_stories")
 }
 
 model UserVacancy {

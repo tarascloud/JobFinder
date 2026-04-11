@@ -93,6 +93,11 @@ export type EmailResponse = Prisma.EmailResponseModel
  */
 export type AdminEmail = Prisma.AdminEmailModel
 /**
+ * Model InterviewStory
+ * 
+ */
+export type InterviewStory = Prisma.InterviewStoryModel
+/**
  * Model UserVacancy
  * 
  */

@@ -23,6 +23,7 @@ import { scrape as scrapeNoDesk } from "./nodesk";
 import { scrape as scrapeRelocateMe } from "./relocateme";
 import { scrape as scrapeFourDayWeek } from "./fourdayweek";
 import { scrape as scrapeEuroRemoteJobs } from "./euroremotejobs";
+import { scrape as scrapeCareerPages } from "./career-pages";
 
 export type { ScrapedVacancy, SearchCriteria } from "./types";
 
@@ -88,6 +89,7 @@ const scrapers = [
   { name: "relocateme", fn: scrapeRelocateMe },
   { name: "4dayweek", fn: scrapeFourDayWeek },
   { name: "euroremotejobs", fn: scrapeEuroRemoteJobs },
+  { name: "career-pages", fn: scrapeCareerPages },
   // Disabled: StackOverflow Jobs shut down in March 2022 — always returns [].
   // Disabled: Google Jobs is almost always blocked by CAPTCHA.
   // Scraper files kept in ./stackoverflow and ./google-jobs for reference.

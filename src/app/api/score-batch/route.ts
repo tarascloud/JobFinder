@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeEqual } from "crypto";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { scoreVacancy } from "@/lib/ai/scorer";
 import { sendTelegramNotification } from "@/lib/telegram";
@@ -121,6 +122,31 @@ export async function POST(request: NextRequest) {
             scoredBy: "batch",
           },
         });
+
+        // Also persist detailed analysis to VacancyScore if it exists
+        if (result.detailedAnalysis) {
+          const existingVacancyScore = await prisma.vacancyScore.findFirst({
+            where: {
+              vacancyId: uv.vacancyId,
+              userId: uv.userId,
+              ...(uv.searchProfileId ? { searchProfileId: uv.searchProfileId } : {}),
+            },
+          });
+          if (existingVacancyScore) {
+            await prisma.vacancyScore.update({
+              where: { id: existingVacancyScore.id },
+              data: {
+                matchScore: result.matchScore,
+                salaryFit: result.salaryFit,
+                remoteFit: result.remoteFit,
+                notes: result.notes,
+                detailedAnalysis: result.detailedAnalysis as unknown as Prisma.InputJsonValue,
+                scoredBy: "batch",
+                scoredAt: new Date(),
+              },
+            });
+          }
+        }
 
         scored++;
 

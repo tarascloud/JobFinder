@@ -66,6 +66,7 @@ export const ModelName = {
   CompanyResearch: 'CompanyResearch',
   EmailResponse: 'EmailResponse',
   AdminEmail: 'AdminEmail',
+  InterviewStory: 'InterviewStory',
   UserVacancy: 'UserVacancy'
 } as const
 
@@ -231,6 +232,7 @@ export const VacancyScoreScalarFieldEnum = {
   salaryFit: 'salaryFit',
   remoteFit: 'remoteFit',
   notes: 'notes',
+  detailedAnalysis: 'detailedAnalysis',
   dismissed: 'dismissed',
   scoredAt: 'scoredAt',
   scoredBy: 'scoredBy'
@@ -382,6 +384,24 @@ export const AdminEmailScalarFieldEnum = {
 export type AdminEmailScalarFieldEnum = (typeof AdminEmailScalarFieldEnum)[keyof typeof AdminEmailScalarFieldEnum]
 
 
+export const InterviewStoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  theme: 'theme',
+  situation: 'situation',
+  task: 'task',
+  action: 'action',
+  result: 'result',
+  reflection: 'reflection',
+  tags: 'tags',
+  usedCount: 'usedCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InterviewStoryScalarFieldEnum = (typeof InterviewStoryScalarFieldEnum)[keyof typeof InterviewStoryScalarFieldEnum]
+
+
 export const UserVacancyScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -410,6 +430,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -424,4 +452,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

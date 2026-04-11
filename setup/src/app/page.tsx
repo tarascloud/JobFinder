@@ -144,6 +144,26 @@ function DeployLogViewer({ log, defaultOpen }: { log: string[]; defaultOpen: boo
   );
 }
 
+
+function getSetupToken(): string | null {
+  if (typeof window === "undefined") return null;
+  let tok = window.localStorage.getItem("jf-setup-token");
+  if (!tok) {
+    tok = window.prompt(
+      "Enter SETUP_TOKEN (see container logs: `docker logs jf-setup` or SETUP_TOKEN env var):",
+    );
+    if (tok) window.localStorage.setItem("jf-setup-token", tok.trim());
+  }
+  return tok ? tok.trim() : null;
+}
+
+function setupFetch(input: string, init: RequestInit = {}): Promise<Response> {
+  const token = getSetupToken();
+  const headers = new Headers(init.headers || {});
+  if (token) headers.set("x-setup-token", token);
+  return fetch(input, { ...init, headers });
+}
+
 function ContainerStatusPanel() {
   const [containers, setContainers] = useState<{ name: string; status: string; health: string }[]>([]);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -151,7 +171,8 @@ function ContainerStatusPanel() {
   useState(() => {
     const fetchStatus = async () => {
       try {
-        const res = await fetch("/api/status");
+        const res = await setupFetch("/api/status");
+        if (res.status === 401) { window.localStorage.removeItem("jf-setup-token"); return; }
         const data = await res.json();
         setContainers(data.containers || []);
       } catch {
@@ -210,11 +231,26 @@ export default function SetupWizard() {
     setDeploying(true);
     setDeployLog([]);
     try {
+      const token = getSetupToken();
+      if (!token) {
+        setDeployLog((prev) => [...prev, "ERROR: SETUP_TOKEN required"]);
+        setDeploying(false);
+        return;
+      }
       const res = await fetch("/api/deploy", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-setup-token": token,
+        },
         body: JSON.stringify(config),
       });
+      if (res.status === 401) {
+        window.localStorage.removeItem("jf-setup-token");
+        setDeployLog((prev) => [...prev, "ERROR: Invalid SETUP_TOKEN — reload page and try again"]);
+        setDeploying(false);
+        return;
+      }
       if (!res.body) throw new Error("No response body");
       const reader = res.body.getReader();
       const decoder = new TextDecoder();

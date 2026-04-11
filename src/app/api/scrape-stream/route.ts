@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { scrapePlatform } from "@/lib/scrapers";
@@ -192,7 +193,7 @@ export async function POST(request: NextRequest) {
                 );
                 await prisma.vacancyScore.update({
                   where: { id: vs.id },
-                  data: { matchScore: result.matchScore, salaryFit: result.salaryFit, remoteFit: result.remoteFit, notes: result.notes, scoredBy: "groq", scoredAt: new Date() },
+                  data: { matchScore: result.matchScore, salaryFit: result.salaryFit, remoteFit: result.remoteFit, notes: result.notes, detailedAnalysis: (result.detailedAnalysis as Prisma.InputJsonValue | undefined) ?? Prisma.JsonNull, scoredBy: "groq", scoredAt: new Date() },
                 });
                 scored++;
               } catch (e) {
