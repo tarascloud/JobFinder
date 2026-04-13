@@ -155,9 +155,9 @@ export async function getServiceIntegrationPlatforms(): Promise<string[]> {
 export async function getAvailablePlatformNames(): Promise<string[]> {
   await requireUser();
 
-  const enabledRows = await prisma.$queryRawUnsafe<{ platform: string }[]>(
-    `SELECT platform FROM platform_settings WHERE enabled = true ORDER BY platform`
-  );
+  const enabledRows = await prisma.$queryRaw<{ platform: string }[]>`
+    SELECT platform FROM platform_settings WHERE enabled = true ORDER BY platform
+  `;
 
   return enabledRows.map((r) => r.platform);
 }

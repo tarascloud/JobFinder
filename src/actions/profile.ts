@@ -381,7 +381,7 @@ export async function analyzeResumeForUser(
       return { error: "Failed to download resume from the provided URL" };
     }
 
-    // Split into 3 smaller AI calls for speed (14B model is slow on large prompts)
+    // Split into 3 smaller AI calls for speed (large model is slow on large prompts)
     const { callAIJSON } = await import("@/lib/ai/provider");
     const resumeSnippet = resumeText.substring(0, 2000); // shorter for search/QA calls
     const resumeFullSnippet = resumeText.substring(0, 3500); // longer for profile/skills extraction

@@ -23,7 +23,7 @@ export async function getAISettings(): Promise<AISettingsData> {
       return {
         provider: "ollama",
         ollamaUrl: "http://ollama:11434",
-        ollamaModel: "qwen2.5:14b-instruct-q4_K_M",
+        ollamaModel: "gemma4:e4b",
         geminiApiKey: null,
         groqApiKey: null,
       };
@@ -37,7 +37,7 @@ export async function getAISettings(): Promise<AISettingsData> {
       return {
         provider: process.env.JF_GROQ_API_KEY ? "jf_groq" : process.env.GEMINI_API_KEY ? "gemini" : "ollama",
         ollamaUrl: process.env.OLLAMA_URL || "http://ollama:11434",
-        ollamaModel: process.env.OLLAMA_MODEL || "qwen2.5:14b-instruct-q4_K_M",
+        ollamaModel: process.env.OLLAMA_MODEL || "gemma4:e4b",
         geminiApiKey: null,
         groqApiKey: null,
       };
@@ -54,7 +54,7 @@ export async function getAISettings(): Promise<AISettingsData> {
     return {
       provider: "ollama",
       ollamaUrl: "http://ollama:11434",
-      ollamaModel: "qwen2.5:14b-instruct-q4_K_M",
+      ollamaModel: "gemma4:e4b",
       geminiApiKey: null,
       groqApiKey: null,
     };

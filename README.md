@@ -66,7 +66,7 @@ npm run dev
 - **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui
 - **Database:** Prisma 7, PostgreSQL
 - **Auth:** NextAuth 5 (Google OAuth, GitHub OAuth), invite-only + demo mode
-- **AI:** Ollama (qwen2.5:14b, local default), Gemini Flash, Groq -- configurable per user
+- **AI:** Ollama (gemma4:e4b, local default), Gemini Flash, Groq -- configurable per user
 - **Scraping/Apply:** Playwright (headless browser automation)
 - **PWA:** Serwist 9 (service worker, offline support)
 - **i18n:** next-intl (EN, UA, ES)

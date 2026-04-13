@@ -50,7 +50,7 @@ export default function AISettingsPage() {
   const [provider, setProvider] = useState<AIProvider>("ollama");
   const [ollamaUrl, setOllamaUrl] = useState("http://ollama:11434");
   const [ollamaModel, setOllamaModel] = useState(
-    "qwen2.5:14b-instruct-q4_K_M"
+    "gemma4:e4b"
   );
   const [geminiApiKey, setGeminiApiKey] = useState("");
   const [groqApiKey, setGroqApiKey] = useState("");
@@ -231,7 +231,7 @@ export default function AISettingsPage() {
               <Input
                 value={ollamaModel}
                 onChange={(e) => setOllamaModel(e.target.value)}
-                placeholder="qwen2.5:14b-instruct-q4_K_M"
+                placeholder="gemma4:e4b"
               />
             </div>
           </div>

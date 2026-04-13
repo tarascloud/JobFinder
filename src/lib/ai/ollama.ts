@@ -37,7 +37,7 @@ export async function isJfAssistantAvailable(url?: string): Promise<boolean> {
 
 /**
  * Resolve the best model to use: prefer jf-assistant if available,
- * then user-configured model, then default qwen2.5.
+ * then user-configured model, then default gemma4.
  */
 async function resolveModel(options?: { model?: string; url?: string }): Promise<string> {
   if (options?.model) return options.model;
@@ -64,7 +64,7 @@ export async function callOllama(
 
   console.log(`[callOllama] Using model: ${modelName}`);
 
-  // 14B model can take 2-3 minutes for complex prompts
+  // gemma4:e4b can take 1-2 minutes for complex prompts
   const resp = await fetch(`${url}/api/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

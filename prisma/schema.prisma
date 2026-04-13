@@ -284,7 +284,7 @@ model UserAISettings {
   userId        Int      @id @map("user_id")
   provider      String   @default("ollama") // ollama, gemini, groq
   ollamaUrl     String   @default("http://ollama:11434") @map("ollama_url")
-  ollamaModel   String   @default("qwen2.5:14b-instruct-q4_K_M") @map("ollama_model")
+  ollamaModel   String   @default("gemma4:e4b") @map("ollama_model")
   geminiApiKey  String?  @map("gemini_api_key")
   groqApiKey    String?  @map("groq_api_key")
   updatedAt     DateTime @updatedAt @map("updated_at")

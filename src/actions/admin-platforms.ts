@@ -173,9 +173,9 @@ export async function getPlatformMetadata(): Promise<
 
 export async function getEnabledPlatforms(): Promise<Record<string, boolean>> {
   await requireOwner();
-  const rows = await prisma.$queryRawUnsafe<{ platform: string; enabled: boolean }[]>(
-    `SELECT platform, enabled FROM platform_settings`
-  );
+  const rows = await prisma.$queryRaw<{ platform: string; enabled: boolean }[]>`
+    SELECT platform, enabled FROM platform_settings
+  `;
   const map: Record<string, boolean> = {};
   for (const p of ALL_PLATFORMS) map[p] = true; // default enabled
   for (const r of rows) map[r.platform] = r.enabled;
@@ -184,10 +184,11 @@ export async function getEnabledPlatforms(): Promise<Record<string, boolean>> {
 
 export async function togglePlatform(platform: string, enabled: boolean): Promise<{ ok: boolean }> {
   await requireOwner();
-  await prisma.$executeRawUnsafe(
-    `INSERT INTO platform_settings (platform, enabled, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (platform) DO UPDATE SET enabled = $2, updated_at = NOW()`,
-    platform, enabled
-  );
+  await prisma.$executeRaw`
+    INSERT INTO platform_settings (platform, enabled, updated_at)
+    VALUES (${platform}, ${enabled}, NOW())
+    ON CONFLICT (platform) DO UPDATE SET enabled = ${enabled}, updated_at = NOW()
+  `;
   return { ok: true };
 }
 
