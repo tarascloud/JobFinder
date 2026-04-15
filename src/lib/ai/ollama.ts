@@ -41,8 +41,11 @@ export async function isJfAssistantAvailable(url?: string): Promise<boolean> {
  */
 async function resolveModel(options?: { model?: string; url?: string }): Promise<string> {
   if (options?.model) return options.model;
-  // Always prefer jf-assistant (3B, fast) — fallback to env or default
-  return "jf-assistant";
+  // Prefer jf-assistant alias if available (points to gemma4:e4b on Ollama)
+  // Fallback to env var or default gemma4:e4b
+  const available = await isJfAssistantAvailable(options?.url);
+  if (available) return "jf-assistant";
+  return process.env.OLLAMA_MODEL || "gemma4:e4b";
 }
 
 export async function callOllama(
