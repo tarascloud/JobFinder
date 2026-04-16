@@ -201,7 +201,7 @@
   --accent: rgba(255, 255, 255, 0.04);
   --accent-foreground: #f1f5f9;
   --destructive: #f87171;
-  --border: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.09);
   --input: rgba(255, 255, 255, 0.08);
   --ring: #3b82f6;
 
@@ -218,7 +218,7 @@
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: rgba(255, 255, 255, 0.04);
   --sidebar-accent-foreground: #f1f5f9;
-  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: #3b82f6;
 
   /* Dashboard semantic tokens (dark) */
