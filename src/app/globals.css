@@ -910,18 +910,18 @@
 
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 15%, transparent);
 }
 
 /* ── Selection color ── */
 
 ::selection {
-  background-color: rgba(59, 130, 246, 0.25);
+  background-color: color-mix(in srgb, var(--ring) 25%, transparent);
   color: inherit;
 }
 
 ::-moz-selection {
-  background-color: rgba(59, 130, 246, 0.25);
+  background-color: color-mix(in srgb, var(--ring) 25%, transparent);
   color: inherit;
 }
 

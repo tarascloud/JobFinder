@@ -23,7 +23,8 @@
     "sign_in_github": "Sign in with GitHub",
     "try_demo": "Try Demo",
     "try_demo_help": "Explore the app with sample data — no login required",
-    "invite_only": "Registration is invite-only. Contact the owner for access."
+    "invite_only": "Registration is invite-only. Contact the owner for access.",
+    "back_to_home": "Back to home"
   },
   "nav": {
     "dashboard": "Dashboard",

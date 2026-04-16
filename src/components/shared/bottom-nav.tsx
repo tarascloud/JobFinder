@@ -3,19 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
   Briefcase,
   Send,
   BarChart3,
+  Search,
   User,
 } from "lucide-react";
 
 const navItems = [
-  { href: "/", label: "Home", icon: LayoutDashboard },
+  { href: "/profile", label: "Profile", icon: User },
+  { href: "/searches", label: "Searches", icon: Search },
   { href: "/vacancies", label: "Vacancies", icon: Briefcase },
   { href: "/applications", label: "Applied", icon: Send },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/profile", label: "Profile", icon: User },
 ];
 
 export default function BottomNav() {

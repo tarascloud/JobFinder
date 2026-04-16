@@ -23,7 +23,8 @@
     "sign_in_github": "Iniciar sesión con GitHub",
     "try_demo": "Probar demo",
     "try_demo_help": "Explora la app con datos de ejemplo — sin necesidad de iniciar sesión",
-    "invite_only": "El registro es solo por invitación. Contacta al propietario para acceder."
+    "invite_only": "El registro es solo por invitación. Contacta al propietario para acceder.",
+    "back_to_home": "Volver al inicio"
   },
   "nav": {
     "dashboard": "Panel",

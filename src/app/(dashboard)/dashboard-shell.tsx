@@ -110,7 +110,7 @@ export default function DashboardShell({
             onClick={() => setSidebarOpen(false)}
             className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
               isActive(href)
-                ? "bg-sidebar-accent text-sidebar-accent-foreground border-l-2 border-primary"
+                ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
                 : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
           >
@@ -140,7 +140,7 @@ export default function DashboardShell({
             onClick={() => setSidebarOpen(false)}
             className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
               isActive(href)
-                ? "bg-sidebar-accent text-sidebar-accent-foreground border-l-2 border-primary"
+                ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
                 : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
           >

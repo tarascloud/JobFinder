@@ -1,10 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { enterDemoMode } from "@/actions/demo";
-import { Eye } from "lucide-react";
+import { ArrowLeft, Eye } from "lucide-react";
 import { LanguageToggle } from "@/components/shared/language-toggle";
 
 export function LoginForm({ githubEnabled }: { githubEnabled: boolean }) {
@@ -90,6 +91,14 @@ export function LoginForm({ githubEnabled }: { githubEnabled: boolean }) {
           <p className="text-xs text-muted-foreground/60">
             Free for the first 10 users. Open registration.
           </p>
+
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {t("back_to_home")}
+          </Link>
         </CardContent>
       </Card>
     </div>
