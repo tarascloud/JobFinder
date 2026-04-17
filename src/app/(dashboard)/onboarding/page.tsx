@@ -374,8 +374,8 @@ export default function OnboardingPage() {
               {step > s.number ? <Check className="h-4 w-4" /> : s.number}
             </div>
             <span
-              className={`ml-1 text-[10px] sm:text-xs whitespace-nowrap ${
-                step >= s.number ? "text-foreground" : "text-muted-foreground/60"
+              className={`ml-1 text-xs whitespace-nowrap ${
+                step >= s.number ? "text-foreground font-medium" : "text-muted-foreground/60"
               }`}
             >
               {s.label}

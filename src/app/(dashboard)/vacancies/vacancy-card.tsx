@@ -78,7 +78,7 @@ export function VacancyCard({
     <Card
       className={`transition-all cursor-pointer hover:shadow-md hover:border-primary/20 ${
         v.dismissed ? "opacity-50" : ""
-      } ${!v.seen ? "border-l-3 border-l-primary bg-primary/[0.02]" : ""}`}
+      } ${!v.seen ? "bg-primary/10" : ""}`}
     >
       <CardContent className="p-4 sm:p-5">
         {/* Main card content */}

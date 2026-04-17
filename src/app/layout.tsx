@@ -114,7 +114,7 @@ export default async function RootLayout({
 
   // Use DB theme as defaultTheme so when localStorage is cleared,
   // next-themes falls back to the user's saved preference instead of "dark".
-  const defaultTheme = dbPrefs?.theme || "dark";
+  const defaultTheme = dbPrefs?.theme || "system";
 
   const jsonLd = {
     "@context": "https://schema.org",

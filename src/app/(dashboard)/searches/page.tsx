@@ -329,7 +329,7 @@ export default function SearchesPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {profiles.map((profile) => (
             <Card key={profile.id} className={`transition-all hover:shadow-md hover:border-primary/20 ${
-              profile.isActive ? "border-l-3 border-l-primary" : "opacity-75"
+              profile.isActive ? "bg-primary/10" : "opacity-75"
             }`}>
               <CardContent className="p-5 space-y-3.5">
                 <div className="flex items-start justify-between">
