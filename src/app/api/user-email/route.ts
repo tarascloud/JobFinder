@@ -1,17 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/db";
-
-function verifyApiToken(request: NextRequest): boolean {
-  // Accept either token name for backwards compatibility
-  const secret = process.env.JF_INBOX_TOKEN || process.env.JOBFINDER_EMAIL_API_TOKEN;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (!auth) return false;
-  const expected = `Bearer ${secret}`;
-  if (Buffer.byteLength(auth) !== Buffer.byteLength(expected)) return false;
-  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
-}
+import { verifyInboxToken } from "@/lib/api-auth";
 
 /**
  * GET /api/user-email?username=tpedchenko
@@ -20,7 +9,7 @@ function verifyApiToken(request: NextRequest): boolean {
  * Protected by Bearer token (used by CF Email Worker).
  */
 export async function GET(request: NextRequest) {
-  if (!verifyApiToken(request)) {
+  if (!verifyInboxToken(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { verifyApiToken } from "@/lib/api-auth";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { createNotification } from "@/actions/notifications";
 
-function verifyApiToken(request: NextRequest): boolean {
-  const secret = process.env.JOBFINDER_EMAIL_API_TOKEN || process.env.JF_INBOX_TOKEN;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (!auth) return false;
-  const expected = `Bearer ${secret}`;
-  if (Buffer.byteLength(auth) !== Buffer.byteLength(expected)) return false;
-  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
-}
+const EmailResponseSchema = z.object({
+  from: z.string().min(1),
+  to: z.string().optional(),
+  subject: z.string().min(1),
+  body: z.string().optional(),
+  bodyText: z.string().optional(),
+  bodyHtml: z.string().optional(),
+  messageId: z.string().optional(),
+  responseType: z.string(),
+});
 
 /**
  * Extract domain from email address, e.g. "recruiter@google.com" -> "google.com"
@@ -30,39 +32,29 @@ function domainToCompany(domain: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  if (!verifyApiToken(request)) {
+  if (!verifyApiToken(request, "JOBFINDER_EMAIL_API_TOKEN", "JF_INBOX_TOKEN")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const body = await request.json();
-    const { from, to, subject, body: emailBody, bodyText, bodyHtml, messageId, responseType, userId } = body as {
-      from: string;
-      to?: string;
-      subject: string;
-      body?: string;
-      bodyText?: string;
-      bodyHtml?: string;
-      messageId?: string;
-      responseType: string;
-      userId?: number;
-    };
-
-    if (!from || !subject) {
+    const raw = await request.json();
+    const parsed = EmailResponseSchema.safeParse(raw);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: from, subject" },
+        { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { from, to, subject, body: emailBody, bodyText, bodyHtml, messageId, responseType } = parsed.data;
 
     const allowedResponseTypes = ["positive", "rejection", "interview", "info"];
     const validatedResponseType = allowedResponseTypes.includes(responseType)
       ? responseType
       : "info";
 
-    // Resolve userId from the `to` address (jfEmail) if not already provided
-    let resolvedUserId = userId;
-    if (!resolvedUserId && to) {
+    // Derive userId ONLY from the `to` address (jfEmail) — never trust userId from body
+    let resolvedUserId: number | undefined;
+    if (to) {
       const toAddress = to.replace(/^.*</, "").replace(/>.*$/, "").trim().toLowerCase();
       if (toAddress.endsWith("@jf.taras.cloud")) {
         const targetUser = await prisma.user.findUnique({

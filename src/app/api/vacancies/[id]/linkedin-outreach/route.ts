@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
+import { requireAuth } from "@/lib/api-auth";
 import { generateLinkedInOutreach } from "@/actions/linkedin-outreach";
 
 export async function GET(
@@ -7,10 +7,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (!authResult.authorized) return authResult.response;
 
     const { id } = await params;
     const vacancyId = parseInt(id, 10);

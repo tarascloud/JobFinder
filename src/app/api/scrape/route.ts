@@ -1,23 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { verifyCronSecret } from "@/lib/api-auth";
 import { scrapeAll } from "@/lib/scrapers";
 import { scoreVacancy } from "@/lib/ai/scorer";
 import { generateCoverLetter } from "@/lib/ai/cover-letter";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { createNotification } from "@/actions/notifications";
 import { saveVacancy, loadExistingVacanciesForDedup } from "@/lib/save-vacancy";
-
-function verifyCronSecret(request: NextRequest): boolean {
-  const secret = process.env.JOBFINDER_CRON_SECRET;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (!auth) return false;
-  const expected = `Bearer ${secret}`;
-  if (Buffer.byteLength(auth) !== Buffer.byteLength(expected)) return false;
-  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
-}
 
 export async function POST(request: NextRequest) {
   if (!verifyCronSecret(request)) {

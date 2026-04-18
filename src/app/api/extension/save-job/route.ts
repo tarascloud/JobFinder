@@ -1,17 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { verifyApiToken } from "@/lib/api-auth";
 import { ensureVacancyScore } from "@/lib/save-vacancy";
 
-function verifyExtensionToken(request: NextRequest): boolean {
-  const secret = process.env.JOBFINDER_EXTENSION_TOKEN;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (!auth) return false;
-  const expected = `Bearer ${secret}`;
-  if (Buffer.byteLength(auth) !== Buffer.byteLength(expected)) return false;
-  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
-}
+const SaveJobSchema = z.object({
+  url: z.string().url(),
+  title: z.string().min(1),
+  company: z.string().optional(),
+  description: z.string().optional(),
+  // TODO: Remove userId from body once extension supports per-user auth tokens.
+  // Currently the extension token is global (not per-user), so we cannot derive
+  // userId from the bearer token. Validate that userId exists in DB as a safeguard.
+  userId: z.number().int().positive(),
+  searchProfileId: z.number().int().positive().optional(),
+});
 
 /**
  * Detect platform from URL
@@ -40,24 +43,29 @@ function generateExternalId(url: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  if (!verifyExtensionToken(request)) {
+  if (!verifyApiToken(request, "JOBFINDER_EXTENSION_TOKEN")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const body = await request.json();
-    const { url, title, company, description, userId, searchProfileId } = body;
-
-    if (!url || !title) {
+    const raw = await request.json();
+    const parsed = SaveJobSchema.safeParse(raw);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: url, title" },
+        { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { url, title, company, description, userId, searchProfileId } = parsed.data;
 
-    if (!userId) {
+    // Validate that userId exists in DB (global token cannot guarantee identity)
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+    if (!userExists) {
       return NextResponse.json(
-        { error: "Missing required field: userId" },
+        { error: "Invalid userId — user not found" },
         { status: 400 }
       );
     }

@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start --port 3456",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report"
@@ -53,6 +55,8 @@
     "typescript": "^6.0.2"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2"
+    "@playwright/test": "^1.58.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "vitest": "^4.1.4"
   }
 }

@@ -1,5 +1,7 @@
+.git
 node_modules
 .next
-.git
-*.md
-.DS_Store
+.env*
+*.local
+coverage
+__tests__

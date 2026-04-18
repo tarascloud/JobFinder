@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { cookies } from "next/headers";
+import Script from "next/script";
+import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { restorePreferencesFromDB } from "@/actions/preferences";
 import "./globals.css";
@@ -46,21 +48,12 @@ export const metadata: Metadata = {
     description:
       "Open-source AI job search automation. Scrape 11+ job boards, get AI match scores, auto-generate cover letters, and auto-apply. Self-hosted & privacy-first.",
     url: "https://jobfinder.taras.cloud",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "JobFinder — AI-Powered Job Search Automation",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "JobFinder — AI-Powered Job Search & Auto-Apply",
     description:
       "Open-source AI job search automation. Scrape 11+ job boards, AI scoring, auto-apply. Self-hosted & privacy-first.",
-    images: ["/og-image.png"],
   },
   appleWebApp: {
     capable: true,
@@ -83,7 +76,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   viewportFit: "cover",
   themeColor: "#0a0a0a",
 };
@@ -125,7 +117,7 @@ export default async function RootLayout({
     description:
       "Open-source AI-powered job search automation. Upload your resume, scrape 11+ job boards, get AI match scores, auto-generate cover letters, and auto-apply.",
     url: "https://jobfinder.taras.cloud",
-    image: "https://jobfinder.taras.cloud/og-image.png",
+    image: "https://jobfinder.taras.cloud/opengraph-image",
     author: {
       "@type": "Organization",
       name: "JobFinder",
@@ -157,9 +149,6 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0BLTYQVLZT" />
-        <script dangerouslySetInnerHTML={{ __html: "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-0BLTYQVLZT');" }} />
       </head>
       <body
         className={`${inter.variable} ${inter.className} antialiased`}
@@ -173,7 +162,10 @@ export default async function RootLayout({
           <NextIntlClientProvider messages={messages}>
             {children}
           </NextIntlClientProvider>
+          <Toaster position="bottom-right" />
         </ThemeProvider>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-0BLTYQVLZT" strategy="afterInteractive" />
+        <Script id="ga-init" strategy="afterInteractive">{`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-0BLTYQVLZT');`}</Script>
       </body>
     </html>
   );

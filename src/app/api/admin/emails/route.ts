@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/db";
+import { verifyInboxToken } from "@/lib/api-auth";
+import { z } from "zod";
 
-function verifyToken(request: NextRequest): boolean {
-  const secret = process.env.JF_INBOX_TOKEN;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (!auth) return false;
-  const expected = `Bearer ${secret}`;
-  if (Buffer.byteLength(auth) !== Buffer.byteLength(expected)) return false;
-  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
-}
+const InboxEmailSchema = z.object({
+  from: z.string().min(1).max(500),
+  to: z.string().max(500).optional(),
+  subject: z.string().min(1).max(1000),
+  body: z.string().max(10000).optional(),
+  bodyText: z.string().max(10000).optional(),
+  bodyHtml: z.string().max(50000).optional(),
+  rawBody: z.string().max(100000).optional(),
+  messageId: z.string().max(500).optional(),
+});
 
 /**
  * Detect platform from sender email domain.
@@ -102,29 +104,20 @@ function detectCategory(subject: string, body: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  if (!verifyToken(request)) {
+  if (!verifyInboxToken(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const data = await request.json();
-    const { from, to, subject, body, bodyText, bodyHtml, rawBody, messageId } = data as {
-      from: string;
-      to: string;
-      subject: string;
-      body: string;
-      bodyText?: string;
-      bodyHtml?: string;
-      rawBody?: string;
-      messageId?: string;
-    };
-
-    if (!from || !subject) {
+    const parsed = InboxEmailSchema.safeParse(data);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: from, subject" },
+        { error: "Validation failed", details: parsed.error.flatten() },
         { status: 400 }
       );
     }
+    const { from, to, subject, body, bodyText, bodyHtml, messageId } = parsed.data;
 
     const platform = detectPlatform(from);
     // Use parsed text for category detection when available

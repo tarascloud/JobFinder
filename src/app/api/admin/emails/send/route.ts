@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
+import { requireAuth } from "@/lib/api-auth";
 
 /**
  * Send email via Resend API.
  * Called from admin/emails and user/emails UI for Reply/Forward.
  */
 export async function POST(request: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const authResult = await requireAuth();
+  if (!authResult.authorized) return authResult.response;
+  const user = authResult.user;
 
   try {
     const data = await request.json();

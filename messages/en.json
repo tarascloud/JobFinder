@@ -572,7 +572,22 @@
     "selfhosted_free_desc": "Open source, no subscription fees, no limits",
     "platforms_title": "11 platforms supported",
     "platforms_subtitle": "Scrape vacancies from all major job boards",
-    "footer": "JobFinder — Open source, self-hosted job search automation. AGPL-3.0 License."
+    "footer": "JobFinder — Open source, self-hosted job search automation. AGPL-3.0 License.",
+    "badge_ai_powered": "AI-Powered",
+    "badge_self_hosted": "Self-Hosted",
+    "badge_privacy": "Privacy-First",
+    "badge_open_source": "Open Source",
+    "tagline": "Your job search, automated.",
+    "try_demo": "Try Demo",
+    "pwa_title": "Works as a native app",
+    "pwa_desc": "Install from your browser, no app store needed. Works offline on any device.",
+    "cta_ready": "Ready to automate your job search?",
+    "feature_search_profiles_title": "Search Profiles",
+    "feature_search_profiles_desc": "Create multiple search profiles with custom job titles, salary ranges, geography, and platform preferences. AI suggests optimal profiles from your resume analysis.",
+    "feature_scraping_title": "Multi-Platform Scraping",
+    "feature_scraping_desc": "Daily automated scraping across 11 job boards: LinkedIn, Indeed, Glassdoor, Djinni, DOU, Work.ua, Robota.ua, Jooble, RemoteOK, WeWorkRemotely, and InfoJobs.",
+    "feature_tracking_title": "Application Tracking",
+    "feature_tracking_desc": "Track every application through the full pipeline: scraped, scored, reviewed, applied, responded. Semi-auto or full-auto apply modes for high-scoring matches."
   },
   "resume_tailor": {
     "title": "Resume Tailor",

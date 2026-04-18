@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
+import { requireAuth } from "@/lib/api-auth";
 import { autoRegisterPlatform } from "@/actions/auto-register";
 import { PLATFORM_REGISTRATION_CONFIGS } from "@/lib/auto-register";
 import { z } from "zod";
@@ -16,8 +16,9 @@ const RegisterSchema = z.object({
  * Returns the registration result.
  */
 export async function POST(request: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user || user.id === 0) {
+  const authResult = await requireAuth();
+  if (!authResult.authorized) return authResult.response;
+  if (authResult.user.id === 0) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
