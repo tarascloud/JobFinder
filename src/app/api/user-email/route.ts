@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { verifyInboxToken } from "@/lib/api-auth";
+import { verifyApiToken } from "@/lib/api-auth";
 
 /**
  * GET /api/user-email?username=tpedchenko
@@ -9,7 +9,7 @@ import { verifyInboxToken } from "@/lib/api-auth";
  * Protected by Bearer token (used by CF Email Worker).
  */
 export async function GET(request: NextRequest) {
-  if (!verifyInboxToken(request)) {
+  if (!verifyApiToken(request, "JOBFINDER_EMAIL_API_TOKEN", "JF_INBOX_TOKEN")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

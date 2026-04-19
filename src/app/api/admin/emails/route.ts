@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { verifyInboxToken } from "@/lib/api-auth";
+import { verifyApiToken } from "@/lib/api-auth";
 import { z } from "zod";
 
 const InboxEmailSchema = z.object({
@@ -104,7 +104,7 @@ function detectCategory(subject: string, body: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  if (!verifyInboxToken(request)) {
+  if (!verifyApiToken(request, "JOBFINDER_EMAIL_API_TOKEN", "JF_INBOX_TOKEN")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

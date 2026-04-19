@@ -2,8 +2,10 @@
 
 networks:
   backend:
+    name: docker_backend
     external: true
   frontend:
+    name: docker_frontend
     external: true
 
 services:
