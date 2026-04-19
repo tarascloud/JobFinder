@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
+import { requireAuth } from "@/lib/api-auth";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
 import { checkIpRateLimit } from "@/lib/rate-limiter";
@@ -16,10 +16,9 @@ const CreateStorySchema = z.object({
 
 export async function GET() {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (!authResult.authorized) return authResult.response;
+    const user = authResult.user;
 
     const stories = await prisma.interviewStory.findMany({
       where: { userId: user.id },
@@ -51,10 +50,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (!authResult.authorized) return authResult.response;
+    const user = authResult.user;
 
     const body = await request.json();
     const parsed = CreateStorySchema.safeParse(body);

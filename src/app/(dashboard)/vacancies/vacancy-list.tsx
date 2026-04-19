@@ -142,7 +142,7 @@ export function VacancyList({
     return (
       <div className="space-y-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="animate-pulse">
+          <Card key={i}>
             <CardContent className="p-4 sm:p-5">
               <div className="flex items-start gap-3">
                 <Skeleton className="h-10 w-10 rounded-xl" />
@@ -200,8 +200,15 @@ export function VacancyList({
 
       {/* Vacancy cards */}
       <div className="space-y-2">
-        {vacancies.map((v) => (
-          <div key={v.id} className="flex items-start gap-2">
+        {vacancies.map((v, index) => (
+          <div
+            key={v.id}
+            className="flex items-start gap-2"
+            style={{
+              animation: "fadeInUp 0.4s ease both",
+              animationDelay: `${Math.min(index, 12) * 50}ms`,
+            }}
+          >
             {/* Checkbox (desktop) */}
             <button
               onClick={(e) => toggleSelect(v.id, e)}

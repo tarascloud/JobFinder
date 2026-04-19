@@ -78,7 +78,7 @@ export function VacancyCard({
     <Card
       className={`transition-all cursor-pointer hover:shadow-md hover:border-primary/20 ${
         v.dismissed ? "opacity-50" : ""
-      } ${!v.seen ? "border-l-3 border-l-primary bg-primary/[0.02]" : ""}`}
+      } ${!v.seen ? "bg-primary/10" : ""}`}
     >
       <CardContent className="p-4 sm:p-5">
         {/* Main card content */}
@@ -99,7 +99,7 @@ export function VacancyCard({
                 <div className="flex items-center gap-2">
                   <p className="font-semibold text-foreground truncate leading-snug">{v.title}</p>
                   {!v.seen && (
-                    <span className="inline-flex h-2 w-2 rounded-full bg-primary shrink-0 animate-pulse" />
+                    <span className="inline-flex h-2 w-2 rounded-full bg-primary shrink-0 animate-[breathe_2s_ease-in-out_infinite]" />
                   )}
                 </div>
 

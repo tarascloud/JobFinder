@@ -66,6 +66,9 @@ function isPublic(pathname: string): boolean {
   );
 }
 
+// SEO files that must be publicly accessible to search engine crawlers
+const SEO_PATHS = ["/sitemap.xml", "/robots.txt"];
+
 function isAsset(pathname: string): boolean {
   return (
     pathname.startsWith("/_next") ||
@@ -79,7 +82,8 @@ function isAsset(pathname: string): boolean {
     pathname.endsWith(".ico") ||
     pathname.endsWith(".json") ||
     pathname.endsWith(".js") ||
-    pathname.endsWith(".css")
+    pathname.endsWith(".css") ||
+    SEO_PATHS.includes(pathname)
   );
 }
 

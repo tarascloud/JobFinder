@@ -34,7 +34,7 @@ export function LanguageToggle() {
         <button
           key={loc}
           onClick={() => switchLocale(loc)}
-          className={`px-2 py-0.5 text-xs font-medium rounded transition-colors ${
+          className={`min-h-[36px] px-2 py-0.5 text-xs font-medium rounded transition-colors ${
             loc === locale
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"

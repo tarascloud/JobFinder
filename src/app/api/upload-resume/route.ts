@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
+import { requireAuth } from "@/lib/api-auth";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -11,10 +11,9 @@ const DATA_RESUMES_DIR = path.join(
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (!authResult.authorized) return authResult.response;
+    const user = authResult.user;
 
     const formData = await request.formData();
     const file = formData.get("file") as File | null;

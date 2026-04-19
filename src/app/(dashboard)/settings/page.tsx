@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserPlus, Trash2, Mail, Users } from "lucide-react";
 import SettingsTabs from "./settings-tabs";
 
@@ -17,6 +18,7 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(true);
   const [invites, setInvites] = useState<{ email: string; invitedBy: string; createdAt: Date }[]>([]);
   const [users, setUsers] = useState<{ id: number; email: string; name: string | null; role: string; createdAt: Date }[]>([]);
 
@@ -25,6 +27,7 @@ export default function SettingsPage() {
     if ("error" in data) return;
     setInvites(data.invites ?? []);
     setUsers(data.users ?? []);
+    setDataLoading(false);
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -84,8 +87,15 @@ export default function SettingsPage() {
           {invites.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-sm font-medium text-foreground/80">{t("pending_invites")}</h3>
-              {invites.map((inv) => (
-                <div key={inv.email} className="flex items-center justify-between p-3 rounded-lg border border-border">
+              {invites.map((inv, i) => (
+                <div
+                  key={inv.email}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border"
+                  style={{
+                    animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: `${i * 60}ms`,
+                  }}
+                >
                   <div>
                     <p className="text-sm">{inv.email}</p>
                     <p className="text-xs text-muted-foreground">{inv.invitedBy}</p>
@@ -108,12 +118,40 @@ export default function SettingsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {users.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("no_users")}</p>
+          {dataLoading ? (
+            <div className="space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                  <div className="flex items-center gap-3">
+                    <div className="space-y-1.5">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-44" />
+                    </div>
+                    <Skeleton className="h-5 w-14 rounded-md" />
+                  </div>
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                </div>
+              ))}
+            </div>
+          ) : users.length === 0 ? (
+            <div className="py-12 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
+                <Users className="h-7 w-7 text-muted-foreground/60" />
+              </div>
+              <p className="text-sm font-medium text-foreground mb-1">{t("no_users")}</p>
+              <p className="text-xs text-muted-foreground">Invite someone above to get started</p>
+            </div>
           ) : (
             <div className="space-y-2">
-              {users.map((u) => (
-                <div key={u.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+              {users.map((u, i) => (
+                <div
+                  key={u.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border"
+                  style={{
+                    animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: `${i * 60}ms`,
+                  }}
+                >
                   <div className="flex items-center gap-3">
                     <div>
                       <p className="text-sm font-medium">{u.name || u.email}</p>

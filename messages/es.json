@@ -572,7 +572,22 @@
     "selfhosted_free_desc": "Codigo abierto, sin suscripciones, sin limites",
     "platforms_title": "11 plataformas soportadas",
     "platforms_subtitle": "Scraping de vacantes de todos los principales portales de empleo",
-    "footer": "JobFinder — Automatizacion de busqueda de empleo open source y self-hosted. Licencia AGPL-3.0."
+    "footer": "JobFinder — Automatizacion de busqueda de empleo open source y self-hosted. Licencia AGPL-3.0.",
+    "badge_ai_powered": "Con IA",
+    "badge_self_hosted": "Autoalojado",
+    "badge_privacy": "Privacidad",
+    "badge_open_source": "Codigo abierto",
+    "tagline": "Tu busqueda de empleo, automatizada.",
+    "try_demo": "Probar Demo",
+    "pwa_title": "Funciona como app nativa",
+    "pwa_desc": "Instala desde tu navegador, sin tienda de apps. Funciona offline en cualquier dispositivo.",
+    "cta_ready": "Listo para automatizar tu busqueda?",
+    "feature_search_profiles_title": "Perfiles de busqueda",
+    "feature_search_profiles_desc": "Crea multiples perfiles de busqueda con puestos, rangos salariales, geografia y plataformas personalizados. La IA sugiere perfiles optimos desde tu CV.",
+    "feature_scraping_title": "Scraping multiplataforma",
+    "feature_scraping_desc": "Scraping diario automatizado de 11 portales: LinkedIn, Indeed, Glassdoor, Djinni, DOU, Work.ua, Robota.ua, Jooble, RemoteOK, WeWorkRemotely e InfoJobs.",
+    "feature_tracking_title": "Seguimiento de solicitudes",
+    "feature_tracking_desc": "Rastrea cada solicitud a traves del pipeline completo: encontrada, puntuada, revisada, aplicada, respondida. Modos semi-auto o auto-aplicar para las mejores coincidencias."
   },
   "resume_tailor": {
     "title": "Adaptar CV",

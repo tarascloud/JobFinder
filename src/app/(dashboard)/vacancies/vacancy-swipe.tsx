@@ -216,7 +216,7 @@ export function VacancySwipe({
         onTouchEnd={handleTouchEnd}
         className="touch-none select-none"
       >
-        <Card className={`${!v.seen ? "border-l-2 border-l-primary" : ""}`}>
+        <Card className={`${!v.seen ? "bg-primary/10" : ""}`}>
           <CardContent className="p-5">
             {/* Header */}
             <div className="flex items-start gap-3">

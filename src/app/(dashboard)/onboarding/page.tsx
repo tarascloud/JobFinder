@@ -357,35 +357,36 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-60px)] flex flex-col items-center justify-start py-8 px-4">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-start py-8 px-4">
       {/* Step indicator */}
       <div className="flex items-center gap-1 mb-8 overflow-x-auto max-w-full">
         {STEPS.map((s, i) => (
           <div key={s.number} className="flex items-center">
             <div
-              className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium transition-colors shrink-0 ${
+              className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium transition-all duration-300 ease-out shrink-0 ${
                 step > s.number
-                  ? "bg-green-600 text-white"
+                  ? "bg-green-600 text-white scale-100"
                   : step === s.number
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
+                  ? "bg-primary text-primary-foreground ring-4 ring-primary/20 scale-105"
+                  : "bg-muted text-muted-foreground scale-100"
               }`}
             >
               {step > s.number ? <Check className="h-4 w-4" /> : s.number}
             </div>
             <span
-              className={`ml-1 text-[10px] sm:text-xs whitespace-nowrap ${
-                step >= s.number ? "text-foreground" : "text-muted-foreground/60"
+              className={`ml-1 text-xs whitespace-nowrap transition-colors duration-300 ${
+                step >= s.number ? "text-foreground font-medium" : "text-muted-foreground/60"
               }`}
             >
               {s.label}
             </span>
             {i < STEPS.length - 1 && (
-              <div
-                className={`w-4 sm:w-8 h-px mx-1 sm:mx-2 ${
-                  step > s.number ? "bg-green-600" : "bg-secondary"
-                }`}
-              />
+              <div className="relative w-4 sm:w-8 h-0.5 mx-1 sm:mx-2 bg-secondary rounded-full overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 bg-green-600 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: step > s.number ? "100%" : "0%" }}
+                />
+              </div>
             )}
           </div>
         ))}

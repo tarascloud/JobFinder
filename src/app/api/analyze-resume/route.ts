@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
+import { requireAuth } from "@/lib/api-auth";
 import { prisma } from "@/lib/db";
 import { analyzeResumeForUser } from "@/actions/profile";
 import { checkRateLimit } from "@/lib/rate-limiter";
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (!authResult.authorized) return authResult.response;
+    const user = authResult.user;
 
     const profile = await prisma.userProfile.findUnique({
       where: { userId: user.id },
@@ -37,10 +36,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (!authResult.authorized) return authResult.response;
+    const user = authResult.user;
 
     // Rate limit: max 5 resume analyses per hour per user
     const rateCheck = checkRateLimit(user.id, "analyze-resume", 5);

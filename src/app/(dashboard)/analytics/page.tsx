@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
   if (!loading && !hasData) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
             <p className="text-muted-foreground">{t("no_data")}</p>
@@ -239,7 +239,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
 
       {/* Row 1: Funnel + Weekly Trends */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

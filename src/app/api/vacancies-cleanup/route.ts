@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import crypto from "crypto";
-
-function timingSafeEqual(a: string, b: string): boolean {
-  try {
-    return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
-  } catch {
-    return false;
-  }
-}
+import { verifyCronSecret } from "@/lib/api-auth";
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get("authorization");
-  const secret = process.env.JOBFINDER_CRON_SECRET;
-  if (!secret || !auth || !timingSafeEqual(auth, `Bearer ${secret}`)) {
+  if (!verifyCronSecret(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

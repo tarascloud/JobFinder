@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   getPendingQuestions,
   getAnsweredQuestions,
@@ -171,10 +172,54 @@ export default function QAPage() {
   if (loading) {
     return (
       <div className="space-y-8 max-w-3xl">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-7 w-48" />
+          <Skeleton className="h-9 w-32 rounded-md" />
         </div>
+
+        {/* Pending section skeleton */}
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-5 w-5 rounded" />
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-5 w-8 rounded-full" />
+          </div>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-4 space-y-2">
+                <Skeleton className="h-4 w-4/5" />
+                <div className="flex gap-2">
+                  <Skeleton className="h-8 flex-1 rounded-md" />
+                  <Skeleton className="h-8 w-9 rounded-md" />
+                  <Skeleton className="h-8 w-9 rounded-md" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
+        {/* Answered section skeleton */}
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-5 w-5 rounded" />
+            <Skeleton className="h-5 w-28" />
+          </div>
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="bg-muted/50 px-4 py-2.5 flex gap-4">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="px-4 py-2.5 border-t border-border flex items-center gap-4">
+                <Skeleton className="h-4 w-3/5" />
+                <Skeleton className="h-4 w-1/5" />
+                <Skeleton className="h-4 w-12" />
+                <Skeleton className="h-4 w-4" />
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     );
   }
@@ -182,7 +227,7 @@ export default function QAPage() {
   return (
     <div className="space-y-8 max-w-3xl">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
         <Button
           variant="outline"
           size="sm"

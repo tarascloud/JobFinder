@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
-ARG DATABASE_URL
+ARG DATABASE_URL=postgresql://build:build@localhost:5432/build
 ENV DATABASE_URL=${DATABASE_URL}
 RUN npx prisma generate
 RUN rm -rf .next node_modules/.cache && npm run build

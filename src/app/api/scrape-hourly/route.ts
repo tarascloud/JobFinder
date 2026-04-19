@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/db";
+import { verifyCronSecret } from "@/lib/api-auth";
 import { scrapeAllWithRateLimit } from "@/lib/scrapers/rate-limited";
 import { saveVacancy, loadExistingVacanciesForDedup } from "@/lib/save-vacancy";
-
-function verifyCronSecret(request: NextRequest): boolean {
-  const secret = process.env.JOBFINDER_CRON_SECRET;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (!auth) return false;
-  const expected = `Bearer ${secret}`;
-  if (Buffer.byteLength(auth) !== Buffer.byteLength(expected)) return false;
-  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
-}
 
 /**
  * Check if current time is within the night window (23:00-08:00 CET).
