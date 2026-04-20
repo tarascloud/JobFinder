@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { verifySetupToken } from "@/lib/setup-auth";
 import { randomBytes } from "crypto";
 import { writeFile, mkdir } from "fs/promises";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { join } from "path";
 
 const OUTPUT_DIR = process.env.OUTPUT_DIR || "/data";
@@ -158,31 +158,39 @@ function toYaml(obj: unknown, indent = 0): string {
 
 function hasDockerSocket(): boolean {
   try {
-    execSync("docker info", { timeout: 5000, stdio: "pipe" });
+    execFileSync("docker", ["info"], { timeout: 5000, stdio: "pipe" });
     return true;
   } catch {
     return false;
   }
 }
 
-function waitForPostgres(log: (msg: string) => void, maxRetries = 30): boolean {
+async function waitForPostgres(
+  log: (msg: string) => void,
+  maxRetries = 30
+): Promise<boolean> {
   for (let i = 0; i < maxRetries; i++) {
     try {
-      execSync(
-        'docker exec pg pg_isready -U jf -d jobfinder',
+      execFileSync(
+        "docker",
+        ["exec", "pg", "pg_isready", "-U", "jf", "-d", "jobfinder"],
         { timeout: 5000, stdio: "pipe" }
       );
       return true;
     } catch {
       log(`  Waiting for PostgreSQL... (${i + 1}/${maxRetries})`);
-      execSync("sleep 2");
+      await new Promise((r) => setTimeout(r, 2000));
     }
   }
   return false;
 }
 
-function runCommand(cmd: string, timeoutMs = 60000): string {
-  return execSync(cmd, { timeout: timeoutMs, stdio: "pipe" }).toString();
+function runCommand(
+  file: string,
+  args: string[],
+  timeoutMs = 60000
+): string {
+  return execFileSync(file, args, { timeout: timeoutMs, stdio: "pipe" }).toString();
 }
 
 export async function POST(req: NextRequest) {
@@ -260,7 +268,18 @@ export async function POST(req: NextRequest) {
         step("Starting containers with docker compose...");
         try {
           const output = runCommand(
-            `docker compose -f ${join(OUTPUT_DIR, "docker-compose.yml")} --env-file ${join(OUTPUT_DIR, ".env")} --project-directory ${OUTPUT_DIR} up -d 2>&1`,
+            "docker",
+            [
+              "compose",
+              "-f",
+              join(OUTPUT_DIR, "docker-compose.yml"),
+              "--env-file",
+              join(OUTPUT_DIR, ".env"),
+              "--project-directory",
+              OUTPUT_DIR,
+              "up",
+              "-d",
+            ],
             120000
           );
           output.split("\n").filter(Boolean).forEach((line) => log("  " + line));
@@ -274,7 +293,7 @@ export async function POST(req: NextRequest) {
         }
 
         step("Waiting for PostgreSQL to be ready...");
-        const pgReady = waitForPostgres(log);
+        const pgReady = await waitForPostgres(log);
         if (!pgReady) {
           log("  ERROR: PostgreSQL did not become ready in time.");
           log("  Run manually: docker logs pg");
@@ -290,7 +309,12 @@ export async function POST(req: NextRequest) {
         let appRunning = false;
         for (let i = 0; i < 15; i++) {
           try {
-            const status = runCommand('docker inspect -f "{{.State.Running}}" jf-app');
+            const status = runCommand("docker", [
+              "inspect",
+              "-f",
+              "{{.State.Running}}",
+              "jf-app",
+            ]);
             if (status.trim() === "true") {
               appRunning = true;
               break;
@@ -298,14 +322,15 @@ export async function POST(req: NextRequest) {
           } catch {
             // container not ready yet
           }
-          execSync("sleep 2");
+          await new Promise((r) => setTimeout(r, 2000));
         }
 
         if (appRunning) {
           log("  jf-app is running.");
           try {
             const migrateOutput = runCommand(
-              "docker exec jf-app npx prisma migrate deploy 2>&1",
+              "docker",
+              ["exec", "jf-app", "npx", "prisma", "migrate", "deploy"],
               120000
             );
             migrateOutput.split("\n").filter(Boolean).forEach((line) => log("  " + line));
@@ -329,7 +354,15 @@ export async function POST(req: NextRequest) {
 
         // Check final container status
         try {
-          const psOutput = runCommand('docker ps --format "{{.Names}}: {{.Status}}" --filter "name=jf-app" --filter "name=pg" 2>&1');
+          const psOutput = runCommand("docker", [
+            "ps",
+            "--format",
+            "{{.Names}}: {{.Status}}",
+            "--filter",
+            "name=jf-app",
+            "--filter",
+            "name=pg",
+          ]);
           log("  Container status:");
           psOutput.split("\n").filter(Boolean).forEach((line) => log("    " + line));
         } catch {

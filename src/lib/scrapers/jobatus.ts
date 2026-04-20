@@ -58,9 +58,8 @@ function parseJobListings(html: string): JobatusJob[] {
   // Cards often use class="offer", "job-item", "list-item" or similar
   const jobLinkPattern =
     /href="(\/empleo\/([^"]+))"[^>]*>/gi;
-  let linkMatch;
 
-  while ((linkMatch = jobLinkPattern.exec(html)) !== null) {
+  for (const linkMatch of html.matchAll(jobLinkPattern)) {
     const [, href, slug] = linkMatch;
     // Skip search/category pages
     if (slug.startsWith("?") || slug.split("/").length > 2) continue;

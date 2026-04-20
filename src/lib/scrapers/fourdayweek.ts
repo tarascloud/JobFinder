@@ -188,9 +188,8 @@ function scrapeHtmlFallback(
 
   // Job links: /remote-job/slug/apply
   const linkPattern = /href="(\/remote-job\/([\w-]+)\/apply)"/gi;
-  let match;
 
-  while ((match = linkPattern.exec(html)) !== null) {
+  for (const match of html.matchAll(linkPattern)) {
     const href = match[1];
     const slug = match[2];
     if (seenIds.has(slug)) continue;

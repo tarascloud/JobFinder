@@ -174,8 +174,7 @@ async function fetchViaHtml(role: string): Promise<WellfoundJob[]> {
     // HTML fallback: parse job card patterns
     const cardPattern =
       /class="[^"]*styles_component[^"]*"[^>]*>[\s\S]*?<a[^>]*href="(\/jobs\/[^"]*)"[^>]*>([\s\S]*?)<\/a>/gi;
-    let match;
-    while ((match = cardPattern.exec(html)) !== null) {
+    for (const match of html.matchAll(cardPattern)) {
       const [, href, content] = match;
       const title = stripHtml(content);
       if (!title) continue;

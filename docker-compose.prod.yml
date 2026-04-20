@@ -28,7 +28,7 @@ services:
       # Set to 120s > cloudflared originRequest.keepAliveTimeout=90s so CF closes idle first
       - KEEP_ALIVE_TIMEOUT=120000
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://0.0.0.0:3456/"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3456/api/health || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3

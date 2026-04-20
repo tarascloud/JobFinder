@@ -55,8 +55,7 @@ function parseJobListings(html: string): ZipRecruiterJob[] {
   // Try to find job cards by data attributes or common class patterns
   const jobIdPattern = /data-job-id="([^"]+)"/g;
   const jobIds: string[] = [];
-  let idMatch;
-  while ((idMatch = jobIdPattern.exec(html)) !== null) {
+  for (const idMatch of html.matchAll(jobIdPattern)) {
     if (!jobIds.includes(idMatch[1])) {
       jobIds.push(idMatch[1]);
     }
@@ -65,8 +64,7 @@ function parseJobListings(html: string): ZipRecruiterJob[] {
   // If no data-job-id found, try to find job links
   if (jobIds.length === 0) {
     const linkPattern = /href="(https:\/\/www\.ziprecruiter\.com\/c\/[^"]*\/job\/[^"]*)"/gi;
-    let linkMatch;
-    while ((linkMatch = linkPattern.exec(html)) !== null) {
+    for (const linkMatch of html.matchAll(linkPattern)) {
       const url = linkMatch[1];
       // Create a pseudo-ID from the URL
       const id = url.split("/").slice(-1)[0] || url;
@@ -80,8 +78,7 @@ function parseJobListings(html: string): ZipRecruiterJob[] {
   // Also try /jobs/ pattern links
   if (jobIds.length === 0) {
     const altLinkPattern = /href="(\/jobs\/[^"]*?)"/gi;
-    let altMatch;
-    while ((altMatch = altLinkPattern.exec(html)) !== null) {
+    for (const altMatch of html.matchAll(altLinkPattern)) {
       const id = altMatch[1].split("/").pop() || altMatch[1];
       if (!seenIds.has(id)) {
         seenIds.add(id);

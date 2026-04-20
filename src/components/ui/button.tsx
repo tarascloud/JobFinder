@@ -10,11 +10,15 @@ const variants = {
   link: "text-primary underline-offset-4 hover:underline",
 } as const;
 
+// WCAG 2.5.5 (AAA) / 2.5.8 (AA) — Target Size minimum 44x44 CSS px on touch pointers.
+// We bump interactive heights to >=44px so the button itself meets the target size,
+// instead of relying on surrounding padding. `sm` keeps a visually compact 32px height
+// but guarantees a 44px touch target on coarse pointers via `touch:min-h-[44px]`.
 const sizes = {
-  sm: "h-8 px-3 py-1.5 text-xs",
-  md: "h-9 px-4 py-2 text-sm",
-  lg: "h-11 px-6 py-3 text-base",
-  icon: "h-9 w-9 p-2",
+  sm: "h-8 min-h-[44px] px-3 py-1.5 text-xs",
+  md: "h-11 min-h-[44px] px-4 py-2 text-sm",
+  lg: "h-11 min-h-[44px] px-6 py-3 text-base",
+  icon: "h-11 w-11 min-h-[44px] min-w-[44px] p-2",
 } as const;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

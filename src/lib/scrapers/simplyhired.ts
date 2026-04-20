@@ -64,8 +64,7 @@ function parseJobListings(html: string): SimplyHiredJob[] {
   const jobLinkPattern = /href="(\/job\/([\w-]+)[^"]*)"/gi;
 
   // Try data-jobkey first
-  let match;
-  while ((match = jobKeyPattern.exec(html)) !== null) {
+  for (const match of html.matchAll(jobKeyPattern)) {
     const id = match[1];
     if (seenIds.has(id)) continue;
     seenIds.add(id);
@@ -80,7 +79,7 @@ function parseJobListings(html: string): SimplyHiredJob[] {
   }
 
   // Also try job links
-  while ((match = jobLinkPattern.exec(html)) !== null) {
+  for (const match of html.matchAll(jobLinkPattern)) {
     const [, href, id] = match;
     if (seenIds.has(id)) continue;
     seenIds.add(id);

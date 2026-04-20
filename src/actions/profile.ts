@@ -383,8 +383,18 @@ export async function analyzeResumeForUser(
 
     // Split into 3 smaller AI calls for speed (large model is slow on large prompts)
     const { callAIJSON } = await import("@/lib/ai/provider");
-    const resumeSnippet = resumeText.substring(0, 2000); // shorter for search/QA calls
-    const resumeFullSnippet = resumeText.substring(0, 3500); // longer for profile/skills extraction
+    const { isLikelyPromptInjection, sanitizeUserInput, wrapUserContent } = await import("@/lib/prompt-guard");
+
+    // Guard: reject resumes that look like prompt-injection attempts (e.g. PDF with
+    // hidden "ignore previous instructions" payload). REV-R2-20260419-0027.
+    if (isLikelyPromptInjection(resumeText)) {
+      console.warn("[analyzeResume] Prompt injection detected in resume text for user", userId);
+      return { error: "Resume content contains suspicious instructions. Please review your PDF/URL." };
+    }
+
+    const resumeSanitized = sanitizeUserInput(resumeText, 4000);
+    void resumeSanitized.substring(0, 2000); // shorter snippet reserved for search/QA calls
+    const resumeFullSnippet = wrapUserContent(resumeSanitized.substring(0, 3500)); // longer for profile/skills extraction
 
     // Step 1: Profile extraction (~10-30 sec)
     console.log("[analyzeResume] Step 1: Extracting profile...");

@@ -26,7 +26,7 @@ import {
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("about");
   return {
-    title: "About",
+    title: "About JobFinder — Open-Source AI Job Search Automation",
     description: t("subtitle"),
     alternates: {
       canonical: "/about",

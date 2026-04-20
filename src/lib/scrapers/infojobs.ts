@@ -59,9 +59,8 @@ function parseJobListings(html: string): InfoJobsJob[] {
   // Pattern: /oferta/SLUG/ID or direct offer links
   const offerLinkPattern =
     /href="(https?:\/\/www\.infojobs\.net\/[^"]*?\/of-i([a-zA-Z0-9]+)[^"]*)"/gi;
-  let linkMatch;
 
-  while ((linkMatch = offerLinkPattern.exec(html)) !== null) {
+  for (const linkMatch of html.matchAll(offerLinkPattern)) {
     const [, url, id] = linkMatch;
     if (seenIds.has(id)) continue;
     seenIds.add(id);
@@ -141,9 +140,8 @@ function parseJobListings(html: string): InfoJobsJob[] {
   if (jobs.length === 0) {
     const fallbackPattern =
       /href="(\/oferta\/[^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
-    let fbMatch;
 
-    while ((fbMatch = fallbackPattern.exec(html)) !== null) {
+    for (const fbMatch of html.matchAll(fallbackPattern)) {
       const [, href, linkText] = fbMatch;
       const title = stripHtml(linkText).trim();
       if (!title || title.length < 5) continue;
