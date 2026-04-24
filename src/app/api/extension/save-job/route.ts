@@ -1,18 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-import { verifyApiToken } from "@/lib/api-auth";
 import { ensureVacancyScore } from "@/lib/save-vacancy";
+import { timingSafeEqual } from "crypto";
 
 const SaveJobSchema = z.object({
   url: z.string().url(),
   title: z.string().min(1),
   company: z.string().optional(),
   description: z.string().optional(),
-  // TODO: Remove userId from body once extension supports per-user auth tokens.
-  // Currently the extension token is global (not per-user), so we cannot derive
-  // userId from the bearer token. Validate that userId exists in DB as a safeguard.
-  userId: z.number().int().positive(),
   searchProfileId: z.number().int().positive().optional(),
 });
 
@@ -42,10 +38,53 @@ function generateExternalId(url: string): string {
   }
 }
 
-export async function POST(request: NextRequest) {
-  if (!verifyApiToken(request, "JOBFINDER_EXTENSION_TOKEN")) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+/**
+ * Authenticate extension request via per-user extension token.
+ * Falls back to legacy global JOBFINDER_EXTENSION_TOKEN for backward compatibility
+ * (but legacy path is deprecated and will be removed).
+ */
+async function authenticateExtension(
+  request: NextRequest
+): Promise<{ userId: number } | null> {
+  const auth = request.headers.get("authorization");
+  if (!auth?.startsWith("Bearer ")) return null;
+  const token = auth.slice(7);
+  if (!token) return null;
+
+  // Primary: per-user extension token lookup
+  const user = await prisma.user.findUnique({
+    where: { extensionToken: token },
+    select: { id: true },
+  });
+  if (user) return { userId: user.id };
+
+  // Legacy fallback: global JOBFINDER_EXTENSION_TOKEN (deprecated, no IDOR protection)
+  // Only used during migration period — extension users should regenerate per-user tokens
+  const globalSecret = process.env.JOBFINDER_EXTENSION_TOKEN;
+  if (globalSecret) {
+    try {
+      if (timingSafeEqual(Buffer.from(token), Buffer.from(globalSecret))) {
+        // Global token matched — but we cannot derive userId, so reject
+        // This forces users to switch to per-user tokens
+        return null;
+      }
+    } catch {
+      // Buffer length mismatch
+    }
   }
+
+  return null;
+}
+
+export async function POST(request: NextRequest) {
+  const authResult = await authenticateExtension(request);
+  if (!authResult) {
+    return NextResponse.json(
+      { error: "Unauthorized — use a per-user extension token from Settings" },
+      { status: 401 }
+    );
+  }
+  const { userId } = authResult;
 
   try {
     const raw = await request.json();
@@ -56,25 +95,25 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const { url, title, company, description, userId, searchProfileId } = parsed.data;
-
-    // Validate that userId exists in DB (global token cannot guarantee identity)
-    const userExists = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true },
-    });
-    if (!userExists) {
-      return NextResponse.json(
-        { error: "Invalid userId — user not found" },
-        { status: 400 }
-      );
-    }
+    const { url, title, company, description, searchProfileId } = parsed.data;
 
     // Resolve search profile: use provided or fall back to user's first active profile
     let resolvedProfileId = searchProfileId;
-    if (!resolvedProfileId) {
+    if (resolvedProfileId) {
+      // Validate that the provided searchProfileId belongs to this user
+      const ownedProfile = await prisma.searchProfile.findFirst({
+        where: { id: resolvedProfileId, userId },
+        select: { id: true },
+      });
+      if (!ownedProfile) {
+        return NextResponse.json(
+          { error: "searchProfileId does not belong to authenticated user" },
+          { status: 403 }
+        );
+      }
+    } else {
       const profile = await prisma.searchProfile.findFirst({
-        where: { userId: Number(userId), isActive: true },
+        where: { userId, isActive: true },
         select: { id: true },
         orderBy: { id: "asc" },
       });
@@ -111,7 +150,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Ensure VacancyScore exists so the vacancy is visible to the user
-    await ensureVacancyScore(vacancy.id, Number(userId), resolvedProfileId);
+    await ensureVacancyScore(vacancy.id, userId, resolvedProfileId);
 
     return NextResponse.json({ ok: true, vacancyId: vacancy.id });
   } catch (error) {

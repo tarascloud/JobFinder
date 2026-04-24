@@ -50,6 +50,7 @@ export type UserMinAggregateOutputType = {
   applicationLimit: number | null
   telegramUsername: string | null
   telegramChatId: string | null
+  extensionToken: string | null
   createdAt: Date | null
   lastVacanciesSeenAt: Date | null
 }
@@ -68,6 +69,7 @@ export type UserMaxAggregateOutputType = {
   applicationLimit: number | null
   telegramUsername: string | null
   telegramChatId: string | null
+  extensionToken: string | null
   createdAt: Date | null
   lastVacanciesSeenAt: Date | null
 }
@@ -86,6 +88,7 @@ export type UserCountAggregateOutputType = {
   applicationLimit: number
   telegramUsername: number
   telegramChatId: number
+  extensionToken: number
   createdAt: number
   lastVacanciesSeenAt: number
   _all: number
@@ -116,6 +119,7 @@ export type UserMinAggregateInputType = {
   applicationLimit?: true
   telegramUsername?: true
   telegramChatId?: true
+  extensionToken?: true
   createdAt?: true
   lastVacanciesSeenAt?: true
 }
@@ -134,6 +138,7 @@ export type UserMaxAggregateInputType = {
   applicationLimit?: true
   telegramUsername?: true
   telegramChatId?: true
+  extensionToken?: true
   createdAt?: true
   lastVacanciesSeenAt?: true
 }
@@ -152,6 +157,7 @@ export type UserCountAggregateInputType = {
   applicationLimit?: true
   telegramUsername?: true
   telegramChatId?: true
+  extensionToken?: true
   createdAt?: true
   lastVacanciesSeenAt?: true
   _all?: true
@@ -257,6 +263,7 @@ export type UserGroupByOutputType = {
   applicationLimit: number
   telegramUsername: string | null
   telegramChatId: string | null
+  extensionToken: string | null
   createdAt: Date
   lastVacanciesSeenAt: Date | null
   _count: UserCountAggregateOutputType | null
@@ -298,6 +305,7 @@ export type UserWhereInput = {
   applicationLimit?: Prisma.IntFilter<"User"> | number
   telegramUsername?: Prisma.StringNullableFilter<"User"> | string | null
   telegramChatId?: Prisma.StringNullableFilter<"User"> | string | null
+  extensionToken?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   lastVacanciesSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
@@ -328,6 +336,7 @@ export type UserOrderByWithRelationInput = {
   applicationLimit?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramChatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  extensionToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastVacanciesSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profile?: Prisma.UserProfileOrderByWithRelationInput
@@ -349,6 +358,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   email?: string
   googleId?: string
   jfEmail?: string
+  extensionToken?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -375,7 +385,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   companyResearch?: Prisma.CompanyResearchListRelationFilter
   userVacancies?: Prisma.UserVacancyListRelationFilter
   interviewStories?: Prisma.InterviewStoryListRelationFilter
-}, "id" | "email" | "googleId" | "jfEmail">
+}, "id" | "email" | "googleId" | "jfEmail" | "extensionToken">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -391,6 +401,7 @@ export type UserOrderByWithAggregationInput = {
   applicationLimit?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramChatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  extensionToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastVacanciesSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -417,6 +428,7 @@ export type UserScalarWhereWithAggregatesInput = {
   applicationLimit?: Prisma.IntWithAggregatesFilter<"User"> | number
   telegramUsername?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   telegramChatId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  extensionToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   lastVacanciesSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
 }
@@ -434,6 +446,7 @@ export type UserCreateInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -464,6 +477,7 @@ export type UserUncheckedCreateInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -493,6 +507,7 @@ export type UserUpdateInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -523,6 +538,7 @@ export type UserUncheckedUpdateInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -553,6 +569,7 @@ export type UserCreateManyInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
 }
@@ -570,6 +587,7 @@ export type UserUpdateManyMutationInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -588,6 +606,7 @@ export type UserUncheckedUpdateManyInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -606,6 +625,7 @@ export type UserCountOrderByAggregateInput = {
   applicationLimit?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrder
   telegramChatId?: Prisma.SortOrder
+  extensionToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastVacanciesSeenAt?: Prisma.SortOrder
 }
@@ -629,6 +649,7 @@ export type UserMaxOrderByAggregateInput = {
   applicationLimit?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrder
   telegramChatId?: Prisma.SortOrder
+  extensionToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastVacanciesSeenAt?: Prisma.SortOrder
 }
@@ -647,6 +668,7 @@ export type UserMinOrderByAggregateInput = {
   applicationLimit?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrder
   telegramChatId?: Prisma.SortOrder
+  extensionToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastVacanciesSeenAt?: Prisma.SortOrder
 }
@@ -866,6 +888,7 @@ export type UserCreateWithoutProfileInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   searchProfiles?: Prisma.SearchProfileCreateNestedManyWithoutUserInput
@@ -895,6 +918,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   searchProfiles?: Prisma.SearchProfileUncheckedCreateNestedManyWithoutUserInput
@@ -939,6 +963,7 @@ export type UserUpdateWithoutProfileInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   searchProfiles?: Prisma.SearchProfileUpdateManyWithoutUserNestedInput
@@ -968,6 +993,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   searchProfiles?: Prisma.SearchProfileUncheckedUpdateManyWithoutUserNestedInput
@@ -996,6 +1022,7 @@ export type UserCreateWithoutSearchProfilesInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1025,6 +1052,7 @@ export type UserUncheckedCreateWithoutSearchProfilesInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1069,6 +1097,7 @@ export type UserUpdateWithoutSearchProfilesInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -1098,6 +1127,7 @@ export type UserUncheckedUpdateWithoutSearchProfilesInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1126,6 +1156,7 @@ export type UserCreateWithoutVacancyScoresInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1155,6 +1186,7 @@ export type UserUncheckedCreateWithoutVacancyScoresInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1199,6 +1231,7 @@ export type UserUpdateWithoutVacancyScoresInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -1228,6 +1261,7 @@ export type UserUncheckedUpdateWithoutVacancyScoresInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1256,6 +1290,7 @@ export type UserCreateWithoutApplicationsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1285,6 +1320,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1329,6 +1365,7 @@ export type UserUpdateWithoutApplicationsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -1358,6 +1395,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1386,6 +1424,7 @@ export type UserCreateWithoutQaPairsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1415,6 +1454,7 @@ export type UserUncheckedCreateWithoutQaPairsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1459,6 +1499,7 @@ export type UserUpdateWithoutQaPairsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -1488,6 +1529,7 @@ export type UserUncheckedUpdateWithoutQaPairsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1516,6 +1558,7 @@ export type UserCreateWithoutPlatformAccountsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1545,6 +1588,7 @@ export type UserUncheckedCreateWithoutPlatformAccountsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1589,6 +1633,7 @@ export type UserUpdateWithoutPlatformAccountsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -1618,6 +1663,7 @@ export type UserUncheckedUpdateWithoutPlatformAccountsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1646,6 +1692,7 @@ export type UserCreateWithoutAiFeedbackInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1675,6 +1722,7 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1719,6 +1767,7 @@ export type UserUpdateWithoutAiFeedbackInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -1748,6 +1797,7 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1776,6 +1826,7 @@ export type UserCreateWithoutAiSettingsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1805,6 +1856,7 @@ export type UserUncheckedCreateWithoutAiSettingsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1849,6 +1901,7 @@ export type UserUpdateWithoutAiSettingsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -1878,6 +1931,7 @@ export type UserUncheckedUpdateWithoutAiSettingsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1906,6 +1960,7 @@ export type UserCreateWithoutNotificationsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -1935,6 +1990,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1979,6 +2035,7 @@ export type UserUpdateWithoutNotificationsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -2008,6 +2065,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2036,6 +2094,7 @@ export type UserCreateWithoutCompanyResearchInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -2065,6 +2124,7 @@ export type UserUncheckedCreateWithoutCompanyResearchInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2109,6 +2169,7 @@ export type UserUpdateWithoutCompanyResearchInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -2138,6 +2199,7 @@ export type UserUncheckedUpdateWithoutCompanyResearchInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2166,6 +2228,7 @@ export type UserCreateWithoutInterviewStoriesInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -2195,6 +2258,7 @@ export type UserUncheckedCreateWithoutInterviewStoriesInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2239,6 +2303,7 @@ export type UserUpdateWithoutInterviewStoriesInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -2268,6 +2333,7 @@ export type UserUncheckedUpdateWithoutInterviewStoriesInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2296,6 +2362,7 @@ export type UserCreateWithoutUserVacanciesInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
@@ -2325,6 +2392,7 @@ export type UserUncheckedCreateWithoutUserVacanciesInput = {
   applicationLimit?: number
   telegramUsername?: string | null
   telegramChatId?: string | null
+  extensionToken?: string | null
   createdAt?: Date | string
   lastVacanciesSeenAt?: Date | string | null
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2369,6 +2437,7 @@ export type UserUpdateWithoutUserVacanciesInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
@@ -2398,6 +2467,7 @@ export type UserUncheckedUpdateWithoutUserVacanciesInput = {
   applicationLimit?: Prisma.IntFieldUpdateOperationsInput | number
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastVacanciesSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2539,6 +2609,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   applicationLimit?: boolean
   telegramUsername?: boolean
   telegramChatId?: boolean
+  extensionToken?: boolean
   createdAt?: boolean
   lastVacanciesSeenAt?: boolean
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
@@ -2570,6 +2641,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   applicationLimit?: boolean
   telegramUsername?: boolean
   telegramChatId?: boolean
+  extensionToken?: boolean
   createdAt?: boolean
   lastVacanciesSeenAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2588,6 +2660,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   applicationLimit?: boolean
   telegramUsername?: boolean
   telegramChatId?: boolean
+  extensionToken?: boolean
   createdAt?: boolean
   lastVacanciesSeenAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2606,11 +2679,12 @@ export type UserSelectScalar = {
   applicationLimit?: boolean
   telegramUsername?: boolean
   telegramChatId?: boolean
+  extensionToken?: boolean
   createdAt?: boolean
   lastVacanciesSeenAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "jfEmail" | "role" | "preferredLocale" | "preferredSkin" | "preferredTheme" | "applicationLimit" | "telegramUsername" | "telegramChatId" | "createdAt" | "lastVacanciesSeenAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "image" | "googleId" | "jfEmail" | "role" | "preferredLocale" | "preferredSkin" | "preferredTheme" | "applicationLimit" | "telegramUsername" | "telegramChatId" | "extensionToken" | "createdAt" | "lastVacanciesSeenAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   searchProfiles?: boolean | Prisma.User$searchProfilesArgs<ExtArgs>
@@ -2659,6 +2733,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     applicationLimit: number
     telegramUsername: string | null
     telegramChatId: string | null
+    extensionToken: string | null
     createdAt: Date
     lastVacanciesSeenAt: Date | null
   }, ExtArgs["result"]["user"]>
@@ -3109,6 +3184,7 @@ export interface UserFieldRefs {
   readonly applicationLimit: Prisma.FieldRef<"User", 'Int'>
   readonly telegramUsername: Prisma.FieldRef<"User", 'String'>
   readonly telegramChatId: Prisma.FieldRef<"User", 'String'>
+  readonly extensionToken: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastVacanciesSeenAt: Prisma.FieldRef<"User", 'DateTime'>
 }

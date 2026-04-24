@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { verifyApiToken } from "@/lib/api-auth";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 import { z } from "zod";
 
 const InboxEmailSchema = z.object({
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
         subject,
         body: (body || "").substring(0, 10000),
         bodyText: bodyText ? bodyText.substring(0, 10000) : null,
-        bodyHtml: bodyHtml ? bodyHtml.substring(0, 50000) : null,
+        bodyHtml: bodyHtml ? sanitizeHtml(bodyHtml).substring(0, 50000) : null,
         messageId: messageId || null,
         platform,
         category,

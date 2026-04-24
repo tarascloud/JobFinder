@@ -1731,6 +1731,7 @@ export const UserScalarFieldEnum = {
   applicationLimit: 'applicationLimit',
   telegramUsername: 'telegramUsername',
   telegramChatId: 'telegramChatId',
+  extensionToken: 'extensionToken',
   createdAt: 'createdAt',
   lastVacanciesSeenAt: 'lastVacanciesSeenAt'
 } as const
