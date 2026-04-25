@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { ensureVacancyScore } from "@/lib/save-vacancy";
-import { timingSafeEqual } from "crypto";
 
 const SaveJobSchema = z.object({
   url: z.string().url(),
@@ -40,8 +39,6 @@ function generateExternalId(url: string): string {
 
 /**
  * Authenticate extension request via per-user extension token.
- * Falls back to legacy global JOBFINDER_EXTENSION_TOKEN for backward compatibility
- * (but legacy path is deprecated and will be removed).
  */
 async function authenticateExtension(
   request: NextRequest
@@ -57,21 +54,6 @@ async function authenticateExtension(
     select: { id: true },
   });
   if (user) return { userId: user.id };
-
-  // Legacy fallback: global JOBFINDER_EXTENSION_TOKEN (deprecated, no IDOR protection)
-  // Only used during migration period — extension users should regenerate per-user tokens
-  const globalSecret = process.env.JOBFINDER_EXTENSION_TOKEN;
-  if (globalSecret) {
-    try {
-      if (timingSafeEqual(Buffer.from(token), Buffer.from(globalSecret))) {
-        // Global token matched — but we cannot derive userId, so reject
-        // This forces users to switch to per-user tokens
-        return null;
-      }
-    } catch {
-      // Buffer length mismatch
-    }
-  }
 
   return null;
 }
