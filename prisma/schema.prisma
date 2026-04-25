@@ -21,6 +21,7 @@ model User {
   applicationLimit Int    @default(10) @map("application_limit")
   telegramUsername String? @map("telegram_username")
   telegramChatId  String? @map("telegram_chat_id")
+  extensionToken  String? @unique @map("extension_token")
   createdAt DateTime @default(now()) @map("created_at")
 
   profile          UserProfile?

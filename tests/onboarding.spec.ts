@@ -123,8 +123,8 @@ test.describe("4. Profile page (demo mode)", () => {
   test("profile page loads without JS errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
-    // Give the page time to fully hydrate
-    await page.waitForLoadState("networkidle").catch(() => {});
+    // Wait for the page to fully hydrate by checking for visible heading
+    await expect(page.locator("h1, h2, h3").first()).toBeVisible({ timeout: 15000 });
     const criticalErrors = errors.filter(
       (e) => !e.includes("hydrat") && !e.includes("Warning:")
     );
@@ -132,8 +132,6 @@ test.describe("4. Profile page (demo mode)", () => {
   });
 
   test("headline input does not contain hardcoded 'Senior Frontend Engineer'", async ({ page }) => {
-    // Demo user may be redirected to /onboarding — wait for page to settle
-    await page.waitForLoadState("networkidle").catch(() => {});
     // Wait for any visible form element (profile or onboarding page)
     await page.locator("input:visible, textarea:visible, select:visible").first().waitFor({ timeout: 15000 });
     // Find all visible inputs AND textareas and check none have the old hardcoded bug value
@@ -285,7 +283,8 @@ test.describe("7. Dashboard pages (demo mode — no crash)", () => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/vacancies");
-    await page.waitForLoadState("networkidle").catch(() => {});
+    await expect(page.locator("body")).toBeVisible();
+    await expect(page.locator("h1, h2, h3, [data-testid]").first()).toBeVisible({ timeout: 15000 });
     // Critical JS errors (not hydration warnings) should be 0
     const critical = errors.filter(
       (e) => !e.includes("hydrat") && !e.includes("Warning:")
@@ -298,7 +297,7 @@ test.describe("7. Dashboard pages (demo mode — no crash)", () => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/applications");
-    await page.waitForLoadState("networkidle").catch(() => {});
+    await expect(page.locator("h1, h2, h3, [data-testid]").first()).toBeVisible({ timeout: 15000 });
     const critical = errors.filter(
       (e) => !e.includes("hydrat") && !e.includes("Warning:")
     );
@@ -310,7 +309,7 @@ test.describe("7. Dashboard pages (demo mode — no crash)", () => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/qa");
-    await page.waitForLoadState("networkidle").catch(() => {});
+    await expect(page.locator("h1, h2, h3, [data-testid]").first()).toBeVisible({ timeout: 15000 });
     const critical = errors.filter(
       (e) => !e.includes("hydrat") && !e.includes("Warning:")
     );
@@ -322,7 +321,7 @@ test.describe("7. Dashboard pages (demo mode — no crash)", () => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/analytics");
-    await page.waitForLoadState("networkidle").catch(() => {});
+    await expect(page.locator("h1, h2, h3, [data-testid]").first()).toBeVisible({ timeout: 15000 });
     const critical = errors.filter(
       (e) => !e.includes("hydrat") && !e.includes("Warning:")
     );
@@ -467,7 +466,7 @@ test.describe("9. Profile page — no stale demo data", () => {
   test("profile page shows empty or real data, not hardcoded defaults", async ({ page }) => {
     await enterDemoMode(page);
     await page.goto("/profile");
-    await page.waitForLoadState("networkidle").catch(() => {});
+    await expect(page.locator("h1, h2, h3").first()).toBeVisible({ timeout: 15000 });
 
     const body = await page.textContent("body");
     expect(body).not.toContain("Senior Frontend Engineer");
@@ -483,7 +482,7 @@ test.describe("10. No errors on key pages", () => {
 
     for (const path of ["/profile", "/vacancies", "/applications"]) {
       await page.goto(path);
-      await page.waitForLoadState("networkidle").catch(() => {});
+      await expect(page.locator("h1, h2, h3, [data-testid]").first()).toBeVisible({ timeout: 15000 });
     }
 
     // Filter out known non-critical errors
@@ -526,14 +525,14 @@ test.describe("12. Vacancies — Score All & UI", () => {
 
   test("Score All button is visible", async ({ page }) => {
     await page.goto("/vacancies");
-    await page.waitForLoadState("networkidle").catch(() => {});
     const scoreBtn = page.locator("button", { hasText: /score all/i });
-    await expect(scoreBtn).toBeVisible({ timeout: 5000 });
+    await expect(scoreBtn).toBeVisible({ timeout: 15000 });
   });
 
   test("All Profiles is default in search dropdown", async ({ page }) => {
     await page.goto("/vacancies");
-    await page.waitForLoadState("networkidle").catch(() => {});
+    // Wait for page content to be ready
+    await expect(page.locator("h1, h2, h3, [data-testid]").first()).toBeVisible({ timeout: 15000 });
     const select = page.locator("select").first();
     if (await select.isVisible().catch(() => false)) {
       const value = await select.inputValue();
@@ -543,16 +542,15 @@ test.describe("12. Vacancies — Score All & UI", () => {
 
   test("Scrape Now button is visible", async ({ page }) => {
     await page.goto("/vacancies");
-    await page.waitForLoadState("networkidle").catch(() => {});
     const scrapeBtn = page.locator("button", { hasText: /scrape now/i });
-    await expect(scrapeBtn).toBeVisible({ timeout: 5000 });
+    await expect(scrapeBtn).toBeVisible({ timeout: 15000 });
   });
 
   test("vacancy list renders without errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/vacancies");
-    await page.waitForLoadState("networkidle").catch(() => {});
+    await expect(page.locator("h1, h2, h3, [data-testid]").first()).toBeVisible({ timeout: 15000 });
     const critical = errors.filter(
       (e) => !e.includes("hydrat") && !e.includes("Warning:") && !e.includes("Server Action")
     );

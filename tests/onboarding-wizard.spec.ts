@@ -692,7 +692,8 @@ test.describe("J. No critical JS errors in wizard flow", () => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await goToOnboarding(page);
-    await page.waitForLoadState("networkidle").catch(() => {});
+    // Wait for step 1 content to be fully rendered
+    await expect(page.getByText("Upload Your Resume")).toBeVisible({ timeout: 15000 });
     const critical = errors.filter(
       (e) =>
         !e.includes("hydrat") &&
@@ -706,7 +707,8 @@ test.describe("J. No critical JS errors in wizard flow", () => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await skipToStep6(page);
-    await page.waitForLoadState("networkidle").catch(() => {});
+    // Wait for step 6 content to be fully rendered
+    await expect(page.getByText("All Set!")).toBeVisible({ timeout: 15000 });
     const critical = errors.filter(
       (e) =>
         !e.includes("hydrat") &&
