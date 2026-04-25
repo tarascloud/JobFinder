@@ -47,6 +47,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@taaboroda",
+    creator: "@taaboroda",
     title: "JobFinder — AI-Powered Job Search & Auto-Apply",
     description:
       "Open-source AI job search automation. Scrape 11+ job boards, AI scoring, auto-apply. Self-hosted & privacy-first.",

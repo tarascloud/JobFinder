@@ -17,6 +17,7 @@ export default function robots(): MetadataRoute.Robots {
         "/emails/",
         "/analytics/",
         "/qa/",
+        "/login",
       ],
     },
     sitemap: "https://jobfinder.taras.cloud/sitemap.xml",
