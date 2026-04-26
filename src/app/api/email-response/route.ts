@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { verifyApiToken } from "@/lib/api-auth";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { createNotification } from "@/actions/notifications";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 const EmailResponseSchema = z.object({
   from: z.string().min(1),
@@ -15,6 +16,11 @@ const EmailResponseSchema = z.object({
   messageId: z.string().optional(),
   responseType: z.string(),
 });
+
+// Defense-in-depth bound on stored bodyHtml. CF Worker already trims to ~50KB,
+// but the boundary must enforce its own ceiling so a misbehaving / malicious
+// upstream cannot bloat the EmailResponse table.
+const MAX_BODY_HTML = 50_000;
 
 /**
  * Extract domain from email address, e.g. "recruiter@google.com" -> "google.com"
@@ -120,18 +126,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Sanitize and truncate bodyHtml to prevent stored-XSS and limit bloat
-    const MAX_BODY_HTML = 20 * 1024; // 20KB
+    // Sanitize bodyHtml at the trust boundary BEFORE persisting. CF Worker
+    // already substring(0, 50000)s it but defense-in-depth: re-cap, then run
+    // through the canonical DOMPurify-based sanitizeHtml() so any XSS payload
+    // stripped at storage time cannot resurface even if a future caller
+    // forgets to sanitize on render.
     let sanitizedBodyHtml: string | null = null;
     if (bodyHtml) {
-      // Strip all HTML tags to extract plain text for storage — avoids stored-XSS entirely
-      const stripped = bodyHtml
-        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
-        .replace(/<[^>]+>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-      sanitizedBodyHtml = stripped.substring(0, MAX_BODY_HTML);
+      const capped = bodyHtml.length > MAX_BODY_HTML ? bodyHtml.substring(0, MAX_BODY_HTML) : bodyHtml;
+      sanitizedBodyHtml = sanitizeHtml(capped);
     }
 
     // Save the email response (include userId when provided by per-user email worker)
