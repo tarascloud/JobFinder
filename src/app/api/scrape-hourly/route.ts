@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { verifyCronSecret } from "@/lib/api-auth";
 import { scrapeAllWithRateLimit } from "@/lib/scrapers/rate-limited";
-import { saveVacancy, loadExistingVacanciesForDedup } from "@/lib/save-vacancy";
+import {
+  loadExistingVacanciesForDedup,
+  prefetchExistingByPlatformId,
+  batchSaveVacancies,
+} from "@/lib/save-vacancy";
+import type { ScrapedVacancy } from "@/lib/scrapers/types";
 
 /**
  * Check if current time is within the night window (23:00-08:00 CET).
@@ -115,47 +120,78 @@ export async function POST(request: NextRequest) {
     let totalNew = 0;
     const errors: string[] = [];
 
-    // Process each unique query group
+    // Phase 1: Scrape all query groups and collect vacancies
+    const groupResults: Array<{
+      key: string;
+      group: (typeof queryGroups extends Map<string, infer V> ? V : never);
+      vacancies: ScrapedVacancy[];
+    }> = [];
+
     for (const [key, group] of queryGroups) {
       console.log(
         `[scrape-hourly] Scraping query group: ${key} (${group.profiles.length} profiles)`
       );
 
-      // JF-V2.7: Retry logic — scrapeAllWithRateLimit catches per-platform errors
-      let vacancies;
       try {
-        vacancies = await scrapeAllWithRateLimit({
+        const vacancies = await scrapeAllWithRateLimit({
           jobTitles: group.jobTitles,
           geographies: group.geographies,
           remoteOnly: group.remoteOnly,
           minSalary: group.minSalary,
           currency: group.currency,
         });
+        totalScraped += vacancies.length;
+        groupResults.push({ key, group, vacancies });
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         console.error(`[scrape-hourly] Query group failed: ${key} — ${msg}`);
         errors.push(`${key}: ${msg}`);
-        continue;
       }
+    }
 
-      totalScraped += vacancies.length;
+    // Phase 2: Pre-fetch existing vacancies by platform+externalId in ONE query
+    const allPlatformKeys: Array<{ platform: string; externalId: string }> = [];
+    for (const gr of groupResults) {
+      for (const v of gr.vacancies) {
+        allPlatformKeys.push({ platform: v.platform, externalId: v.externalId });
+      }
+    }
+    const existingByPlatformId = await prefetchExistingByPlatformId(allPlatformKeys);
+    console.log(
+      `[scrape-hourly] Pre-fetched ${existingByPlatformId.size} existing vacancies from ${allPlatformKeys.length} scraped`
+    );
 
-      // Save vacancies for each user whose profile is in this group
-      for (const sp of group.profiles) {
-        const existingVacancies = await loadExistingVacanciesForDedup(sp.userId);
+    // Phase 3: Pre-fetch dedup data per unique user (once per user, not per profile)
+    const uniqueUserIds = [
+      ...new Set(groupResults.flatMap((gr) => gr.group.profiles.map((sp) => sp.userId))),
+    ];
+    const dedupByUser = new Map<string, Awaited<ReturnType<typeof loadExistingVacanciesForDedup>>>();
+    await Promise.all(
+      uniqueUserIds.map(async (uid) => {
+        const dedup = await loadExistingVacanciesForDedup(uid);
+        dedupByUser.set(String(uid), dedup);
+      })
+    );
 
-        for (const v of vacancies) {
-          try {
-            const saved = await saveVacancy(v, sp.userId, sp.id, existingVacancies);
-            if (saved.result === "new") {
-              totalNew++;
-            }
-          } catch (err) {
-            console.error(
-              `[scrape-hourly] Save error for ${v.platform}/${v.externalId}:`,
-              err instanceof Error ? err.message : err
-            );
-          }
+    // Phase 4: Batch-save vacancies per profile using pre-fetched data
+    for (const gr of groupResults) {
+      for (const sp of gr.group.profiles) {
+        const dedupVacancies = dedupByUser.get(String(sp.userId))!;
+
+        try {
+          const { newCount } = await batchSaveVacancies(
+            gr.vacancies,
+            sp.userId,
+            sp.id,
+            existingByPlatformId,
+            dedupVacancies
+          );
+          totalNew += newCount;
+        } catch (err) {
+          console.error(
+            `[scrape-hourly] Batch save error for profile ${sp.id}:`,
+            err instanceof Error ? err.message : err
+          );
         }
 
         // JF-V2.6: Update lastScrapedAt
