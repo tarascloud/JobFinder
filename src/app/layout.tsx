@@ -36,6 +36,13 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://jobfinder.taras.cloud"),
   alternates: {
     canonical: "/",
+    // SMM-20260507-0013: hreflang for ua/en + x-default. JF UI strings exist
+    // in next-intl en/uk; same URL serves both via cookie negotiation.
+    languages: {
+      en: "https://jobfinder.taras.cloud",
+      uk: "https://jobfinder.taras.cloud",
+      "x-default": "https://jobfinder.taras.cloud",
+    },
   },
   openGraph: {
     type: "website",

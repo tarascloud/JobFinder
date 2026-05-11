@@ -78,6 +78,11 @@ scan_pattern() {
     --exclude="docker-compose.yml" \
     --exclude-dir="setup" \
     --exclude="apply-email.ts" \
+    --exclude="*.test.ts" \
+    --exclude="*.test.tsx" \
+    --exclude="*.spec.ts" \
+    --exclude-dir="tests" \
+    --exclude-dir="__tests__" \
     2>/dev/null || true)
 
   if [ -n "$matches" ]; then

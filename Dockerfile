@@ -25,4 +25,7 @@ RUN mkdir -p /app/data/resumes /app/data/screenshots /app/public/resumes /app/pu
 USER nextjs
 EXPOSE 3456
 ENV PORT=3456
+# DEV-20260507-0019: Add HEALTHCHECK — wget-based (wget available in alpine)
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=20s \
+  CMD wget -qO- http://127.0.0.1:3456/api/health > /dev/null || exit 1
 CMD ["node", "server.js"]

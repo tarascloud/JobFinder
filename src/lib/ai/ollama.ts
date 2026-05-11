@@ -48,6 +48,25 @@ async function resolveModel(options?: { model?: string; url?: string }): Promise
   return process.env.OLLAMA_MODEL || "gemma4:e4b";
 }
 
+// Per-attempt timeout (ms). gemma4:e4b can take 1-2 min for complex prompts;
+// 120s lets each attempt fail fast enough to retry once before user gives up.
+// DEV-20260507-0042: was 300000 (5 min, single attempt) → now 120000 with 1 retry.
+const OLLAMA_PER_ATTEMPT_TIMEOUT_MS = 120_000;
+const OLLAMA_RETRY_DELAY_MS = 2_000;
+
+function isRetryableOllamaError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const name = err.name || "";
+  const msg = err.message || "";
+  // AbortSignal.timeout throws TimeoutError; node also surfaces ETIMEDOUT/UND_ERR_CONNECT_TIMEOUT.
+  return (
+    name === "TimeoutError" ||
+    name === "AbortError" ||
+    /timeout/i.test(msg) ||
+    /ETIMEDOUT|ECONNRESET|UND_ERR_/i.test(msg)
+  );
+}
+
 export async function callOllama(
   prompt: string,
   options?: { model?: string; url?: string; systemPrompt?: string }
@@ -67,17 +86,49 @@ export async function callOllama(
 
   console.log(`[callOllama] Using model: ${modelName}`);
 
-  // gemma4:e4b can take 1-2 minutes for complex prompts
-  const resp = await fetch(`${url}/api/generate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(300000), // 5 min timeout
-  });
+  // 2 attempts total (1 retry) with per-attempt timeout. Total worst case ~242s.
+  let lastError: unknown = null;
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const resp = await fetch(`${url}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(OLLAMA_PER_ATTEMPT_TIMEOUT_MS),
+      });
 
-  if (!resp.ok) throw new Error(`Ollama API error: ${resp.status}`);
-  const data = await resp.json();
-  return data.response || "";
+      if (!resp.ok) {
+        // 5xx is retryable, 4xx is not (bad request, won't fix on retry).
+        if (resp.status >= 500 && attempt === 1) {
+          lastError = new Error(`Ollama API error: ${resp.status}`);
+          console.warn(`[callOllama] HTTP ${resp.status} on attempt ${attempt}, retrying in ${OLLAMA_RETRY_DELAY_MS}ms`);
+          await new Promise((r) => setTimeout(r, OLLAMA_RETRY_DELAY_MS));
+          continue;
+        }
+        throw new Error(`Ollama API error: ${resp.status}`);
+      }
+      const data = await resp.json();
+      return data.response || "";
+    } catch (err) {
+      lastError = err;
+      if (attempt === 1 && isRetryableOllamaError(err)) {
+        console.warn(
+          `[callOllama] Attempt ${attempt} failed (${(err as Error).message}), retrying in ${OLLAMA_RETRY_DELAY_MS}ms`,
+        );
+        await new Promise((r) => setTimeout(r, OLLAMA_RETRY_DELAY_MS));
+        continue;
+      }
+      // Non-retryable or final attempt: throw user-friendly error.
+      if (isRetryableOllamaError(err)) {
+        throw new Error(
+          "AI service timed out after retry. Please try again in a moment, or switch provider in Settings.",
+        );
+      }
+      throw err;
+    }
+  }
+  // Unreachable but TS needs it.
+  throw lastError instanceof Error ? lastError : new Error("Ollama call failed");
 }
 
 export async function callOllamaJSON<T>(

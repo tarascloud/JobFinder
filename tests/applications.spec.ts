@@ -95,7 +95,8 @@ test.describe('Applications pipeline (demo mode)', () => {
     const count = await tabs.count();
     for (let i = 0; i < count; i++) {
       await tabs.nth(i).click();
-      await page.waitForTimeout(300);
+      // Wait for the tab panel to become visible instead of a fixed timeout
+      await page.waitForSelector('[role="tabpanel"]:not([hidden])', { state: 'visible' });
     }
 
     const criticalErrors = errors.filter(

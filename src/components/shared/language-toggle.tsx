@@ -34,6 +34,8 @@ export function LanguageToggle() {
         <button
           key={loc}
           onClick={() => switchLocale(loc)}
+          aria-pressed={loc === locale}
+          aria-label={`Switch language to ${localeLabels[loc]}`}
           className={`min-h-[36px] px-2 py-0.5 text-xs font-medium rounded transition-colors ${
             loc === locale
               ? "bg-background text-foreground shadow-sm"

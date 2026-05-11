@@ -1,7 +1,23 @@
-// In-memory rate limiter (per user, per action)
+import { slidingWindow } from "./rate-limit-redis";
+
+/**
+ * JF rate limiter.
+ *
+ * Internals: Redis-backed sliding window when REDIS_URL/REDIS_PASSWORD set
+ * (canon shared with PD/VS/KO via `rate-limit-redis.ts`, namespace `jf:rl`).
+ * Falls back to in-process Maps for dev/CI without Redis.
+ *
+ * Public API (`checkRateLimit`, `checkIpRateLimit`) preserved from pre-Redis
+ * version so existing callers continue to work. Distributed-aware async
+ * variants exposed for new code: `checkRateLimitAsync`, `checkIpRateLimitAsync`.
+ */
+
+const NAMESPACE = "jf:rl";
+
+// Per user, per action (hour-window)
 const limits = new Map<string, { count: number; resetAt: number }>();
 
-// IP-based rate limiter (per IP, per action, per minute window)
+// IP-based (per IP, per action, minute-window)
 const ipLimits = new Map<string, { count: number; resetAt: number }>();
 
 export function checkIpRateLimit(
@@ -38,7 +54,6 @@ export function checkRateLimit(
   const key = `${userId}:${action}`;
   const now = Date.now();
 
-  // Evict expired entries when the map grows too large
   if (limits.size > 1000) {
     for (const [k, v] of limits) {
       if (now > v.resetAt) {
@@ -62,5 +77,35 @@ export function checkRateLimit(
   }
 
   entry.count++;
+  return { allowed: true };
+}
+
+/**
+ * Async variant — Redis preferred, fail-open via slidingWindow().
+ * Use in new code that runs in distributed deployments.
+ */
+export async function checkRateLimitAsync(
+  userId: number,
+  action: string,
+  maxPerHour: number
+): Promise<{ allowed: boolean; retryAfter?: number }> {
+  const r = await slidingWindow(NAMESPACE, `u:${userId}:${action}`, {
+    limit: maxPerHour,
+    windowSeconds: 3600,
+  });
+  if (!r.allowed) return { allowed: false, retryAfter: r.retryAfterSecs };
+  return { allowed: true };
+}
+
+export async function checkIpRateLimitAsync(
+  ip: string,
+  action: string,
+  maxPerMinute: number
+): Promise<{ allowed: boolean; retryAfter?: number }> {
+  const r = await slidingWindow(NAMESPACE, `ip:${ip}:${action}`, {
+    limit: maxPerMinute,
+    windowSeconds: 60,
+  });
+  if (!r.allowed) return { allowed: false, retryAfter: r.retryAfterSecs };
   return { allowed: true };
 }
