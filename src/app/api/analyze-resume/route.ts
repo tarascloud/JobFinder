@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/api-auth";
 import { prisma } from "@/lib/db";
 import { analyzeResumeForUser } from "@/actions/profile";
-import { checkRateLimit } from "@/lib/rate-limiter";
+import { checkRateLimitAsync } from "@/lib/rate-limiter";
 
 export async function GET(request: NextRequest) {
   try {
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const user = authResult.user;
 
     // Rate limit: max 5 resume analyses per hour per user
-    const rateCheck = checkRateLimit(user.id, "analyze-resume", 5);
+    const rateCheck = await checkRateLimitAsync(user.id, "analyze-resume", 5);
     if (!rateCheck.allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded", retryAfter: rateCheck.retryAfter },

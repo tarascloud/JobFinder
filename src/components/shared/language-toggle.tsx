@@ -39,7 +39,7 @@ export function LanguageToggle() {
           className={`min-h-[36px] px-2 py-0.5 text-xs font-medium rounded transition-colors ${
             loc === locale
               ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
+              : "text-foreground/80 hover:text-foreground"
           }`}
         >
           {localeLabels[loc]}

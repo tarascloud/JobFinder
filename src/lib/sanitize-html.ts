@@ -10,6 +10,15 @@
  *   - explicit FORBID_ATTR (style + every common on* event handler)
  *   - URI scheme enforcement (http, https, mailto only)
  *   - external link rel/target hardening (noopener noreferrer nofollow)
+ *
+ * TODO(REV-08-PHASE-D-3-JF): replace this file with
+ *   `import { sanitizeHtml } from "@taras-cloud/security/sanitize-html"`
+ * once the package is published to GitHub Packages. See
+ * `vs-private/docs/adr/shared-security-package.md` §"Update 2026-05-13"
+ * for the 6 pre-conditions (publish workflow, TS->JS build, NPM_TOKEN
+ * in Docker build, DI refactor, codemod, delete-per-project-copies).
+ * Until then, keep this file byte-aligned with the scaffold canon at
+ * vs-private/packages/security/src/sanitize-html.ts.
  */
 import DOMPurify from "isomorphic-dompurify";
 

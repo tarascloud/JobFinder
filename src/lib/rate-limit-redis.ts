@@ -45,6 +45,7 @@ async function getRedis(): Promise<IoRedisClient | null> {
 
   try {
     // Dynamic import so projects without ioredis still build.
+    // @ts-expect-error — ioredis is optional; phase-2 ADR adds dep.
     const mod = await import(/* webpackIgnore: true */ "ioredis").catch(
       () => null,
     );

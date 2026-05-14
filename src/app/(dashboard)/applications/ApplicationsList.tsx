@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ListSkeleton } from "@/components/shared/list-skeleton";
 import { getApplyQueue, approveWithCoverLetter, rejectFromQueue, revertToQueued, markAsManuallyApplied, triggerAutoApply, retryAutoApply } from "@/actions/apply-queue";
 import { getApplications, getApplicationRateLimit } from "@/actions/applications";
 import { ApplicationPipeline } from "./ApplicationPipeline";
@@ -33,6 +34,7 @@ export function ApplicationsList() {
   const [autoApplyResult, setAutoApplyResult] = useState<{ id: number; success: boolean; newQuestions?: string[]; error?: string } | null>(null);
   const [batchApplying, setBatchApplying] = useState(false);
   const [batchProgress, setBatchProgress] = useState<{ done: number; total: number; succeeded: number; failed: number } | null>(null);
+  const [initialLoaded, setInitialLoaded] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -72,6 +74,7 @@ export function ApplicationsList() {
       if ("used" in rateLimitResult) {
         setRateLimit(rateLimitResult as RateLimitInfo);
       }
+      setInitialLoaded(true);
     });
   }
 
@@ -185,6 +188,18 @@ export function ApplicationsList() {
     interview: allItems.filter(a => a.status === "interview").length,
     offer: allItems.filter(a => a.status === "offer").length,
   };
+
+  if (!initialLoaded) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">{tq("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Loading applications…</p>
+        </div>
+        <ListSkeleton rows={5} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

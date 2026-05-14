@@ -37,14 +37,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Verify PDF magic bytes ("%PDF") — file.type is client-controlled and
+    // can be spoofed; we must inspect the actual bytes before persisting.
+    const bytes = await file.arrayBuffer();
+    const buf = Buffer.from(bytes);
+    if (buf.length < 4 || buf.subarray(0, 4).toString("ascii") !== "%PDF") {
+      return NextResponse.json(
+        { error: "Not a valid PDF" },
+        { status: 400 }
+      );
+    }
+
     await mkdir(DATA_RESUMES_DIR, { recursive: true });
 
     const timestamp = Date.now();
     const filename = `${user.id}-${timestamp}.pdf`;
     const filepath = path.join(DATA_RESUMES_DIR, filename);
 
-    const bytes = await file.arrayBuffer();
-    await writeFile(filepath, Buffer.from(bytes));
+    await writeFile(filepath, buf);
 
     // Serve via API route (not public/ — that's baked into Docker image at build)
     const url = `/api/resumes/${filename}`;

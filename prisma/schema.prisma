@@ -8,35 +8,35 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  image     String?
-  googleId  String?  @unique @map("google_id")
-  jfEmail   String?  @unique @map("jf_email")
-  role      String   @default("user")
-  preferredLocale String @default("en") @map("preferred_locale")
-  preferredSkin   String @default("taras") @map("preferred_skin")
-  preferredTheme  String @default("dark") @map("preferred_theme")
-  applicationLimit Int    @default(10) @map("application_limit")
-  telegramUsername String? @map("telegram_username")
-  telegramChatId  String? @map("telegram_chat_id")
-  extensionToken  String? @unique @map("extension_token")
-  createdAt DateTime @default(now()) @map("created_at")
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  name             String?
+  image            String?
+  googleId         String?  @unique @map("google_id")
+  jfEmail          String?  @unique @map("jf_email")
+  role             String   @default("user")
+  preferredLocale  String   @default("en") @map("preferred_locale")
+  preferredSkin    String   @default("taras") @map("preferred_skin")
+  preferredTheme   String   @default("dark") @map("preferred_theme")
+  applicationLimit Int      @default(10) @map("application_limit")
+  telegramUsername String?  @map("telegram_username")
+  telegramChatId   String?  @map("telegram_chat_id")
+  extensionToken   String?  @unique @map("extension_token")
+  createdAt        DateTime @default(now()) @map("created_at")
 
-  profile          UserProfile?
-  searchProfiles   SearchProfile[]
-  vacancyScores    VacancyScore[]
-  applications     Application[]
-  qaPairs          QaPair[]
-  platformAccounts PlatformAccount[]
-  aiFeedback       AiFeedback[]
-  aiSettings       UserAISettings?
-  notifications    Notification[]
-  companyResearch  CompanyResearch[]
-  userVacancies    UserVacancy[]
-  interviewStories InterviewStory[]
-  lastVacanciesSeenAt DateTime? @map("last_vacancies_seen_at")
+  profile             UserProfile?
+  searchProfiles      SearchProfile[]
+  vacancyScores       VacancyScore[]
+  applications        Application[]
+  qaPairs             QaPair[]
+  platformAccounts    PlatformAccount[]
+  aiFeedback          AiFeedback[]
+  aiSettings          UserAISettings?
+  notifications       Notification[]
+  companyResearch     CompanyResearch[]
+  userVacancies       UserVacancy[]
+  interviewStories    InterviewStory[]
+  lastVacanciesSeenAt DateTime?         @map("last_vacancies_seen_at")
 
   @@map("users")
 }
@@ -75,7 +75,7 @@ model UserProfile {
   education           String?
   educationField      String?  @map("education_field")
   educationSchool     String?  @map("education_school")
-  educationHistory    String?  @db.Text @map("education_history") // JSON array [{degree, field, school, dateFrom, dateTo}]
+  educationHistory    String?  @map("education_history") @db.Text // JSON array [{degree, field, school, dateFrom, dateTo}]
   currentCompany      String?  @map("current_company")
   currentTitle        String?  @map("current_title")
   experience          String?  @db.Text // JSON array [{company, title, dateFrom, dateTo, description}]
@@ -95,31 +95,31 @@ model UserProfile {
 }
 
 model SearchProfile {
-  id                 Int      @id @default(autoincrement())
-  userId             Int      @map("user_id")
+  id                 Int       @id @default(autoincrement())
+  userId             Int       @map("user_id")
   name               String
-  isActive           Boolean  @default(true) @map("is_active")
-  jobTitles          String[] @map("job_titles")
-  minSalary          Int?     @map("min_salary")
+  isActive           Boolean   @default(true) @map("is_active")
+  jobTitles          String[]  @map("job_titles")
+  minSalary          Int?      @map("min_salary")
   currency           String?
-  employmentTypes    String[] @map("employment_types")
-  remoteOnly         Boolean  @default(true) @map("remote_only")
+  employmentTypes    String[]  @map("employment_types")
+  remoteOnly         Boolean   @default(true) @map("remote_only")
   geographies        String[]
-  excludedCompanies  String[] @map("excluded_companies")
-  excludedIndustries String[] @map("excluded_industries")
-  stackFilter        String[] @map("stack_filter")
-  applyHoursStart    Int      @default(18) @map("apply_hours_start")
-  applyHoursEnd      Int      @default(22) @map("apply_hours_end")
-  applyTimezone      String   @default("Europe/Madrid") @map("apply_timezone")
-  maxDailyApplies    Int      @default(20) @map("max_daily_applies")
-  autoApply          Boolean  @default(false) @map("auto_apply")
-  scrapeSchedule     String   @default("daily") @map("scrape_schedule")
-  source             String   @default("manual")
-  skills             String[] @default([])
-  preferredPlatforms String[] @default([]) @map("preferred_platforms")
-  excludedKeywords   String[] @default([]) @map("excluded_keywords")
+  excludedCompanies  String[]  @map("excluded_companies")
+  excludedIndustries String[]  @map("excluded_industries")
+  stackFilter        String[]  @map("stack_filter")
+  applyHoursStart    Int       @default(18) @map("apply_hours_start")
+  applyHoursEnd      Int       @default(22) @map("apply_hours_end")
+  applyTimezone      String    @default("Europe/Madrid") @map("apply_timezone")
+  maxDailyApplies    Int       @default(20) @map("max_daily_applies")
+  autoApply          Boolean   @default(false) @map("auto_apply")
+  scrapeSchedule     String    @default("daily") @map("scrape_schedule")
+  source             String    @default("manual")
+  skills             String[]  @default([])
+  preferredPlatforms String[]  @default([]) @map("preferred_platforms")
+  excludedKeywords   String[]  @default([]) @map("excluded_keywords")
   lastScrapedAt      DateTime? @map("last_scraped_at")
-  createdAt          DateTime @default(now()) @map("created_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   vacancyScores VacancyScore[]
@@ -150,18 +150,18 @@ model Vacancy {
   language       String?
   postedAt       DateTime? @map("posted_at")
   scrapedAt      DateTime  @default(now()) @map("scraped_at")
-  rawHtml        String?   @db.Text @map("raw_html")
+  rawHtml        String?   @map("raw_html") @db.Text
   isDuplicateOf  Int?      @map("is_duplicate_of")
   tagStack       String[]  @default([]) @map("tag_stack")
   tagLevel       String?   @map("tag_level")
   tagIndustry    String?   @map("tag_industry")
   tagTeamSize    String?   @map("tag_team_size")
 
-  duplicateOf   Vacancy?  @relation("VacancyDuplicates", fields: [isDuplicateOf], references: [id], onDelete: SetNull)
-  duplicates    Vacancy[] @relation("VacancyDuplicates")
+  duplicateOf Vacancy?  @relation("VacancyDuplicates", fields: [isDuplicateOf], references: [id], onDelete: SetNull)
+  duplicates  Vacancy[] @relation("VacancyDuplicates")
 
-  isArchived    Boolean   @default(false) @map("is_archived")
-  archivedAt    DateTime? @map("archived_at")
+  isArchived Boolean   @default(false) @map("is_archived")
+  archivedAt DateTime? @map("archived_at")
 
   vacancyScores VacancyScore[]
   applications  Application[]
@@ -198,21 +198,21 @@ model VacancyScore {
 }
 
 model Application {
-  id              Int       @id @default(autoincrement())
-  userId          Int       @map("user_id")
-  vacancyId       Int       @map("vacancy_id")
-  searchProfileId Int       @map("search_profile_id")
-  status          String    @default("queued")
-  coverLetter     String?   @db.Text @map("cover_letter")
-  coverLetterVariant String? @map("cover_letter_variant")
-  interviewPrep   String?   @db.Text @map("interview_prep")
-  appliedAt       DateTime? @map("applied_at")
-  failedAt        DateTime? @map("failed_at")
-  errorMessage    String?   @map("error_message")
-  screenshotPath  String?   @map("screenshot_path")
-  applyLog        String?   @db.Text @map("apply_log")
-  appliedWithPersonalAccount Boolean @default(false) @map("applied_with_personal_account")
-  createdAt       DateTime  @default(now()) @map("created_at")
+  id                         Int       @id @default(autoincrement())
+  userId                     Int       @map("user_id")
+  vacancyId                  Int       @map("vacancy_id")
+  searchProfileId            Int       @map("search_profile_id")
+  status                     String    @default("queued")
+  coverLetter                String?   @map("cover_letter") @db.Text
+  coverLetterVariant         String?   @map("cover_letter_variant")
+  interviewPrep              String?   @map("interview_prep") @db.Text
+  appliedAt                  DateTime? @map("applied_at")
+  failedAt                   DateTime? @map("failed_at")
+  errorMessage               String?   @map("error_message")
+  screenshotPath             String?   @map("screenshot_path")
+  applyLog                   String?   @map("apply_log") @db.Text
+  appliedWithPersonalAccount Boolean   @default(false) @map("applied_with_personal_account")
+  createdAt                  DateTime  @default(now()) @map("created_at")
 
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   vacancy       Vacancy       @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
@@ -252,12 +252,12 @@ model PlatformAccount {
   authType          String    @default("password") @map("auth_type")
   email             String?
   passwordEncrypted String?   @map("password_encrypted")
-  sessionData       String?   @db.Text @map("session_data")
+  sessionData       String?   @map("session_data") @db.Text
   lastLogin         DateTime? @map("last_login")
   status            String    @default("active")
   // Auto-registration fields
   registeredAt      DateTime? @map("registered_at")
-  registrationLog   String?   @db.Text @map("registration_log")
+  registrationLog   String?   @map("registration_log") @db.Text
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -268,11 +268,11 @@ model PlatformAccount {
 model AiFeedback {
   id        Int      @id @default(autoincrement())
   userId    Int      @map("user_id")
-  field     String   // "profile.headline", "profile.summary", "cover_letter", "qa.answer", etc.
+  field     String // "profile.headline", "profile.summary", "cover_letter", "qa.answer", etc.
   context   String?  @db.Text // the prompt/input that generated the content
   content   String   @db.Text // the AI-generated content
-  rating    String   // "like" or "dislike"
-  comment   String?  // optional user comment on why
+  rating    String // "like" or "dislike"
+  comment   String? // optional user comment on why
   createdAt DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -282,13 +282,13 @@ model AiFeedback {
 }
 
 model UserAISettings {
-  userId        Int      @id @map("user_id")
-  provider      String   @default("ollama") // ollama, gemini, groq
-  ollamaUrl     String   @default("http://ollama:11434") @map("ollama_url")
-  ollamaModel   String   @default("gemma4:e4b") @map("ollama_model")
-  geminiApiKey  String?  @map("gemini_api_key")
-  groqApiKey    String?  @map("groq_api_key")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  userId       Int      @id @map("user_id")
+  provider     String   @default("ollama") // ollama, gemini, groq
+  ollamaUrl    String   @default("http://ollama:11434") @map("ollama_url")
+  ollamaModel  String   @default("gemma4:e4b") @map("ollama_model")
+  geminiApiKey String?  @map("gemini_api_key")
+  groqApiKey   String?  @map("groq_api_key")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -298,10 +298,10 @@ model UserAISettings {
 model Notification {
   id        Int      @id @default(autoincrement())
   userId    Int      @map("user_id")
-  type      String   // "new_vacancies", "application_response", "interview_scheduled", "qa_pending", "scrape_complete"
+  type      String // "new_vacancies", "application_response", "interview_scheduled", "qa_pending", "scrape_complete"
   title     String
   message   String
-  link      String?  // URL to navigate to
+  link      String? // URL to navigate to
   read      Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -331,14 +331,17 @@ model EmailResponse {
   fromEmail     String   @map("from_email")
   subject       String
   body          String?  @db.Text
-  bodyText      String?  @db.Text @map("body_text")
-  bodyHtml      String?  @db.Text @map("body_html")
+  bodyText      String?  @map("body_text") @db.Text
+  bodyHtml      String?  @map("body_html") @db.Text
   messageId     String?  @map("message_id")
   responseType  String   @map("response_type") // positive, rejection, interview, info
   matched       Boolean  @default(false)
   read          Boolean  @default(false)
   receivedAt    DateTime @default(now()) @map("received_at")
 
+  @@index([userId])
+  @@index([applicationId])
+  @@index([userId, receivedAt(sort: Desc)])
   @@map("email_responses")
 }
 
@@ -348,8 +351,8 @@ model AdminEmail {
   toEmail   String   @map("to_email")
   subject   String
   body      String   @db.Text
-  bodyText  String?  @db.Text @map("body_text")
-  bodyHtml  String?  @db.Text @map("body_html")
+  bodyText  String?  @map("body_text") @db.Text
+  bodyHtml  String?  @map("body_html") @db.Text
   messageId String?  @map("message_id")
   platform  String?
   category  String   @default("other") // registration, confirmation, notification, other

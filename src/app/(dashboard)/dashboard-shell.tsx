@@ -160,8 +160,8 @@ export default function DashboardShell({
   return (
     <div className="flex h-screen overflow-hidden">
       <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:rounded focus:shadow-lg"
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:outline focus:outline-2 focus:outline-primary"
       >
         Skip to content
       </a>
@@ -236,7 +236,7 @@ export default function DashboardShell({
         </header>
 
         {/* Page content */}
-        <main id="main" className="flex-1 overflow-y-auto p-4 pb-20 md:p-6 md:pb-6">{children}</main>
+        <main id="main-content" className="flex-1 overflow-y-auto p-4 pb-20 md:p-6 md:pb-6">{children}</main>
       </div>
 
       {/* Mobile bottom navigation */}

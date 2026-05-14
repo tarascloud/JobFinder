@@ -151,34 +151,42 @@ export async function executeApplyForUser(applicationId: number, userId: number)
 
       log.push('Application status updated to "pending_qa"');
 
-      // Save new questions to Q&A base
+      // Save new questions to Q&A base (batched to avoid N+1)
       let newQuestionsCount = 0;
       if (result.newQuestions && result.newQuestions.length > 0) {
-        for (const question of result.newQuestions) {
-          const existing = await prisma.qaPair.findFirst({
-            where: {
-              userId,
-              question: { equals: question, mode: "insensitive" },
-            },
-          });
+        const existingRows = await prisma.qaPair.findMany({
+          where: {
+            userId,
+            question: { in: result.newQuestions, mode: "insensitive" },
+          },
+          select: { question: true },
+        });
+        const existingSet = new Set(
+          existingRows.map((r) => r.question.toLowerCase())
+        );
 
-          if (!existing) {
-            // Check if AI provided a suggested answer for this question
+        const toCreate = result.newQuestions
+          .filter((q) => !existingSet.has(q.toLowerCase()))
+          .map((question) => {
             const suggested = result.suggestedAnswers?.find(
               (s) => s.question === question
             );
-            await prisma.qaPair.create({
-              data: {
-                userId,
-                question,
-                answer: suggested?.answer ?? null,
-                sourceVacancyId: application.vacancyId,
-                category: "screening",
-                source: suggested ? "ai" : "manual",
-              },
-            });
-            newQuestionsCount++;
-          }
+            return {
+              userId,
+              question,
+              answer: suggested?.answer ?? null,
+              sourceVacancyId: application.vacancyId,
+              category: "screening",
+              source: suggested ? "ai" : "manual",
+            };
+          });
+
+        if (toCreate.length > 0) {
+          const created = await prisma.qaPair.createMany({
+            data: toCreate,
+            skipDuplicates: true,
+          });
+          newQuestionsCount = created.count;
         }
       }
 
@@ -228,36 +236,44 @@ export async function executeApplyForUser(applicationId: number, userId: number)
 
     log.push(`Application status updated to "${isSuccess ? "applied" : "failed"}"`);
 
-    // 8. If new questions found, create QaPair entries
+    // 8. If new questions found, create QaPair entries (batched to avoid N+1)
     let newQuestionsCount = 0;
     if (result.newQuestions && result.newQuestions.length > 0) {
       log.push(`Found ${result.newQuestions.length} new screening question(s)`);
 
-      for (const question of result.newQuestions) {
-        const existing = await prisma.qaPair.findFirst({
-          where: {
-            userId,
-            question: { equals: question, mode: "insensitive" },
-          },
-        });
+      const existingRows = await prisma.qaPair.findMany({
+        where: {
+          userId,
+          question: { in: result.newQuestions, mode: "insensitive" },
+        },
+        select: { question: true },
+      });
+      const existingSet = new Set(
+        existingRows.map((r) => r.question.toLowerCase())
+      );
 
-        if (!existing) {
-          // Check if AI provided a suggested answer for this question
+      const toCreate = result.newQuestions
+        .filter((q) => !existingSet.has(q.toLowerCase()))
+        .map((question) => {
           const suggested = result.suggestedAnswers?.find(
             (s) => s.question === question
           );
-          await prisma.qaPair.create({
-            data: {
-              userId,
-              question,
-              answer: suggested?.answer ?? null,
-              sourceVacancyId: application.vacancyId,
-              category: "screening",
-              source: suggested ? "ai" : "manual",
-            },
-          });
-          newQuestionsCount++;
-        }
+          return {
+            userId,
+            question,
+            answer: suggested?.answer ?? null,
+            sourceVacancyId: application.vacancyId,
+            category: "screening",
+            source: suggested ? "ai" : "manual",
+          };
+        });
+
+      if (toCreate.length > 0) {
+        const created = await prisma.qaPair.createMany({
+          data: toCreate,
+          skipDuplicates: true,
+        });
+        newQuestionsCount = created.count;
       }
 
       log.push("New questions saved to Q&A base for review");

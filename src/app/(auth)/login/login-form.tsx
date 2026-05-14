@@ -29,7 +29,14 @@ export function LoginForm({ githubEnabled }: { githubEnabled: boolean }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:outline focus:outline-2 focus:outline-primary"
+      >
+        Skip to content
+      </a>
+      <main id="main-content" className="w-full max-w-md">
+      <Card className="w-full">
         <CardContent className="p-8 text-center space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-primary">{t("title")}</h1>
@@ -126,6 +133,7 @@ export function LoginForm({ githubEnabled }: { githubEnabled: boolean }) {
           </Link>
         </CardContent>
       </Card>
+      </main>
     </div>
   );
 }

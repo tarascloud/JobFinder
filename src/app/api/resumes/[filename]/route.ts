@@ -64,21 +64,36 @@ export async function GET(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
+    // Only serve PDFs. Upload route writes "{userId}-{ts}.pdf" — any other
+    // extension means the file is not one we issued. Reject early instead of
+    // serving as text/html or octet-stream (mitigates XSS via stored HTML
+    // and content sniffing).
+    const ext = path.extname(filename).toLowerCase();
+    if (ext !== ".pdf") {
+      return NextResponse.json(
+        { error: "Unsupported file type" },
+        { status: 400 }
+      );
+    }
+
     const buffer = await readFile(filePath);
 
-    const ext = path.extname(filename).toLowerCase();
-    const contentType =
-      ext === ".pdf"
-        ? "application/pdf"
-        : ext === ".html"
-          ? "text/html"
-          : "application/octet-stream";
+    // Verify PDF magic bytes before serving — defense in depth against any
+    // non-PDF that may have ended up on disk through a different path.
+    if (buffer.length < 4 || buffer.subarray(0, 4).toString("ascii") !== "%PDF") {
+      return NextResponse.json(
+        { error: "Stored file is not a valid PDF" },
+        { status: 500 }
+      );
+    }
 
     return new NextResponse(buffer, {
       status: 200,
       headers: {
-        "Content-Type": contentType,
+        "Content-Type": "application/pdf",
         "Content-Length": fileStat.size.toString(),
+        "Content-Disposition": `inline; filename="${filename}"`,
+        "X-Content-Type-Options": "nosniff",
         "Cache-Control": "private, max-age=86400",
       },
     });

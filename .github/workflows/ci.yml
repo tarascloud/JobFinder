@@ -7,6 +7,34 @@ on:
 permissions:
   contents: read
 jobs:
+  # REV-20260512-042: gitleaks secrets scan
+  secrets-scan:
+    name: Secrets scan (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # REV-20260512-042: npm dependency vulnerability audit
+  npm-audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
   test:
     runs-on: ubuntu-latest
     steps:

@@ -13,6 +13,7 @@ services:
     image: jobfinder:latest
     container_name: jobfinder
     mem_limit: 1g
+    pids_limit: 200  # DEV-20260512-0018
     restart: unless-stopped
     ports:
       - "127.0.0.1:3456:3456"

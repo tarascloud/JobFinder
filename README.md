@@ -61,6 +61,31 @@ npx prisma generate
 npm run dev
 ```
 
+### Tests
+
+Unit tests (Vitest) run against in-process mocks:
+
+```bash
+npx vitest run                              # all unit tests
+npx vitest run tests/unit/<name>.test.ts    # one file
+```
+
+E2E tests (Playwright) default to `http://localhost:3456`. **Never run mutating
+tests against prod** — they create/delete data and would corrupt
+`jobfinder.taras.cloud`. Override the target with `TEST_BASE_URL`:
+
+```bash
+npm run dev                                    # in another terminal
+npx playwright test                            # local dev (default)
+TEST_BASE_URL=http://localhost:3457 npx playwright test  # custom local port
+npx playwright test --project=smoke            # read-only prod smoke
+                                               # (only runs tests/smoke/*.spec.ts)
+```
+
+The `smoke` project is reserved for read-only checks against
+`https://jobfinder.taras.cloud`. Only place tests under `tests/smoke/` if they
+do not write to the database.
+
 ## Tech Stack
 
 - **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui

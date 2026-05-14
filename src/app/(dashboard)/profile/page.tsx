@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Mail, Copy, Check, Plus, Trash2, Settings, RefreshCw, MessageCircle, CheckCircle2, AlertCircle } from "lucide-react";
+import { Mail, Copy, Check, Settings, RefreshCw, MessageCircle, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { ProfileSectionSkeleton } from "@/components/shared/list-skeleton";
 import { updateProfile, type AnalyzedProfile, type ExperienceEntry, type EducationEntry } from "@/actions/profile";
 import { getApplyEmailInfo } from "@/actions/apply-email";
 import { resetOnboarding } from "@/actions/onboarding";
@@ -20,6 +21,9 @@ import LanguagesSection, {
   serializeLanguages,
 } from "./languages-section";
 import ProfileForm from "./profile-form";
+import PersonalInfoSection from "./personal-info-section";
+import EducationSection from "./education-section";
+import ExperienceSection from "./experience-section";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -198,6 +202,18 @@ export default function ProfilePage() {
     } catch {
       // Stay on the profile page if save fails
     }
+  }
+
+  if (!profileLoaded) {
+    return (
+      <div className="space-y-6 max-w-3xl">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Loading profile…</p>
+        </div>
+        <ProfileSectionSkeleton />
+      </div>
+    );
   }
 
   return (
@@ -405,203 +421,38 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
-      {/* Personal Info (LinkedIn Easy Apply) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("personal_info")}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-muted-foreground mb-1.5">{t("first_name")}</label>
-              <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-sm text-muted-foreground mb-1.5">{t("last_name")}</label>
-              <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("phone")}</label>
-            <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+34 612 345 678" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("location")}</label>
-            <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Madrid, Spain" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("linkedin_url")}</label>
-            <Input type="url" value={linkedinUrl} onChange={(e) => setLinkedinUrl(e.target.value)} placeholder="https://linkedin.com/in/yourname" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("github_url")}</label>
-            <Input type="url" value={githubUrl} onChange={(e) => setGithubUrl(e.target.value)} placeholder="https://github.com/yourname" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("portfolio_url")}</label>
-            <Input type="url" value={dedicatedPortfolioUrl} onChange={(e) => setDedicatedPortfolioUrl(e.target.value)} placeholder="https://yoursite.dev" />
-          </div>
-        </CardContent>
-      </Card>
+      <PersonalInfoSection
+        firstName={firstName}
+        setFirstName={setFirstName}
+        lastName={lastName}
+        setLastName={setLastName}
+        phone={phone}
+        setPhone={setPhone}
+        location={location}
+        setLocation={setLocation}
+        linkedinUrl={linkedinUrl}
+        setLinkedinUrl={setLinkedinUrl}
+        githubUrl={githubUrl}
+        setGithubUrl={setGithubUrl}
+        dedicatedPortfolioUrl={dedicatedPortfolioUrl}
+        setDedicatedPortfolioUrl={setDedicatedPortfolioUrl}
+      />
 
-      {/* Education */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("education_title")}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("education_degree")}</label>
-            <select
-              value={education}
-              onChange={(e) => setEducation(e.target.value)}
-              className="w-full rounded-lg border border-input bg-muted px-3 py-2 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
-            >
-              <option value="">{t("select_option")}</option>
-              <option value="High School">High School</option>
-              <option value="Associate">Associate</option>
-              <option value="Bachelor's">Bachelor&apos;s</option>
-              <option value="Master's">Master&apos;s</option>
-              <option value="PhD">PhD</option>
-              <option value="MBA">MBA</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("education_field")}</label>
-            <Input value={educationField} onChange={(e) => setEducationField(e.target.value)} placeholder="Computer Science, Engineering, etc." />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{t("education_school")}</label>
-            <Input value={educationSchool} onChange={(e) => setEducationSchool(e.target.value)} />
-          </div>
+      <EducationSection
+        education={education}
+        setEducation={setEducation}
+        educationField={educationField}
+        setEducationField={setEducationField}
+        educationSchool={educationSchool}
+        setEducationSchool={setEducationSchool}
+        educationHistory={educationHistory}
+        setEducationHistory={setEducationHistory}
+      />
 
-          {/* Education History (multiple entries) */}
-          <div className="border-t border-border pt-4 mt-4">
-            <div className="flex items-center justify-between mb-3">
-              <label className="block text-sm font-medium text-foreground">{t("education_history")}</label>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setEducationHistory([...educationHistory, { degree: "", field: "", school: "", dateFrom: "", dateTo: "" }])}
-              >
-                <Plus className="h-3 w-3 mr-1" /> {t("add")}
-              </Button>
-            </div>
-            {educationHistory.map((entry, idx) => (
-              <div key={idx} className="rounded-lg border border-border p-3 mb-3 space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">#{idx + 1}</span>
-                  <button
-                    type="button"
-                    onClick={() => setEducationHistory(educationHistory.filter((_, i) => i !== idx))}
-                    className="text-destructive hover:text-destructive/80"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Input
-                    placeholder={t("education_degree")}
-                    value={entry.degree}
-                    onChange={(e) => { const u = [...educationHistory]; u[idx] = { ...u[idx], degree: e.target.value }; setEducationHistory(u); }}
-                  />
-                  <Input
-                    placeholder={t("education_field")}
-                    value={entry.field}
-                    onChange={(e) => { const u = [...educationHistory]; u[idx] = { ...u[idx], field: e.target.value }; setEducationHistory(u); }}
-                  />
-                </div>
-                <Input
-                  placeholder={t("education_school")}
-                  value={entry.school}
-                  onChange={(e) => { const u = [...educationHistory]; u[idx] = { ...u[idx], school: e.target.value }; setEducationHistory(u); }}
-                />
-                <div className="grid grid-cols-2 gap-2">
-                  <Input
-                    placeholder={t("date_from")}
-                    value={entry.dateFrom}
-                    onChange={(e) => { const u = [...educationHistory]; u[idx] = { ...u[idx], dateFrom: e.target.value }; setEducationHistory(u); }}
-                  />
-                  <Input
-                    placeholder={t("date_to")}
-                    value={entry.dateTo}
-                    onChange={(e) => { const u = [...educationHistory]; u[idx] = { ...u[idx], dateTo: e.target.value }; setEducationHistory(u); }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Work Experience */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>{t("experience_title")}</CardTitle>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setExperience([...experience, { company: "", title: "", dateFrom: "", dateTo: "", description: "" }])}
-            >
-              <Plus className="h-3 w-3 mr-1" /> {t("add")}
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {experience.length === 0 && (
-            <p className="text-sm text-muted-foreground">{t("no_experience")}</p>
-          )}
-          {experience.map((entry, idx) => (
-            <div key={idx} className="rounded-lg border border-border p-3 space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">#{idx + 1}</span>
-                <button
-                  type="button"
-                  onClick={() => setExperience(experience.filter((_, i) => i !== idx))}
-                  className="text-destructive hover:text-destructive/80"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  placeholder={t("exp_company")}
-                  value={entry.company}
-                  onChange={(e) => { const u = [...experience]; u[idx] = { ...u[idx], company: e.target.value }; setExperience(u); }}
-                />
-                <Input
-                  placeholder={t("exp_title")}
-                  value={entry.title}
-                  onChange={(e) => { const u = [...experience]; u[idx] = { ...u[idx], title: e.target.value }; setExperience(u); }}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  placeholder={t("date_from")}
-                  value={entry.dateFrom}
-                  onChange={(e) => { const u = [...experience]; u[idx] = { ...u[idx], dateFrom: e.target.value }; setExperience(u); }}
-                />
-                <Input
-                  placeholder={t("date_to")}
-                  value={entry.dateTo}
-                  onChange={(e) => { const u = [...experience]; u[idx] = { ...u[idx], dateTo: e.target.value }; setExperience(u); }}
-                />
-              </div>
-              <textarea
-                placeholder={t("exp_description")}
-                value={entry.description}
-                onChange={(e) => { const u = [...experience]; u[idx] = { ...u[idx], description: e.target.value }; setExperience(u); }}
-                rows={2}
-                className="w-full rounded-lg border border-input bg-muted px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
-              />
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+      <ExperienceSection
+        experience={experience}
+        setExperience={setExperience}
+      />
 
       {/* Work Info */}
       <Card>

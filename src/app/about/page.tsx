@@ -53,7 +53,7 @@ function FeatureCard({
         {icon}
       </div>
       <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
-      <p className="text-sm leading-relaxed text-[#9a9ea6]">{desc}</p>
+      <p className="text-sm leading-relaxed text-[var(--landing-text-muted)]">{desc}</p>
     </div>
   );
 }
@@ -70,7 +70,7 @@ function TechBadge({
   name: string;
 }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-[#9a9ea6]">
+    <span className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-[var(--landing-text-muted)]">
       {icon}
       {name}
     </span>
@@ -83,7 +83,7 @@ function TechBadge({
 
 function PlatformBadge({ name }: { name: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-[#9a9ea6] transition-colors hover:border-blue-400/30 hover:text-white">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-[var(--landing-text-muted)] transition-colors hover:border-blue-400/30 hover:text-white">
       <Globe className="h-3 w-3 text-blue-400/60" />
       {name}
     </span>
@@ -120,6 +120,13 @@ export default async function AboutPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white selection:bg-blue-500/20">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:outline focus:outline-2 focus:outline-primary"
+      >
+        Skip to content
+      </a>
+      <main id="main-content">
       {/* Back to login */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 pt-6">
         <a
@@ -155,7 +162,7 @@ export default async function AboutPage() {
             </span>
           </h1>
 
-          <p className="mb-8 text-lg text-[#9a9ea6] sm:text-xl">
+          <p className="mb-8 text-lg text-[var(--landing-text-muted)] sm:text-xl">
             {t("tagline")}
           </p>
 
@@ -208,7 +215,7 @@ export default async function AboutPage() {
             <h2 className="mb-3 text-3xl font-bold sm:text-4xl">
               {t("features_title")}
             </h2>
-            <p className="text-[#9a9ea6]">
+            <p className="text-[var(--landing-text-muted)]">
               {t("features_subtitle")}
             </p>
           </div>
@@ -233,7 +240,7 @@ export default async function AboutPage() {
             <h2 className="mb-3 text-3xl font-bold sm:text-4xl">
               {t("how_title")}
             </h2>
-            <p className="text-[#9a9ea6]">
+            <p className="text-[var(--landing-text-muted)]">
               {t("how_subtitle")}
             </p>
           </div>
@@ -253,7 +260,7 @@ export default async function AboutPage() {
                   <h3 className="mb-1 font-semibold text-white/90">
                     {t(`step_${step}_title`)}
                   </h3>
-                  <p className="text-sm text-[#9a9ea6]">
+                  <p className="text-sm text-[var(--landing-text-muted)]">
                     {t(`step_${step}_desc`)}
                   </p>
                 </div>
@@ -270,7 +277,7 @@ export default async function AboutPage() {
             <h2 className="mb-3 text-3xl font-bold sm:text-4xl">
               {t("platforms_title")}
             </h2>
-            <p className="text-[#9a9ea6]">
+            <p className="text-[var(--landing-text-muted)]">
               {t("platforms_subtitle")}
             </p>
           </div>
@@ -329,7 +336,7 @@ export default async function AboutPage() {
                     {t("selfhosted_badge")}
                   </span>
                 </div>
-                <p className="text-[#9a9ea6]">
+                <p className="text-[var(--landing-text-muted)]">
                   {t("selfhosted_desc")}
                 </p>
               </div>
@@ -342,7 +349,7 @@ export default async function AboutPage() {
                   <p className="text-sm font-medium text-white/80">
                     {t("selfhosted_privacy_title")}
                   </p>
-                  <p className="text-xs text-[#9a9ea6]">
+                  <p className="text-xs text-[var(--landing-text-muted)]">
                     {t("selfhosted_privacy_desc")}
                   </p>
                 </div>
@@ -353,7 +360,7 @@ export default async function AboutPage() {
                   <p className="text-sm font-medium text-white/80">
                     {t("selfhosted_control_title")}
                   </p>
-                  <p className="text-xs text-[#9a9ea6]">
+                  <p className="text-xs text-[var(--landing-text-muted)]">
                     {t("selfhosted_control_desc")}
                   </p>
                 </div>
@@ -364,7 +371,7 @@ export default async function AboutPage() {
                   <p className="text-sm font-medium text-white/80">
                     {t("selfhosted_free_title")}
                   </p>
-                  <p className="text-xs text-[#9a9ea6]">
+                  <p className="text-xs text-[var(--landing-text-muted)]">
                     {t("selfhosted_free_desc")}
                   </p>
                 </div>
@@ -401,13 +408,14 @@ export default async function AboutPage() {
               <p className="font-semibold text-white/90">
                 {t("pwa_title")}
               </p>
-              <p className="text-sm text-[#9a9ea6]">
+              <p className="text-sm text-[var(--landing-text-muted)]">
                 {t("pwa_desc")}
               </p>
             </div>
           </div>
         </div>
       </section>
+      </main>
 
       {/* ==================== FOOTER ==================== */}
       <footer className="border-t border-white/[0.06] py-12">

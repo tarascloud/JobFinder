@@ -20,6 +20,11 @@ const limits = new Map<string, { count: number; resetAt: number }>();
 // IP-based (per IP, per action, minute-window)
 const ipLimits = new Map<string, { count: number; resetAt: number }>();
 
+/**
+ * @deprecated Use `checkIpRateLimitAsync` (Redis-backed, distributed-safe).
+ * In-memory variant kept only for legacy callers and dev/CI without Redis.
+ * Will be removed once all callers migrate.
+ */
 export function checkIpRateLimit(
   ip: string,
   action: string,
@@ -46,6 +51,11 @@ export function checkIpRateLimit(
   return { allowed: true };
 }
 
+/**
+ * @deprecated Use `checkRateLimitAsync` (Redis-backed, distributed-safe).
+ * In-memory variant kept only for legacy callers and dev/CI without Redis.
+ * Will be removed once all callers migrate.
+ */
 export function checkRateLimit(
   userId: number,
   action: string,

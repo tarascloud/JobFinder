@@ -111,6 +111,12 @@ export async function LandingPage() {
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:outline focus:outline-2 focus:outline-primary"
+      >
+        Skip to content
+      </a>
       {/* Navigation */}
       <nav className="fixed top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -136,6 +142,7 @@ export async function LandingPage() {
         </div>
       </nav>
 
+      <main id="main-content">
       {/* Hero -- left-aligned split screen */}
       <section className="relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
         {/* Background glow -- offset to the right */}
@@ -187,8 +194,9 @@ export async function LandingPage() {
             </div>
           </div>
 
-          {/* Right: abstract dashboard preview */}
-          <div className="hidden md:block">
+          {/* Right: abstract dashboard preview — decorative chrome window,
+              hidden from screen readers (DES-20260512-0010). */}
+          <div className="hidden md:block" aria-hidden="true">
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
               {/* Mock header */}
               <div className="flex items-center gap-3 mb-5">
@@ -228,8 +236,13 @@ export async function LandingPage() {
       </section>
 
       {/* Features -- 2-column zig-zag */}
-      <section className="py-24">
+      <section className="py-24" aria-labelledby="features-heading">
         <div className="mx-auto max-w-6xl space-y-20 px-6">
+          {/* Visually hidden section heading so the H1 -> H3 jump becomes
+              H1 -> H2 -> H3 (DES-20260512-0009, WCAG SC 1.3.1). */}
+          <h2 id="features-heading" className="sr-only">
+            Features
+          </h2>
           <FeatureRow
             icon={<Brain className="h-5 w-5" />}
             title="AI Scoring"
@@ -368,6 +381,7 @@ export async function LandingPage() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer className="border-t border-border py-12">

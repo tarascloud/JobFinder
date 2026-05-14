@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { scrapePlatform } from "@/lib/scrapers";
 import type { ScrapedVacancy, SearchCriteria } from "@/lib/scrapers/types";
-import { checkRateLimit } from "@/lib/rate-limiter";
+import { checkRateLimitAsync } from "@/lib/rate-limiter";
 import { saveVacancy, loadExistingVacanciesForDedup } from "@/lib/save-vacancy";
 
 // Re-export scrapers list for sequential streaming
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Rate limit: max 3 scrapes per hour per user
-  const rateCheck = checkRateLimit(user.id, "scrape", 3);
+  const rateCheck = await checkRateLimitAsync(user.id, "scrape", 3);
   if (!rateCheck.allowed) {
     return new Response(
       JSON.stringify({
@@ -155,9 +155,22 @@ export async function POST(request: NextRequest) {
               totalDuplicates++;
             }
           } catch (err) {
+            // JF-RUNTIME-FIX-20260512: include full error context so root cause
+            // is visible in status logs (previously only err.message was logged,
+            // which produced empty `[scrape-stream] Save error:` entries for
+            // non-Error throws or errors with empty message).
+            const errInfo =
+              err instanceof Error
+                ? {
+                    name: err.name,
+                    message: err.message,
+                    code: (err as { code?: string }).code,
+                    meta: (err as { meta?: unknown }).meta,
+                  }
+                : { raw: err };
             console.error(
-              `[scrape-stream] Save error:`,
-              err instanceof Error ? err.message : err
+              `[scrape-stream] Save error (vacancy ${vacancy.platform}/${vacancy.externalId}):`,
+              JSON.stringify(errInfo)
             );
           }
         }
