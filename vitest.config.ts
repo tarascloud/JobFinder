@@ -19,7 +19,7 @@ export default defineConfig({
       },
     },
     coverage: {
-      provider: "@vitest/coverage-v8",
+      provider: "v8",
       thresholds: {
         lines: 60,
         functions: 60,
