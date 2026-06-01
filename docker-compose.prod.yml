@@ -15,6 +15,11 @@ services:
     mem_limit: 1g
     pids_limit: 200  # DEV-20260512-0018
     restart: unless-stopped
+    # DEV-20260601-0011: container hardening — no-new-privileges + cap_drop ALL
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     ports:
       - "127.0.0.1:3456:3456"
     # depends_on pg from infra compose

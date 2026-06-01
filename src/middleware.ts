@@ -13,6 +13,8 @@ const PUBLIC_PATHS = [
   "/api/status",
   "/api/email-response",
   "/api/telegram-webhook",
+  "/api/scrape",        // bearer-token auth (JOBFINDER_CRON_SECRET), no session
+  "/api/apply",         // bearer-token auth (JOBFINDER_CRON_SECRET), no session
 ];
 
 // Auth endpoints subject to rate limiting
@@ -96,6 +98,8 @@ const CSRF_EXEMPT_PREFIXES = [
   "/api/status",
   "/api/email-response",
   "/api/telegram-webhook",
+  "/api/scrape",        // cron bearer-token auth, no cookie session
+  "/api/apply",         // cron bearer-token auth, no cookie session
 ];
 
 function csrfExempt(pathname: string): boolean {

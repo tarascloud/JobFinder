@@ -40,16 +40,18 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://jobfinder.taras.cloud"),
   alternates: {
     canonical: "/",
-    // SMM-20260507-0013: hreflang for ua/en + x-default. JF UI strings exist
-    // in next-intl en/uk; same URL serves both via cookie negotiation.
+    // SMM-20260601-0014: removed uk hreflang — JF uses cookie-based locale
+    // negotiation (no URL segments), so en and uk mapped to the same URL.
+    // Duplicate-URL hreflang gives no SEO benefit and can confuse Google.
+    // If URL-segment routing (/en/, /uk/) is added later, restore hreflang.
     languages: {
       en: "https://jobfinder.taras.cloud",
-      uk: "https://jobfinder.taras.cloud",
       "x-default": "https://jobfinder.taras.cloud",
     },
   },
   openGraph: {
     type: "website",
+    locale: "en_US",
     siteName: "JobFinder",
     title: "JobFinder — AI-Powered Job Search & Auto-Apply",
     description:

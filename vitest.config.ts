@@ -18,5 +18,12 @@ export default defineConfig({
         inline: ["next-auth", "next"],
       },
     },
+    coverage: {
+      provider: "@vitest/coverage-v8",
+      thresholds: {
+        lines: 60,
+        functions: 60,
+      },
+    },
   },
 });

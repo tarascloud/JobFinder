@@ -4,6 +4,11 @@ import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/current-user";
 import { readFile } from "fs/promises";
 import path from "path";
+import {
+  safeExternalFetch,
+  parseLocalResumeUrl,
+  SafeFetchError,
+} from "@/lib/safe-fetch";
 
 export async function getProfile() {
   try {
@@ -268,21 +273,30 @@ export async function analyzeResumeForUser(
   userId: number
 ): Promise<ComprehensiveAnalysisResult | { error: string }> {
   try {
-    // Fetch resume content (supports PDF, HTML, LinkedIn, local uploads)
+    // Fetch resume content (supports PDF, HTML, LinkedIn, local uploads).
+    // SSRF hardening (ARC-20260601-0002): for /-prefixed URLs we read the
+    // file from disk via parseLocalResumeUrl() — never coerce to
+    // http://localhost. For remote URLs we go through safeExternalFetch()
+    // which enforces scheme + host allowlist + private-IP blocklist +
+    // 5 MB body cap.
     let resumeText = "";
     const isLinkedIn = isLinkedInUrl(resumeUrl);
-    const isLocalUpload =
-      resumeUrl.startsWith("/api/resumes/") || resumeUrl.startsWith("/resumes/");
+    const localFilename = parseLocalResumeUrl(resumeUrl);
 
     try {
-      if (isLocalUpload) {
+      if (resumeUrl.startsWith("/") && localFilename === null) {
+        // Looks local but failed the strict resume-path regex
+        // (path traversal, %2F, weird chars). Reject upfront.
+        console.warn("[analyzeResume] Rejected local URL outside /api/resumes/:", resumeUrl);
+        return { error: "Resume URL is not allowed" };
+      }
+
+      if (localFilename !== null) {
         // Read uploaded file directly from disk — no HTTP needed
-        // Supports both old /resumes/ URLs and new /api/resumes/ URLs
-        const filename = resumeUrl.split("/").pop() || "";
         const dataDir = process.env.DATA_DIR || "/app/data";
-        const filePath = path.join(dataDir, "resumes", filename);
+        const filePath = path.join(dataDir, "resumes", localFilename);
         // Also check legacy public/resumes/ path
-        const legacyPath = path.join(process.cwd(), "public", "resumes", filename);
+        const legacyPath = path.join(process.cwd(), "public", "resumes", localFilename);
 
         let buffer: Buffer | null = null;
         try {
@@ -299,8 +313,7 @@ export async function analyzeResumeForUser(
         }
 
         // Extract text from PDF using pdf-parse, or fallback to raw ASCII
-        const fname = resumeUrl.split("/").pop() || "";
-        if (fname.endsWith(".pdf")) {
+        if (localFilename.endsWith(".pdf")) {
           try {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const pdfParse = require("pdf-parse");
@@ -321,31 +334,38 @@ export async function analyzeResumeForUser(
         }
         console.log("[analyzeResume] Local file text length:", resumeText.length);
       } else {
-        // Remote URL — fetch via HTTP
-        const fullUrl = resumeUrl.startsWith("/")
-          ? `http://localhost:${process.env.PORT ?? "3456"}${resumeUrl}`
-          : resumeUrl;
+        // Remote URL — fetch via safeExternalFetch (SSRF-hardened).
+        console.log("[analyzeResume] Fetching URL:", resumeUrl, "isLinkedIn:", isLinkedIn);
 
-        console.log("[analyzeResume] Fetching URL:", fullUrl, "isLinkedIn:", isLinkedIn);
-
-        const response = await fetch(fullUrl, {
-          headers: {
-            "User-Agent": "Mozilla/5.0 (compatible; JobFinder/1.0)",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          },
-          signal: AbortSignal.timeout(15000),
-        });
+        let response;
+        try {
+          response = await safeExternalFetch(resumeUrl, {
+            headers: {
+              "User-Agent": "Mozilla/5.0 (compatible; JobFinder/1.0)",
+              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            },
+            timeoutMs: 15000,
+            maxBytes: 5_000_000,
+          });
+        } catch (e) {
+          if (e instanceof SafeFetchError) {
+            console.warn("[analyzeResume] safe-fetch rejected URL:", e.code, e.message);
+            // Return a generic message — don't leak which check failed.
+            return { error: "Resume URL is not allowed or unreachable" };
+          }
+          throw e;
+        }
 
         if (!response.ok) {
           console.error("[analyzeResume] Fetch failed:", response.status, response.statusText);
           return { error: `Failed to fetch resume: ${response.status}` };
         }
 
-        const contentType = response.headers.get("content-type") || "";
+        const contentType = response.contentType;
         console.log("[analyzeResume] Content-Type:", contentType);
 
         if (contentType.includes("text/html") || contentType.includes("application/xhtml")) {
-          const html = await response.text();
+          const html = response.text;
           resumeText = stripHtmlToText(html);
 
           if (isLinkedIn) {
@@ -359,7 +379,7 @@ export async function analyzeResumeForUser(
             console.log("[analyzeResume] LinkedIn text length:", resumeText.length);
           }
         } else {
-          resumeText = await response.text();
+          resumeText = response.text;
         }
 
         console.log("[analyzeResume] Resume text length:", resumeText.length);

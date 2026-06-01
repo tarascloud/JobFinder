@@ -3,6 +3,10 @@ import { requireAuth } from "@/lib/api-auth";
 import { prisma } from "@/lib/db";
 import { analyzeResumeForUser } from "@/actions/profile";
 import { checkRateLimitAsync } from "@/lib/rate-limiter";
+import {
+  isHostAllowed,
+  parseLocalResumeUrl,
+} from "@/lib/safe-fetch";
 
 export async function GET(request: NextRequest) {
   try {
@@ -60,6 +64,42 @@ export async function POST(request: NextRequest) {
         { error: "resumeUrl is required" },
         { status: 400 }
       );
+    }
+
+    // SSRF pre-check (ARC-20260601-0002): reject obviously-bad URLs
+    // before scheduling background work. The action layer
+    // (safeExternalFetch) does the full DNS + IP check; here we just
+    // do shape validation so we don't write "analyzing" status for a
+    // request that's guaranteed to fail.
+    if (resumeUrl.startsWith("/")) {
+      if (parseLocalResumeUrl(resumeUrl) === null) {
+        return NextResponse.json(
+          { error: "Resume URL is not allowed" },
+          { status: 400 }
+        );
+      }
+    } else {
+      let parsedUrl: URL;
+      try {
+        parsedUrl = new URL(resumeUrl);
+      } catch {
+        return NextResponse.json(
+          { error: "Invalid resumeUrl" },
+          { status: 400 }
+        );
+      }
+      if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        return NextResponse.json(
+          { error: "URL scheme is not allowed" },
+          { status: 400 }
+        );
+      }
+      if (!isHostAllowed(parsedUrl.hostname)) {
+        return NextResponse.json(
+          { error: "URL host is not allowed" },
+          { status: 400 }
+        );
+      }
     }
 
     // Ensure profile exists and set status to analyzing

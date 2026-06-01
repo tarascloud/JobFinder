@@ -67,6 +67,7 @@ SCAN_DIR="$PUBLIC_DIR"
 scan_pattern() {
   local label="$1"
   local pattern="$2"
+  local extra_exclude="${3:-}"
   local matches
   matches=$(grep -rn --include="*.ts" --include="*.tsx" --include="*.js" --include="*.json" --include="*.yml" --include="*.yaml" --include="*.sh" --include="*.env*" --include="*.md" -E "$pattern" "$SCAN_DIR" \
     --exclude-dir=node_modules \
@@ -83,6 +84,7 @@ scan_pattern() {
     --exclude="*.spec.ts" \
     --exclude-dir="tests" \
     --exclude-dir="__tests__" \
+    ${extra_exclude:+--exclude="$extra_exclude"} \
     2>/dev/null || true)
 
   if [ -n "$matches" ]; then
@@ -102,7 +104,9 @@ scan_pattern "Personal email (tpedchenko)" "tpedchenko@gmail\.com"
 scan_pattern "Telegram user ID" "289736191"
 
 # IP addresses (private network)
-scan_pattern "Private IP address" "192\.168\.[0-9]+\.[0-9]+"
+# Exception: src/lib/safe-fetch.ts intentionally references RFC1918 ranges
+# in comments + hex constants for SSRF blocklist; that file is allowlisted.
+scan_pattern "Private IP address" "192\.168\.[0-9]+\.[0-9]+" "safe-fetch.ts"
 
 # Tailscale IP
 scan_pattern "Tailscale IP" "100\.106\.[0-9]+\.[0-9]+"

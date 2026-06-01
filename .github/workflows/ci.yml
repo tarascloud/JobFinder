@@ -44,5 +44,12 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
+      - name: TypeScript check
+        run: npx tsc --noEmit
+      - name: Lint
+        run: npm run lint
       - run: npm run build
-      - run: npm test
+      - name: Prettier format check
+        run: npx prettier --check .
+      - name: Unit tests
+        run: npm test -- --coverage --reporter=text

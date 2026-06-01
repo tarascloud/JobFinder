@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { sendTelegramMessage } from "@/lib/telegram-bot";
-import { timingSafeEqual } from "crypto";
+import { timingSafeCompareStr } from "@/lib/timing-safe";
 
 /**
  * Telegram Bot Webhook endpoint.
@@ -24,16 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
-  let isValid = false;
-  try {
-    const expected = Buffer.from(webhookSecret, "utf8");
-    const incoming = Buffer.from(incomingToken, "utf8");
-    isValid = expected.length === incoming.length && timingSafeEqual(expected, incoming);
-  } catch {
-    isValid = false;
-  }
-
-  if (!isValid) {
+  if (!timingSafeCompareStr(webhookSecret, incomingToken)) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
