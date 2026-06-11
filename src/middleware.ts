@@ -14,6 +14,7 @@ const PUBLIC_PATHS = [
   "/api/email-response",
   "/api/telegram-webhook",
   "/api/scrape",        // bearer-token auth (JOBFINDER_CRON_SECRET), no session
+  "/api/scrape-hourly", // bearer-token auth (verifyCronSecret), no session
   "/api/apply",         // bearer-token auth (JOBFINDER_CRON_SECRET), no session
 ];
 
@@ -62,14 +63,15 @@ function getClientIp(request: NextRequest): string {
   );
 }
 
-function isPublic(pathname: string): boolean {
+export function isPublic(pathname: string): boolean {
   return PUBLIC_PATHS.some(
     (p) => pathname === p || pathname.startsWith(p + "/"),
   );
 }
 
 // SEO files that must be publicly accessible to search engine crawlers
-const SEO_PATHS = ["/sitemap.xml", "/robots.txt"];
+// (/opengraph-image is the Next.js-generated OG image, also used as twitter:image)
+const SEO_PATHS = ["/sitemap.xml", "/robots.txt", "/opengraph-image"];
 
 function isAsset(pathname: string): boolean {
   return (
@@ -99,11 +101,16 @@ const CSRF_EXEMPT_PREFIXES = [
   "/api/email-response",
   "/api/telegram-webhook",
   "/api/scrape",        // cron bearer-token auth, no cookie session
+  "/api/scrape-hourly", // cron bearer-token auth, no cookie session
   "/api/apply",         // cron bearer-token auth, no cookie session
 ];
 
-function csrfExempt(pathname: string): boolean {
-  return CSRF_EXEMPT_PREFIXES.some((p) => pathname.startsWith(p));
+// Exact + slash matching (same as isPublic) so e.g. "/api/scrape" does
+// NOT exempt "/api/scrape-stream" (cookie-session route, needs CSRF check).
+export function csrfExempt(pathname: string): boolean {
+  return CSRF_EXEMPT_PREFIXES.some(
+    (p) => pathname === p || pathname.startsWith(p + "/"),
+  );
 }
 
 /**
