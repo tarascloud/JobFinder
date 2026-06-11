@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/EmptyState";
 import {
   getPendingQuestions,
   getAnsweredQuestions,
@@ -44,20 +45,20 @@ interface QaPairData {
 function ConfidenceBadge({ confidence }: { confidence: number }) {
   if (confidence >= 80) {
     return (
-      <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium bg-green-500/15 text-green-400 border border-green-500/30">
+      <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium bg-status-success/15 text-status-success border border-status-success/30">
         {confidence}%
       </span>
     );
   }
   if (confidence >= 50) {
     return (
-      <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium bg-yellow-500/15 text-yellow-400 border border-yellow-500/30">
+      <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium bg-status-warning/15 text-status-warning border border-status-warning/30">
         {confidence}%
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium bg-red-500/15 text-red-400 border border-red-500/30">
+    <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium bg-status-error/15 text-status-error border border-status-error/30">
       <AlertTriangle className="h-2.5 w-2.5" />
       {confidence}%
     </span>
@@ -244,14 +245,20 @@ export default function QAPage() {
       </div>
 
       {/* Pending — questions without answers */}
-      {pending.length > 0 && (
-        <section>
-          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-yellow-400" />
-            {t("pending")}
-            <Badge color="yellow">{pending.length}</Badge>
-          </h2>
+      <section>
+        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <MessageSquare className="h-5 w-5 text-status-warning" />
+          {t("pending")}
+          {pending.length > 0 && <Badge color="yellow">{pending.length}</Badge>}
+        </h2>
 
+        {pending.length === 0 ? (
+          <EmptyState
+            icon={MessageSquare}
+            title={t("no_pending")}
+            className="py-10 border border-dashed border-border rounded-lg"
+          />
+        ) : (
           <div className="space-y-3">
             {pending.map((q) => (
               <Card key={q.id}>
@@ -278,6 +285,7 @@ export default function QAPage() {
                         setDrafts({ ...drafts, [q.id]: e.target.value })
                       }
                       placeholder={t("answer_placeholder")}
+                      aria-label={t("answer_placeholder")}
                       className="flex-1 rounded-md border border-input bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                       onKeyDown={(e) => {
                         if (e.key === "Enter") handleSaveAnswer(q.id);
@@ -287,6 +295,7 @@ export default function QAPage() {
                       size="sm"
                       onClick={() => handleSaveAnswer(q.id)}
                       disabled={!drafts[q.id]?.trim() || savingId === q.id}
+                      aria-label={tCommon("save")}
                     >
                       {savingId === q.id ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
@@ -300,6 +309,7 @@ export default function QAPage() {
                       onClick={() => handleAutoAnswer(q.id)}
                       disabled={autoAnsweringId === q.id}
                       title={t("auto_answer")}
+                      aria-label={t("auto_answer")}
                     >
                       {autoAnsweringId === q.id ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
@@ -312,13 +322,13 @@ export default function QAPage() {
               </Card>
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {/* Answered — simple table */}
       <section>
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <CheckCircle className="h-5 w-5 text-green-400" />
+          <CheckCircle className="h-5 w-5 text-status-success" />
           {t("answered")}
           {answered.length > 0 && (
             <Badge color="green">{answered.length}</Badge>
@@ -326,11 +336,11 @@ export default function QAPage() {
         </h2>
 
         {answered.length === 0 ? (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <p className="text-muted-foreground">{t("no_answered")}</p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={CheckCircle}
+            title={t("no_answered")}
+            className="py-10 border border-dashed border-border rounded-lg"
+          />
         ) : (
           <div className="border border-border rounded-lg overflow-hidden">
             <table className="w-full text-sm">
@@ -358,7 +368,7 @@ export default function QAPage() {
                     <tr
                       key={qa.id}
                       className={`border-b border-border last:border-0 hover:bg-muted/30 transition-colors ${
-                        needsReview ? "bg-red-500/5" : ""
+                        needsReview ? "bg-status-error/5" : ""
                       }`}
                     >
                       <td className="px-4 py-2.5 text-foreground">
@@ -368,7 +378,7 @@ export default function QAPage() {
                             <Sparkles className="h-3 w-3 text-purple-400 shrink-0" />
                           )}
                           {needsReview && (
-                            <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium bg-red-500/15 text-red-400 border border-red-500/30 shrink-0">
+                            <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium bg-status-error/15 text-status-error border border-status-error/30 shrink-0">
                               <AlertTriangle className="h-2.5 w-2.5" />
                               {t("needs_review")}
                             </span>
@@ -382,6 +392,7 @@ export default function QAPage() {
                               type="text"
                               value={editValue}
                               onChange={(e) => setEditValue(e.target.value)}
+                              aria-label={t("col_answer")}
                               className="flex-1 rounded-md border border-input bg-background px-2 py-1 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                               autoFocus
                               onKeyDown={(e) => {
@@ -392,7 +403,8 @@ export default function QAPage() {
                             <button
                               onClick={() => handleInlineEdit(qa.id)}
                               disabled={savingId === qa.id}
-                              className="p-1 text-green-400 hover:text-green-300"
+                              aria-label={tCommon("save")}
+                              className="p-1 text-status-success hover:text-status-success/80"
                             >
                               {savingId === qa.id ? (
                                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -402,6 +414,7 @@ export default function QAPage() {
                             </button>
                             <button
                               onClick={cancelEditing}
+                              aria-label={tCommon("cancel")}
                               className="p-1 text-muted-foreground hover:text-foreground"
                             >
                               <X className="h-3.5 w-3.5" />
@@ -423,7 +436,8 @@ export default function QAPage() {
                           <button
                             onClick={() => startEditing(qa)}
                             className="p-1 text-muted-foreground hover:text-foreground transition-colors"
-                            title="Edit"
+                            title={tCommon("edit")}
+                            aria-label={tCommon("edit")}
                           >
                             <Pencil className="h-3.5 w-3.5" />
                           </button>

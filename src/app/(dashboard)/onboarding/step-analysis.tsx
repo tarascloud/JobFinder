@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ANALYSIS_MESSAGES } from "./types";
+import { FormError } from "@/components/shared/form-error";
 
 interface StepAnalysisProps {
   analysisMessageIndex: number;
@@ -73,7 +74,7 @@ export default function StepAnalysis({
 
           {analysisError && (
             <div className="space-y-3">
-              <p className="text-sm text-red-400">{analysisError}</p>
+              <FormError>{analysisError}</FormError>
               <Button variant="outline" onClick={onBack}>
                 <ChevronLeft className="h-4 w-4 mr-1" /> {tCommon("back")}
               </Button>

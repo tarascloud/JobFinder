@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { FormError } from "@/components/shared/form-error";
 import {
   Dialog,
   DialogContent,
@@ -45,7 +46,7 @@ interface FormData {
   autoApply: boolean;
 }
 
-function TagInput({ value, onChange, placeholder }: { value: string[]; onChange: (tags: string[]) => void; placeholder?: string }) {
+function TagInput({ id, value, onChange, placeholder }: { id?: string; value: string[]; onChange: (tags: string[]) => void; placeholder?: string }) {
   const [input, setInput] = useState("");
   const addTag = (tag: string) => {
     const trimmed = tag.trim();
@@ -60,13 +61,13 @@ function TagInput({ value, onChange, placeholder }: { value: string[]; onChange:
         {value.map((tag) => (
           <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-primary/15 border border-primary/40 text-primary px-2.5 py-0.5 text-sm">
             {tag}
-            <button type="button" onClick={() => removeTag(tag)} className="text-primary/60 hover:text-primary cursor-pointer">
-              <X className="h-3 w-3" />
+            <button type="button" onClick={() => removeTag(tag)} aria-label={`Remove ${tag}`} className="text-primary/60 hover:text-primary cursor-pointer">
+              <X className="h-3 w-3" aria-hidden="true" />
             </button>
           </span>
         ))}
       </div>
-      <Input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag(input); } }} placeholder={placeholder} />
+      <Input id={id} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag(input); } }} placeholder={placeholder} />
       <p className="text-xs text-muted-foreground mt-1">Press Enter to add</p>
     </div>
   );
@@ -118,35 +119,43 @@ export function SearchProfileDialog({
           )}
 
           <div>
-            <Label>{t("name")}</Label>
-            <Input value={form.name} onChange={(e) => onFormChange("name", e.target.value)} placeholder="Senior Frontend Remote" />
+            <Label htmlFor="sp-name" required>{t("name")}</Label>
+            <Input
+              id="sp-name"
+              value={form.name}
+              onChange={(e) => onFormChange("name", e.target.value)}
+              placeholder="Senior Frontend Remote"
+              aria-required="true"
+              aria-invalid={!!error && !form.name.trim()}
+              aria-describedby={error ? "sp-form-error" : undefined}
+            />
           </div>
 
           <div>
-            <Label>{t("job_titles")}</Label>
-            <Input value={form.jobTitles} onChange={(e) => onFormChange("jobTitles", e.target.value)} placeholder="Senior Frontend Engineer, Staff Engineer" />
+            <Label htmlFor="sp-job-titles">{t("job_titles")}</Label>
+            <Input id="sp-job-titles" value={form.jobTitles} onChange={(e) => onFormChange("jobTitles", e.target.value)} placeholder="Senior Frontend Engineer, Staff Engineer" />
             <p className="text-xs text-muted-foreground mt-1">Comma-separated</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>{t("min_salary")}</Label>
-              <Input type="number" value={form.minSalary} onChange={(e) => onFormChange("minSalary", e.target.value)} placeholder="100000" />
+              <Label htmlFor="sp-min-salary">{t("min_salary")}</Label>
+              <Input id="sp-min-salary" type="number" value={form.minSalary} onChange={(e) => onFormChange("minSalary", e.target.value)} placeholder="100000" />
             </div>
             <div>
-              <Label>{t("currency")}</Label>
-              <Input value={form.currency} onChange={(e) => onFormChange("currency", e.target.value)} placeholder="EUR" />
+              <Label htmlFor="sp-currency">{t("currency")}</Label>
+              <Input id="sp-currency" value={form.currency} onChange={(e) => onFormChange("currency", e.target.value)} placeholder="EUR" />
             </div>
           </div>
 
           <div>
-            <Label>{t("geography")}</Label>
-            <Input value={form.geographies} onChange={(e) => onFormChange("geographies", e.target.value)} placeholder="Remote (EU), Spain, Germany" />
+            <Label htmlFor="sp-geography">{t("geography")}</Label>
+            <Input id="sp-geography" value={form.geographies} onChange={(e) => onFormChange("geographies", e.target.value)} placeholder="Remote (EU), Spain, Germany" />
           </div>
 
           <div>
-            <Label>{t("skills")}</Label>
-            <TagInput value={form.skills} onChange={(tags) => onFormTagChange("skills", tags)} placeholder="React, TypeScript, Node.js" />
+            <Label htmlFor="sp-skills">{t("skills")}</Label>
+            <TagInput id="sp-skills" value={form.skills} onChange={(tags) => onFormTagChange("skills", tags)} placeholder="React, TypeScript, Node.js" />
           </div>
 
           <div>
@@ -202,32 +211,32 @@ export function SearchProfileDialog({
           </div>
 
           <div>
-            <Label>{t("excluded_companies")}</Label>
-            <TagInput value={form.excludedCompanies} onChange={(tags) => onFormTagChange("excludedCompanies", tags)} placeholder="Acme Corp, Evil Inc" />
+            <Label htmlFor="sp-excluded-companies">{t("excluded_companies")}</Label>
+            <TagInput id="sp-excluded-companies" value={form.excludedCompanies} onChange={(tags) => onFormTagChange("excludedCompanies", tags)} placeholder="Acme Corp, Evil Inc" />
           </div>
 
           <div>
-            <Label>{t("excluded_keywords")}</Label>
-            <TagInput value={form.excludedKeywords} onChange={(tags) => onFormTagChange("excludedKeywords", tags)} placeholder="senior, manager, lead" />
+            <Label htmlFor="sp-excluded-keywords">{t("excluded_keywords")}</Label>
+            <TagInput id="sp-excluded-keywords" value={form.excludedKeywords} onChange={(tags) => onFormTagChange("excludedKeywords", tags)} placeholder="senior, manager, lead" />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <Label>{t("apply_hours")} (start)</Label>
-              <Input type="number" min={0} max={23} value={form.applyHoursStart} onChange={(e) => onFormChange("applyHoursStart", e.target.value)} />
+              <Label htmlFor="sp-hours-start">{t("apply_hours")} (start)</Label>
+              <Input id="sp-hours-start" type="number" min={0} max={23} value={form.applyHoursStart} onChange={(e) => onFormChange("applyHoursStart", e.target.value)} />
             </div>
             <div>
-              <Label>{t("apply_hours")} (end)</Label>
-              <Input type="number" min={0} max={23} value={form.applyHoursEnd} onChange={(e) => onFormChange("applyHoursEnd", e.target.value)} />
+              <Label htmlFor="sp-hours-end">{t("apply_hours")} (end)</Label>
+              <Input id="sp-hours-end" type="number" min={0} max={23} value={form.applyHoursEnd} onChange={(e) => onFormChange("applyHoursEnd", e.target.value)} />
             </div>
             <div>
-              <Label>{t("max_daily")}</Label>
-              <Input type="number" value={form.maxDailyApplies} onChange={(e) => onFormChange("maxDailyApplies", e.target.value)} />
+              <Label htmlFor="sp-max-daily">{t("max_daily")}</Label>
+              <Input id="sp-max-daily" type="number" value={form.maxDailyApplies} onChange={(e) => onFormChange("maxDailyApplies", e.target.value)} />
             </div>
           </div>
         </div>
 
-        {error && <p className="text-sm text-destructive bg-destructive/10 rounded-md px-3 py-2">{error}</p>}
+        <FormError id="sp-form-error">{error}</FormError>
 
         <DialogFooter>
           <Button variant="ghost" onClick={onClose}>{tCommon("cancel")}</Button>

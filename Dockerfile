@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:22-alpine@sha256:8ea2348b068a9544dae7317b4f3aafcdc032df1647bb7d768a05a5cad1a7683f AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install --legacy-peer-deps
@@ -8,7 +8,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 RUN npx prisma generate
 RUN rm -rf .next node_modules/.cache && npm run build
 
-FROM node:22-alpine AS runner
+FROM node:22-alpine@sha256:8ea2348b068a9544dae7317b4f3aafcdc032df1647bb7d768a05a5cad1a7683f AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs

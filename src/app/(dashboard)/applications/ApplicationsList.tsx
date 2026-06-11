@@ -7,9 +7,9 @@ import {
   CheckCircle2,
   Gauge,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ListSkeleton } from "@/components/shared/list-skeleton";
+import { EmptyState } from "@/components/EmptyState";
 import { getApplyQueue, approveWithCoverLetter, rejectFromQueue, revertToQueued, markAsManuallyApplied, triggerAutoApply, retryAutoApply } from "@/actions/apply-queue";
 import { getApplications, getApplicationRateLimit } from "@/actions/applications";
 import { ApplicationPipeline } from "./ApplicationPipeline";
@@ -194,7 +194,7 @@ export function ApplicationsList() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{tq("title")}</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Loading applications…</p>
+          <p className="text-sm text-muted-foreground mt-0.5">{t("loading")}</p>
         </div>
         <ListSkeleton rows={5} />
       </div>
@@ -207,13 +207,13 @@ export function ApplicationsList() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{tq("title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {allItems.length > 0 ? `${allItems.length} total applications` : "Manage your application pipeline"}
+            {allItems.length > 0 ? t("total_applications", { count: allItems.length }) : t("subtitle")}
           </p>
         </div>
         {rateLimit && (
           <div className="flex items-center gap-2 text-sm">
             <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 ${
-              rateLimit.remaining === 0 ? "bg-red-500/10 text-red-400" : "bg-muted text-muted-foreground"
+              rateLimit.remaining === 0 ? "bg-status-error/10 text-status-error" : "bg-muted text-muted-foreground"
             }`}>
               <Gauge className="h-4 w-4" />
               <span className={rateLimit.remaining === 0 ? "font-medium" : ""}>
@@ -227,7 +227,7 @@ export function ApplicationsList() {
       {allItems.length > 0 && <ApplicationPipeline stats={pipelineStats} />}
 
       {error && (
-        <div className="rounded-md bg-red-900/30 border border-red-700/40 px-4 py-2 text-sm text-red-300">{error}</div>
+        <div className="rounded-md bg-status-error/10 border border-status-error/30 px-4 py-2 text-sm text-status-error">{error}</div>
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -235,7 +235,7 @@ export function ApplicationsList() {
           <TabsTrigger value="queue">
             {tq("queue_tab")}
             {queueItems.length > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-1.5 text-[11px] font-bold">
+              <span className="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-status-warning/20 text-status-warning px-1.5 text-[11px] font-bold">
                 {queueItems.length}
               </span>
             )}
@@ -243,7 +243,7 @@ export function ApplicationsList() {
           <TabsTrigger value="applied">
             {tq("applied_tab")}
             {appliedItems.length > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-green-500/20 text-green-600 dark:text-green-400 px-1.5 text-[11px] font-bold">
+              <span className="ml-2 inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-status-success/20 text-status-success px-1.5 text-[11px] font-bold">
                 {appliedItems.length}
               </span>
             )}
@@ -282,24 +282,19 @@ export function ApplicationsList() {
 
         <TabsContent value="applied">
           {appliedItems.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent className="py-16 px-6 text-center">
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
-                  <CheckCircle2 className="h-8 w-8 text-muted-foreground/60" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-1.5">{t("no_applications")}</h3>
-                <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                  Approve queued applications and they will appear here after applying
-                </p>
-              </CardContent>
-            </Card>
+            <EmptyState
+              icon={CheckCircle2}
+              title={t("no_applications")}
+              description={t("empty_applied_hint")}
+              className="border border-dashed border-border rounded-xl"
+            />
           ) : (
             <div className="space-y-2">
               <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-2.5 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
-                <div className="col-span-4">Position</div>
-                <div className="col-span-3">Company</div>
-                <div className="col-span-2 text-center">Status</div>
-                <div className="col-span-2 text-center">Applied</div>
+                <div className="col-span-4">{t("th_position")}</div>
+                <div className="col-span-3">{t("th_company")}</div>
+                <div className="col-span-2 text-center">{t("th_status")}</div>
+                <div className="col-span-2 text-center">{t("th_applied")}</div>
                 <div className="col-span-1" />
               </div>
               {appliedItems.map((app) => (
@@ -311,24 +306,19 @@ export function ApplicationsList() {
 
         <TabsContent value="all">
           {allItems.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent className="py-16 px-6 text-center">
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
-                  <Send className="h-8 w-8 text-muted-foreground/60" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-1.5">{t("no_applications")}</h3>
-                <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                  Start by queuing vacancies and approving them for application
-                </p>
-              </CardContent>
-            </Card>
+            <EmptyState
+              icon={Send}
+              title={t("no_applications")}
+              description={t("empty_all_hint")}
+              className="border border-dashed border-border rounded-xl"
+            />
           ) : (
             <div className="space-y-2">
               <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-2.5 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
-                <div className="col-span-4">Position</div>
-                <div className="col-span-3">Company</div>
-                <div className="col-span-2 text-center">Status</div>
-                <div className="col-span-2 text-center">Date</div>
+                <div className="col-span-4">{t("th_position")}</div>
+                <div className="col-span-3">{t("th_company")}</div>
+                <div className="col-span-2 text-center">{t("th_status")}</div>
+                <div className="col-span-2 text-center">{t("th_date")}</div>
                 <div className="col-span-1" />
               </div>
               {allItems.map((app) => (

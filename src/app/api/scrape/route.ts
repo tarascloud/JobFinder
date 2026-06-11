@@ -7,7 +7,11 @@ import { scoreVacancy } from "@/lib/ai/scorer";
 import { generateCoverLetter } from "@/lib/ai/cover-letter";
 import { sendTelegramNotification } from "@/lib/telegram";
 import { createNotification } from "@/actions/notifications";
-import { saveVacancy, loadExistingVacanciesForDedup } from "@/lib/save-vacancy";
+import {
+  loadExistingVacanciesForDedup,
+  prefetchExistingByPlatformId,
+  batchSaveVacancies,
+} from "@/lib/save-vacancy";
 
 export async function POST(request: NextRequest) {
   if (!verifyCronSecret(request)) {
@@ -46,27 +50,38 @@ export async function POST(request: NextRequest) {
       // Load existing vacancies for cross-platform dedup
       const existingVacancies = await loadExistingVacanciesForDedup(sp.userId);
 
-      // Save and dedup vacancies
-      for (const v of vacancies) {
-        let vacancyId: number;
-        let isNew: boolean;
-        try {
-          const saved = await saveVacancy(v, sp.userId, sp.id, existingVacancies);
-          vacancyId = saved.vacancyId;
-          isNew = saved.result === "new";
-        } catch (err) {
-          console.error(
-            `[scrape] Save error for ${v.platform}/${v.externalId}:`,
-            err instanceof Error ? err.message : err
-          );
-          continue;
-        }
+      // Pre-fetch existing vacancies by platform+externalId in batched queries
+      const existingByPlatformId = await prefetchExistingByPlatformId(
+        vacancies.map((v) => ({ platform: v.platform, externalId: v.externalId }))
+      );
 
-        totalScraped++;
+      // Save and dedup vacancies in batch (REV-16 helpers)
+      let created: Array<{ vacancyId: number; isDuplicate: boolean }>;
+      try {
+        const result = await batchSaveVacancies(
+          vacancies,
+          sp.userId,
+          sp.id,
+          existingByPlatformId,
+          existingVacancies
+        );
+        totalScraped += result.newCount + result.dupCount;
+        created = result.created;
+      } catch (err) {
+        console.error(
+          `[scrape] Batch save error for profile ${sp.id}:`,
+          err instanceof Error ? err.message : err
+        );
+        continue;
+      }
 
-        // Score new vacancies with AI
-        if (isNew && sp.user.profile) {
-          const vacancy = await prisma.vacancy.findUnique({ where: { id: vacancyId } });
+      // Score new (non-cross-platform-duplicate) vacancies with AI
+      if (sp.user.profile) {
+        for (const entry of created) {
+          if (entry.isDuplicate) continue;
+          const vacancy = await prisma.vacancy.findUnique({
+            where: { id: entry.vacancyId },
+          });
           if (!vacancy) continue;
           try {
             const score = await scoreVacancy(

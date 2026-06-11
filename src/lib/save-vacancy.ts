@@ -301,7 +301,8 @@ export async function batchEnsureVacancyScores(
  * @param searchProfileId - the search profile ID
  * @param existingByPlatformId - pre-fetched Map from prefetchExistingByPlatformId
  * @param dedupVacancies - mutable array for cross-platform dedup (shared across groups per user)
- * @returns count of newly created vacancies
+ * @returns count of newly created vacancies + the created entries
+ *          (isDuplicate=true means cross-platform duplicate, equivalent to saveVacancy "cross-platform-dup")
  */
 export async function batchSaveVacancies(
   vacancies: ScrapedVacancy[],
@@ -309,7 +310,11 @@ export async function batchSaveVacancies(
   searchProfileId: number,
   existingByPlatformId: Map<string, ExistingVacancyRecord>,
   dedupVacancies: ExistingVacancyForDedup[]
-): Promise<{ newCount: number; dupCount: number }> {
+): Promise<{
+  newCount: number;
+  dupCount: number;
+  created: Array<{ vacancyId: number; isDuplicate: boolean }>;
+}> {
   let newCount = 0;
   let dupCount = 0;
 
@@ -493,5 +498,12 @@ export async function batchSaveVacancies(
   }
 
   newCount = newVacancyEntries.length;
-  return { newCount, dupCount };
+  return {
+    newCount,
+    dupCount,
+    created: newVacancyEntries.map((e) => ({
+      vacancyId: e.vacancyId,
+      isDuplicate: e.isDuplicate,
+    })),
+  };
 }

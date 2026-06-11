@@ -41,6 +41,7 @@ export function ApplicationCard({
 }: ApplicationCardProps) {
   const t = useTranslations("applications");
   const tq = useTranslations("apply_queue");
+  const tv = useTranslations("vacancies");
 
   const canRetry = app.status === "pending_qa" || app.status === "failed";
   const canFollowUp = app.status === "applied" || app.status === "applied_manual" || app.status === "interview";
@@ -69,15 +70,16 @@ export function ApplicationCard({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors shrink-0"
+                aria-label={tv("open_original")}
               >
-                <ExternalLink className="h-3.5 w-3.5" />
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </div>
           </div>
           <div className="col-span-3">
             <span className="text-sm text-muted-foreground">{app.vacancy.company}</span>
           </div>
-          <div className="col-span-2 text-center">
+          <div className="col-span-2 text-left md:text-center">
             <span className="inline-flex items-center gap-1">
               <Badge color={statusColors[app.status] || "yellow"}>
                 {t(statusKeys[app.status] || (variant === "applied" ? "status_applied" : "status_queued"))}
@@ -89,7 +91,7 @@ export function ApplicationCard({
               )}
             </span>
           </div>
-          <div className="col-span-2 text-center">
+          <div className="col-span-2 text-left md:text-center">
             <span className="text-sm text-muted-foreground">
               {variant === "applied"
                 ? (app.appliedAt
@@ -98,7 +100,7 @@ export function ApplicationCard({
                 : new Date(app.createdAt).toLocaleDateString()}
             </span>
           </div>
-          <div className="col-span-1 text-right flex items-center justify-end gap-1">
+          <div className="col-span-1 flex items-center justify-start md:justify-end gap-1">
             {canRetry && (
               <Button
                 variant="ghost"
@@ -106,6 +108,7 @@ export function ApplicationCard({
                 onClick={() => onRetry(app.id)}
                 disabled={loadingAction === app.id}
                 title={t("retry")}
+                aria-label={t("retry")}
                 className="h-7 w-7 p-0"
               >
                 {loadingAction === app.id ? (
@@ -121,6 +124,7 @@ export function ApplicationCard({
               onClick={() => onManualApply(app.id, app.vacancy.url)}
               disabled={loadingAction === app.id}
               title={tq("apply_manual")}
+              aria-label={tq("apply_manual")}
               className="h-7 w-7 p-0"
             >
               {loadingAction === app.id ? (
@@ -134,8 +138,9 @@ export function ApplicationCard({
                 href={`/applications/${app.id}/email`}
                 className="text-sm text-green-400 hover:text-green-300"
                 title={t("follow_up")}
+                aria-label={t("follow_up")}
               >
-                <Mail className="h-4 w-4 inline" />
+                <Mail className="h-4 w-4 inline" aria-hidden="true" />
               </Link>
             )}
             {isInterview && (
@@ -144,8 +149,9 @@ export function ApplicationCard({
                   href={`/applications/${app.id}/prep`}
                   className="text-sm text-indigo-400 hover:text-indigo-300"
                   title={t("prepare")}
+                  aria-label={t("prepare")}
                 >
-                  <BookOpen className="h-4 w-4 inline" />
+                  <BookOpen className="h-4 w-4 inline" aria-hidden="true" />
                 </Link>
                 <CalendarButton applicationId={app.id} />
               </>

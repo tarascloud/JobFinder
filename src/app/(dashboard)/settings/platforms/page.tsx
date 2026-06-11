@@ -87,11 +87,11 @@ type PlatformAccount = {
 function statusColor(status: string) {
   switch (status) {
     case "active":
-      return "bg-green-500/20 text-green-400 border-green-500/30";
+      return "bg-status-success/20 text-status-success border-status-success/30";
     case "needs_attention":
-      return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      return "bg-status-warning/20 text-status-warning border-status-warning/30";
     case "failed":
-      return "bg-red-500/20 text-red-400 border-red-500/30";
+      return "bg-status-error/20 text-status-error border-status-error/30";
     default:
       return "bg-muted text-muted-foreground border-border";
   }
@@ -275,7 +275,7 @@ export default function PlatformsPage() {
                           )}
                         </p>
                       ) : hasJFAccount ? (
-                        <p className="text-xs text-green-400/80 flex items-center gap-1 mt-0.5">
+                        <p className="text-xs text-status-success/80 flex items-center gap-1 mt-0.5">
                           <Shield className="h-3 w-3 flex-shrink-0" />
                           {t("using_jf_account")}
                         </p>
@@ -296,7 +296,7 @@ export default function PlatformsPage() {
                     {/* Status badges */}
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {hasJFAccount && (
-                        <Badge className="bg-green-500/15 text-green-400 border-green-500/30">
+                        <Badge className="bg-status-success/15 text-status-success border-status-success/30">
                           <Shield className="h-3 w-3 mr-1" />
                           {t("available_via_jf")}
                         </Badge>
@@ -311,7 +311,7 @@ export default function PlatformsPage() {
                               : account.status}
                         </Badge>
                       ) : !hasJFAccount ? (
-                        <Badge className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20">
+                        <Badge className="bg-status-warning/10 text-status-warning border-status-warning/20">
                           <AlertTriangle className="h-3 w-3 mr-1" />
                           {t("status_not_configured")}
                         </Badge>
@@ -353,7 +353,7 @@ export default function PlatformsPage() {
                           variant="ghost"
                           onClick={() => handleDelete(account.id)}
                         >
-                          <Trash2 className="h-4 w-4 text-red-400" />
+                          <Trash2 className="h-4 w-4 text-status-error" />
                         </Button>
                       </>
                     ) : hasJFAccount ? (
@@ -473,15 +473,15 @@ export default function PlatformsPage() {
 
             {/* Show info when platform has JF account */}
             {!editingAccount && integratedPlatforms.has(platform) && (
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-                <Shield className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-green-400">
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-status-success/10 border border-status-success/20">
+                <Shield className="h-4 w-4 text-status-success mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-status-success">
                   {t("jf_account_info")}
                 </p>
               </div>
             )}
 
-            {error && <p className="text-sm text-red-400">{error}</p>}
+            {error && <p className="text-sm text-status-error">{error}</p>}
 
             <DialogFooter>
               <Button

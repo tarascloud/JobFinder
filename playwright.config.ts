@@ -41,9 +41,11 @@ export default defineConfig({
     },
     {
       // Read-only smoke check against prod.
-      // Match only tests under tests/smoke/ — never run mutating tests here.
+      // Match only smoke specs (tests/smoke.spec.ts) — never run mutating
+      // tests here. (Previous regex required a tests/smoke/ directory that
+      // does not exist, so the project silently matched 0 tests.)
       name: "smoke",
-      testMatch: /tests\/smoke\/.*\.spec\.ts$/,
+      testMatch: /smoke\.spec\.ts$/,
       use: {
         ...devices["Desktop Chrome"],
         baseURL: process.env.TEST_BASE_URL || PROD_URL,

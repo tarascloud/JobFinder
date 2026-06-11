@@ -59,7 +59,7 @@ export function serializeLanguages(entries: LanguageEntry[]): string[] {
 function getLevelColor(level: LanguageLevel) {
   switch (level) {
     case "Native":
-      return "bg-green-900/40 border-green-700/40 text-green-300";
+      return "bg-status-success/15 border-status-success/40 text-status-success";
     case "Fluent":
       return "bg-primary/15 border-primary/30 text-primary/80";
     case "Professional":

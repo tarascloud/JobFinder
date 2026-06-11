@@ -52,7 +52,7 @@ export function ResumeRecommendationsPanel({
           </div>
         ) : recommendations.length === 0 ? (
           <div className="text-center py-4">
-            <Check className="h-6 w-6 text-green-400 mx-auto mb-2" />
+            <Check className="h-6 w-6 text-status-success mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">{tOnboarding("no_recommendations")}</p>
           </div>
         ) : (
@@ -69,7 +69,7 @@ export function ResumeRecommendationsPanel({
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="text-sm font-medium">{rec.title}</h4>
                       <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs ${
-                        rec.priority === "high" ? "bg-red-900/40 border-red-700/40 text-red-300"
+                        rec.priority === "high" ? "bg-status-error/15 border-status-error/40 text-status-error"
                           : rec.priority === "medium" ? "bg-amber-900/40 border-amber-700/40 text-amber-300"
                           : "bg-blue-900/40 border-blue-700/40 text-blue-300"
                       }`}>
@@ -81,11 +81,11 @@ export function ResumeRecommendationsPanel({
                     <p className="text-sm text-muted-foreground">{rec.description}</p>
                     {rec.currentText && rec.suggestedText && (
                       <div className="mt-2 space-y-1">
-                        <div className="rounded bg-red-950/30 border border-red-900/30 px-2 py-1">
-                          <p className="text-xs text-red-300/70 line-through">{rec.currentText}</p>
+                        <div className="rounded bg-status-error/10 border border-status-error/20 px-2 py-1">
+                          <p className="text-xs text-status-error/70 line-through">{rec.currentText}</p>
                         </div>
-                        <div className="rounded bg-green-950/30 border border-green-900/30 px-2 py-1">
-                          <p className="text-xs text-green-300">{rec.suggestedText}</p>
+                        <div className="rounded bg-status-success/10 border border-status-success/20 px-2 py-1">
+                          <p className="text-xs text-status-success">{rec.suggestedText}</p>
                         </div>
                       </div>
                     )}
@@ -95,7 +95,7 @@ export function ResumeRecommendationsPanel({
                       onClick={() => onFeedback(rec.id, "like")}
                       className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                         recFeedback[rec.id] === "like"
-                          ? "bg-green-900/40 text-green-400"
+                          ? "bg-status-success/15 text-status-success"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       }`}
                     >
@@ -105,7 +105,7 @@ export function ResumeRecommendationsPanel({
                       onClick={() => onFeedback(rec.id, "dislike")}
                       className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                         recFeedback[rec.id] === "dislike"
-                          ? "bg-red-900/40 text-red-400"
+                          ? "bg-status-error/15 text-status-error"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       }`}
                     >

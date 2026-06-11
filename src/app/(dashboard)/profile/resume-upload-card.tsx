@@ -119,7 +119,7 @@ export function ResumeUploadCard({
                     : analysisPhase === "analyzing"
                       ? "border-amber-500/50 bg-amber-500/5"
                       : (uploadedFile && analysisPhase !== "error")
-                        ? "border-green-500/50 bg-green-500/5"
+                        ? "border-status-success/50 bg-status-success/5"
                         : "border-border hover:border-primary/40 hover:bg-muted/50"
                 }
               `}
@@ -139,8 +139,8 @@ export function ResumeUploadCard({
                 </div>
               ) : uploadedFile && analysisPhase !== "error" ? (
                 <div className="flex flex-col items-center gap-3">
-                  <CheckCircle className="h-10 w-10 text-green-400" />
-                  <p className="text-sm text-green-300 font-medium">{uploadedFile}</p>
+                  <CheckCircle className="h-10 w-10 text-status-success" />
+                  <p className="text-sm text-status-success font-medium">{uploadedFile}</p>
                   <p className="text-xs text-muted-foreground">
                     {analysisPhase === "analyzing"
                       ? t("upload_complete_analyzing")
@@ -161,7 +161,7 @@ export function ResumeUploadCard({
             </div>
 
             {analyzeError && (
-              <div className="flex items-center gap-2 text-sm text-red-400">
+              <div className="flex items-center gap-2 text-sm text-status-error">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <p>{analyzeError}</p>
               </div>

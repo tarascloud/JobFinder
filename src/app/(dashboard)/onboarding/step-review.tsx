@@ -9,6 +9,7 @@ import { ReviewProfileTab } from "./review-profile-tab";
 import { ReviewSearchesTab } from "./review-searches-tab";
 import { ReviewQaTab } from "./review-qa-tab";
 import type { ReviewTab, AnalyzedProfile, AnalyzedSearchProfile, AnalyzedQaPair } from "./types";
+import { FormError } from "@/components/shared/form-error";
 
 interface StepReviewProps {
   profile: AnalyzedProfile;
@@ -155,7 +156,7 @@ export default function StepReview({
           {tCommon("next")} <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
-      {analyzeError && <p className="text-sm text-red-400 text-center">{analyzeError}</p>}
+      <FormError className="text-center">{analyzeError}</FormError>
     </div>
   );
 }

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import type { AIModel } from "./types";
+import { FormError } from "@/components/shared/form-error";
 
 interface StepUploadProps {
   onAnalysisStart: (url: string) => void;
@@ -196,9 +197,7 @@ export default function StepUpload({ onAnalysisStart, onSkip, onSkipOnboarding }
           </Button>
         </div>
 
-        {analyzeError && (
-          <p className="text-sm text-red-400">{analyzeError}</p>
-        )}
+        <FormError>{analyzeError}</FormError>
 
         <Button
           variant="ghost"

@@ -101,13 +101,13 @@ interface VariantData {
 }
 
 const CHART_COLORS = {
-  blue: "#3b82f6",
-  green: "#22c55e",
-  yellow: "#eab308",
-  purple: "#a855f7",
-  red: "#ef4444",
-  cyan: "#06b6d4",
-  orange: "#f97316",
+  blue: "var(--chart-1)",
+  green: "var(--chart-2)",
+  yellow: "var(--chart-3)",
+  purple: "var(--chart-4)",
+  red: "var(--chart-5)",
+  cyan: "var(--chart-6)",
+  orange: "var(--chart-7)",
 };
 
 const FUNNEL_COLORS = [
@@ -134,11 +134,14 @@ const VARIANT_COLORS: Record<string, string> = {
 };
 
 const TOOLTIP_STYLE = {
-  background: "#1a1a1a",
-  border: "1px solid #333",
+  background: "var(--popover)",
+  border: "1px solid var(--border)",
   borderRadius: "8px",
-  color: "#fff",
+  color: "var(--popover-foreground)",
 };
+
+const GRID_STROKE = "var(--border)";
+const AXIS_STROKE = "var(--muted-foreground)";
 
 function ChartSkeleton() {
   return (
@@ -220,12 +223,12 @@ export default function AnalyticsPage() {
 
   const funnelChartData = funnel
     ? [
-        { name: "Queued", value: funnel.queued },
-        { name: "Approved", value: funnel.approved },
-        { name: "Applied", value: funnel.applied },
-        { name: "Response", value: funnel.response },
-        { name: "Interview", value: funnel.interview },
-        { name: "Offer", value: funnel.offer },
+        { name: t("stage_queued"), value: funnel.queued },
+        { name: t("stage_approved"), value: funnel.approved },
+        { name: t("stage_applied"), value: funnel.applied },
+        { name: t("stage_response"), value: funnel.response },
+        { name: t("stage_interview"), value: funnel.interview },
+        { name: t("stage_offer"), value: funnel.offer },
       ]
     : [];
 
@@ -254,12 +257,12 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={funnelChartData} layout="vertical" margin={{ left: 10, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis type="number" stroke="#888" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
+                  <XAxis type="number" stroke={AXIS_STROKE} fontSize={12} />
                   <YAxis
                     type="category"
                     dataKey="name"
-                    stroke="#888"
+                    stroke={AXIS_STROKE}
                     fontSize={12}
                     width={80}
                   />
@@ -286,14 +289,14 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={weekly} margin={{ left: 0, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
                   <XAxis
                     dataKey="week"
-                    stroke="#888"
+                    stroke={AXIS_STROKE}
                     fontSize={11}
                     tickFormatter={(v: string) => v.replace(/^\d{4}-/, "")}
                   />
-                  <YAxis stroke="#888" fontSize={12} />
+                  <YAxis stroke={AXIS_STROKE} fontSize={12} />
                   <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Line
                     type="monotone"
@@ -301,7 +304,7 @@ export default function AnalyticsPage() {
                     stroke={CHART_COLORS.blue}
                     strokeWidth={2}
                     dot={{ r: 3 }}
-                    name="Applied"
+                    name={t("applied")}
                   />
                   <Line
                     type="monotone"
@@ -309,7 +312,7 @@ export default function AnalyticsPage() {
                     stroke={CHART_COLORS.green}
                     strokeWidth={2}
                     dot={{ r: 3 }}
-                    name="Responses"
+                    name={t("responses")}
                   />
                   <Line
                     type="monotone"
@@ -317,7 +320,7 @@ export default function AnalyticsPage() {
                     stroke={CHART_COLORS.purple}
                     strokeWidth={2}
                     dot={{ r: 3 }}
-                    name="Interviews"
+                    name={t("interviews")}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -341,9 +344,9 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={platforms} margin={{ left: 0, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="platform" stroke="#888" fontSize={12} />
-                  <YAxis stroke="#888" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
+                  <XAxis dataKey="platform" stroke={AXIS_STROKE} fontSize={12} />
+                  <YAxis stroke={AXIS_STROKE} fontSize={12} />
                   <Tooltip
                     contentStyle={TOOLTIP_STYLE}
                     formatter={(value, name) => {
@@ -351,8 +354,8 @@ export default function AnalyticsPage() {
                       return [value, name];
                     }}
                   />
-                  <Bar dataKey="vacancies" fill={CHART_COLORS.blue} name="Vacancies" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="applied" fill={CHART_COLORS.green} name="Applied" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="vacancies" fill={CHART_COLORS.blue} name={t("vacancies")} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="applied" fill={CHART_COLORS.green} name={t("applied")} radius={[4, 4, 0, 0]} />
                   <Bar dataKey="responseRate" fill={CHART_COLORS.purple} name="responseRate" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -371,9 +374,9 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={scores} margin={{ left: 0, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="range" stroke="#888" fontSize={12} />
-                  <YAxis stroke="#888" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
+                  <XAxis dataKey="range" stroke={AXIS_STROKE} fontSize={12} />
+                  <YAxis stroke={AXIS_STROKE} fontSize={12} />
                   <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                     {scores.map((_, idx) => (
@@ -411,10 +414,10 @@ export default function AnalyticsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border text-muted-foreground">
-                      <th className="text-left py-2 font-medium">Company</th>
-                      <th className="text-right py-2 font-medium">Vacancies</th>
-                      <th className="text-right py-2 font-medium">Applied</th>
-                      <th className="text-right py-2 font-medium">Avg Score</th>
+                      <th className="text-left py-2 font-medium">{t("company")}</th>
+                      <th className="text-right py-2 font-medium">{t("vacancies")}</th>
+                      <th className="text-right py-2 font-medium">{t("applied")}</th>
+                      <th className="text-right py-2 font-medium">{t("avg_score")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -429,9 +432,9 @@ export default function AnalyticsPage() {
                           <span
                             className={
                               c.avgScore >= 70
-                                ? "text-green-400"
+                                ? "text-status-success"
                                 : c.avgScore >= 40
-                                  ? "text-yellow-400"
+                                  ? "text-status-warning"
                                   : "text-muted-foreground"
                             }
                           >
@@ -460,14 +463,14 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={timeData} margin={{ left: 0, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
                   <XAxis
                     dataKey="hour"
-                    stroke="#888"
+                    stroke={AXIS_STROKE}
                     fontSize={11}
                     tickFormatter={(h: number) => `${String(h).padStart(2, "0")}:00`}
                   />
-                  <YAxis stroke="#888" fontSize={12} />
+                  <YAxis stroke={AXIS_STROKE} fontSize={12} />
                   <Tooltip
                     contentStyle={TOOLTIP_STYLE}
                     labelFormatter={(h) => `${String(h).padStart(2, "0")}:00`}
@@ -475,13 +478,13 @@ export default function AnalyticsPage() {
                   <Bar
                     dataKey="applications"
                     fill={CHART_COLORS.blue}
-                    name="Applications"
+                    name={t("applications")}
                     radius={[4, 4, 0, 0]}
                   />
                   <Bar
                     dataKey="responses"
                     fill={CHART_COLORS.green}
-                    name="Responses"
+                    name={t("responses")}
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
@@ -506,9 +509,9 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={platformResponse} margin={{ left: 0, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="platform" stroke="#888" fontSize={12} />
-                  <YAxis stroke="#888" fontSize={12} unit="%" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
+                  <XAxis dataKey="platform" stroke={AXIS_STROKE} fontSize={12} />
+                  <YAxis stroke={AXIS_STROKE} fontSize={12} unit="%" />
                   <Tooltip
                     contentStyle={TOOLTIP_STYLE}
                     formatter={(value, name) => {
@@ -517,7 +520,7 @@ export default function AnalyticsPage() {
                     }}
                   />
                   <Bar dataKey="responseRate" fill={CHART_COLORS.green} name="responseRate" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="applied" fill={CHART_COLORS.blue} name="Applied" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="applied" fill={CHART_COLORS.blue} name={t("applied")} radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -537,14 +540,14 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={activeBestTimeHours} margin={{ left: 0, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
                   <XAxis
                     dataKey="hour"
-                    stroke="#888"
+                    stroke={AXIS_STROKE}
                     fontSize={11}
                     tickFormatter={(h: number) => `${String(h).padStart(2, "0")}:00`}
                   />
-                  <YAxis stroke="#888" fontSize={12} unit="%" />
+                  <YAxis stroke={AXIS_STROKE} fontSize={12} unit="%" />
                   <Tooltip
                     contentStyle={TOOLTIP_STYLE}
                     labelFormatter={(h) => `${String(h).padStart(2, "0")}:00`}
@@ -590,9 +593,9 @@ export default function AnalyticsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border text-muted-foreground">
-                      <th className="text-left py-2 font-medium">Company</th>
-                      <th className="text-right py-2 font-medium">Applied</th>
-                      <th className="text-right py-2 font-medium">Responses</th>
+                      <th className="text-left py-2 font-medium">{t("company")}</th>
+                      <th className="text-right py-2 font-medium">{t("applied")}</th>
+                      <th className="text-right py-2 font-medium">{t("responses")}</th>
                       <th className="text-right py-2 font-medium">{t("response_rate")}</th>
                     </tr>
                   </thead>
@@ -608,9 +611,9 @@ export default function AnalyticsPage() {
                           <span
                             className={
                               c.responseRate >= 50
-                                ? "text-green-400"
+                                ? "text-status-success"
                                 : c.responseRate >= 20
-                                  ? "text-yellow-400"
+                                  ? "text-status-warning"
                                   : "text-muted-foreground"
                             }
                           >
@@ -639,9 +642,9 @@ export default function AnalyticsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={variantStats} margin={{ left: 0, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="variant" stroke="#888" fontSize={12} />
-                  <YAxis stroke="#888" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} />
+                  <XAxis dataKey="variant" stroke={AXIS_STROKE} fontSize={12} />
+                  <YAxis stroke={AXIS_STROKE} fontSize={12} />
                   <Tooltip
                     contentStyle={TOOLTIP_STYLE}
                     formatter={(value, name) => {
@@ -649,7 +652,7 @@ export default function AnalyticsPage() {
                       return [value, name];
                     }}
                   />
-                  <Bar dataKey="sent" name="Sent" radius={[4, 4, 0, 0]}>
+                  <Bar dataKey="sent" name={t("sent")} radius={[4, 4, 0, 0]}>
                     {variantStats.map((entry) => (
                       <Cell
                         key={entry.variant}

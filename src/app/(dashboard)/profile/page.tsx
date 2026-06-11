@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ProfileSectionSkeleton } from "@/components/shared/list-skeleton";
+import { FormError } from "@/components/shared/form-error";
 import { updateProfile, type AnalyzedProfile, type ExperienceEntry, type EducationEntry } from "@/actions/profile";
 import { getApplyEmailInfo } from "@/actions/apply-email";
 import { resetOnboarding } from "@/actions/onboarding";
@@ -209,7 +210,7 @@ export default function ProfilePage() {
       <div className="space-y-6 max-w-3xl">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Loading profile…</p>
+          <p className="text-sm text-muted-foreground mt-0.5">{t("loading")}</p>
         </div>
         <ProfileSectionSkeleton />
       </div>
@@ -221,7 +222,7 @@ export default function ProfilePage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          Manage your professional profile and resume details
+          {t("subtitle")}
         </p>
       </div>
 
@@ -279,6 +280,9 @@ export default function ProfilePage() {
                 setTelegramError("");
               }}
               placeholder={t("telegram_username_placeholder")}
+              aria-label={t("telegram_title")}
+              aria-invalid={!!telegramError}
+              aria-describedby={telegramError ? "telegram-error" : undefined}
               className="flex-1"
             />
             <Button
@@ -301,12 +305,12 @@ export default function ProfilePage() {
               {telegramSaving ? t("telegram_saving") : t("telegram_save")}
             </Button>
           </div>
-          {telegramError && (
-            <p className="text-xs text-red-400">{telegramError}</p>
-          )}
+          <FormError id="telegram-error" className="text-xs">
+            {telegramError}
+          </FormError>
           {telegramConnected ? (
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-green-500">
+              <div className="flex items-center gap-2 text-xs text-status-success">
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 {t("telegram_connected")}
               </div>
@@ -375,8 +379,8 @@ export default function ProfilePage() {
       >
         <Settings className="h-4 w-4 shrink-0" />
         <span>
-          Configure your job platform accounts{" "}
-          <span className="text-foreground font-medium">Settings &gt; Platforms</span>
+          {t("configure_platforms")}{" "}
+          <span className="text-foreground font-medium">{t("configure_platforms_link")}</span>
         </span>
       </Link>
 
@@ -486,11 +490,11 @@ export default function ProfilePage() {
               className="w-full rounded-lg border border-input bg-muted px-3 py-2 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
             >
               <option value="">{t("select_option")}</option>
-              <option value="Immediately">Immediately</option>
-              <option value="2 weeks">2 weeks</option>
-              <option value="1 month">1 month</option>
-              <option value="2 months">2 months</option>
-              <option value="3 months">3 months</option>
+              <option value="Immediately">{t("notice_immediately")}</option>
+              <option value="2 weeks">{t("notice_2_weeks")}</option>
+              <option value="1 month">{t("notice_1_month")}</option>
+              <option value="2 months">{t("notice_2_months")}</option>
+              <option value="3 months">{t("notice_3_months")}</option>
             </select>
           </div>
         </CardContent>
@@ -520,12 +524,12 @@ export default function ProfilePage() {
               className="w-full rounded-lg border border-input bg-muted px-3 py-2 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
             >
               <option value="">{t("select_option")}</option>
-              <option value="EU citizen">EU citizen</option>
-              <option value="Work permit">Work permit</option>
-              <option value="Student visa">Student visa</option>
-              <option value="Need sponsorship">Need sponsorship</option>
-              <option value="Permanent resident">Permanent resident</option>
-              <option value="Other">Other</option>
+              <option value="EU citizen">{t("auth_eu_citizen")}</option>
+              <option value="Work permit">{t("auth_work_permit")}</option>
+              <option value="Student visa">{t("auth_student_visa")}</option>
+              <option value="Need sponsorship">{t("auth_need_sponsorship")}</option>
+              <option value="Permanent resident">{t("auth_permanent_resident")}</option>
+              <option value="Other">{t("auth_other")}</option>
             </select>
           </div>
         </CardContent>

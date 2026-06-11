@@ -24,6 +24,8 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-chart-7: var(--chart-7);
+  --color-chart-6: var(--chart-6);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -71,6 +73,11 @@
   --color-hr: var(--hr);
   --color-neutral: var(--neutral);
   --color-mood: var(--mood);
+
+  /* Semantic status colors (success / error / warning) */
+  --color-status-success: var(--status-success);
+  --color-status-error: var(--status-error);
+  --color-status-warning: var(--status-warning);
 }
 
 /* ── Light theme (default) ── */
@@ -100,6 +107,13 @@
   --chart-3: #d97706;
   --chart-4: #7c3aed;
   --chart-5: #dc2626;
+  --chart-6: #0891b2;
+  --chart-7: #ea580c;
+
+  /* Semantic status tokens (light) */
+  --status-success: #16a34a;
+  --status-error: #dc2626;
+  --status-warning: #ca8a04;
 
   /* Sidebar */
   --sidebar: #f1f5f9;
@@ -221,6 +235,13 @@
   --chart-3: #fbbf24;
   --chart-4: #a78bfa;
   --chart-5: #f87171;
+  --chart-6: #22d3ee;
+  --chart-7: #fb923c;
+
+  /* Semantic status tokens (dark) */
+  --status-success: #4ade80;
+  --status-error: #f87171;
+  --status-warning: #facc15;
 
   /* Sidebar */
   --sidebar: #111827;
@@ -340,6 +361,13 @@
   --chart-3: #f59e0b;
   --chart-4: #f43f5e;
   --chart-5: #10b981;
+  --chart-6: #06b6d4;
+  --chart-7: #f97316;
+
+  /* Semantic status tokens (aurora light) */
+  --status-success: #12a150;
+  --status-error: #e5484d;
+  --status-warning: #d97706;
 
   --sidebar: #f5f3ef;
   --sidebar-foreground: #1a1a1a;
@@ -453,6 +481,13 @@
   --chart-3: #fbbf24;
   --chart-4: #fb7185;
   --chart-5: #34d399;
+  --chart-6: #22d3ee;
+  --chart-7: #fb923c;
+
+  /* Semantic status tokens (aurora dark) */
+  --status-success: #34d399;
+  --status-error: #f87171;
+  --status-warning: #fbbf24;
 
   --sidebar: #171615;
   --sidebar-foreground: #ededec;
@@ -568,6 +603,13 @@
   --chart-3: #60a5fa;
   --chart-4: #c084fc;
   --chart-5: #f87171;
+  --chart-6: #22d3ee;
+  --chart-7: #ff8a00;
+
+  /* Semantic status tokens (taras) */
+  --status-success: #34d399;
+  --status-error: #f87171;
+  --status-warning: #ffc700;
 
   --sidebar: #1e2023;
   --sidebar-foreground: rgba(255, 255, 255, 0.85);
@@ -686,6 +728,13 @@
   --chart-3: #39ff14;
   --chart-4: #bf5af2;
   --chart-5: #ff9500;
+  --chart-6: #64d2ff;
+  --chart-7: #ffd60a;
+
+  /* Semantic status tokens (neon) */
+  --status-success: #39ff14;
+  --status-error: #ff2d55;
+  --status-warning: #ff9500;
 
   --sidebar: #08080d;
   --sidebar-foreground: rgba(224, 247, 250, 0.9);

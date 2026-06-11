@@ -24,6 +24,7 @@ import {
 } from "@/actions/vacancies";
 import type { Vacancy } from "./types";
 import { VacancyCard } from "./vacancy-card";
+import { EmptyState } from "@/components/EmptyState";
 
 interface VacancyListProps {
   vacancies: Vacancy[];
@@ -166,15 +167,12 @@ export function VacancyList({
 
   if (vacancies.length === 0) {
     return (
-      <Card className="border-dashed">
-        <CardContent className="py-16 px-6 text-center">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
-            <Briefcase className="h-8 w-8 text-muted-foreground/60" />
-          </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1.5">{t("no_vacancies")}</h3>
-          <p className="text-sm text-muted-foreground max-w-sm mx-auto">{tCommon("filter")}</p>
-        </CardContent>
-      </Card>
+      <EmptyState
+        icon={Briefcase}
+        title={t("no_vacancies")}
+        description={tCommon("filter")}
+        className="border border-dashed border-border rounded-xl"
+      />
     );
   }
 
@@ -186,6 +184,7 @@ export function VacancyList({
           onClick={toggleSelectAll}
           className="flex items-center justify-center w-7 h-7 text-muted-foreground hover:text-foreground transition-colors"
           title={t("select_all")}
+          aria-label={t("select_all")}
         >
           {allSelected ? (
             <CheckSquare className="h-4 w-4 text-primary" />

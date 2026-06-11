@@ -59,7 +59,7 @@ export function ReviewProfileTab({ profile, setProfile, aiOriginalProfile }: Rev
         {/* Headline */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-sm text-muted-foreground">{tProfile("headline")}</label>
+            <label htmlFor="ob-headline" className="text-sm text-muted-foreground">{tProfile("headline")}</label>
             <div className="flex items-center gap-1.5">
               {aiOriginalProfile && profile.headline !== aiOriginalProfile.headline && (
                 <span className="text-xs text-amber-400 flex items-center gap-1"><Pencil className="h-3 w-3" /> {tEdit("edited")}</span>
@@ -73,6 +73,7 @@ export function ReviewProfileTab({ profile, setProfile, aiOriginalProfile }: Rev
             </div>
           </div>
           <Input
+            id="ob-headline"
             value={profile.headline}
             onChange={(e) => setProfile((p) => ({ ...p, headline: e.target.value }))}
             placeholder="e.g. Senior Frontend Engineer"
@@ -82,7 +83,7 @@ export function ReviewProfileTab({ profile, setProfile, aiOriginalProfile }: Rev
         {/* Summary */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-sm text-muted-foreground">{tProfile("summary")}</label>
+            <label htmlFor="ob-summary" className="text-sm text-muted-foreground">{tProfile("summary")}</label>
             <div className="flex items-center gap-1.5">
               {aiOriginalProfile && profile.summary !== aiOriginalProfile.summary && (
                 <span className="text-xs text-amber-400 flex items-center gap-1"><Pencil className="h-3 w-3" /> {tEdit("edited")}</span>
@@ -96,6 +97,7 @@ export function ReviewProfileTab({ profile, setProfile, aiOriginalProfile }: Rev
             </div>
           </div>
           <textarea
+            id="ob-summary"
             value={profile.summary}
             onChange={(e) => setProfile((p) => ({ ...p, summary: e.target.value }))}
             rows={3}
@@ -106,8 +108,9 @@ export function ReviewProfileTab({ profile, setProfile, aiOriginalProfile }: Rev
         {/* Years + Salary */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{tProfile("years_experience")}</label>
+            <label htmlFor="ob-years" className="block text-sm text-muted-foreground mb-1.5">{tProfile("years_experience")}</label>
             <Input
+              id="ob-years"
               type="number"
               value={profile.yearsExperience ?? ""}
               onChange={(e) => setProfile((p) => ({ ...p, yearsExperience: e.target.value ? parseInt(e.target.value) : null }))}
@@ -115,9 +118,10 @@ export function ReviewProfileTab({ profile, setProfile, aiOriginalProfile }: Rev
             />
           </div>
           <div>
-            <label className="block text-sm text-muted-foreground mb-1.5">{tProfile("salary_min")}</label>
+            <label htmlFor="ob-salary-min" className="block text-sm text-muted-foreground mb-1.5">{tProfile("salary_min")}</label>
             <div className="flex gap-2">
               <Input
+                id="ob-salary-min"
                 type="number"
                 value={profile.salaryMin ?? ""}
                 onChange={(e) => setProfile((p) => ({ ...p, salaryMin: e.target.value ? parseInt(e.target.value) : null }))}
@@ -125,6 +129,7 @@ export function ReviewProfileTab({ profile, setProfile, aiOriginalProfile }: Rev
                 className="flex-1"
               />
               <select
+                aria-label={tSearches("currency")}
                 value={profile.salaryCurrency}
                 onChange={(e) => setProfile((p) => ({ ...p, salaryCurrency: e.target.value }))}
                 className="rounded-lg border border-input bg-muted px-2 text-sm text-foreground focus:border-ring focus:outline-none"
