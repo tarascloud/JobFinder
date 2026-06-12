@@ -75,9 +75,9 @@ export const metadata: Metadata = {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],
-    apple: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
+    // SMM-20260610-0001: apple-touch-icon must be PNG (iOS does not render
+    // SVG touch icons). Served via src/app/apple-icon.png file convention
+    // (Next.js auto-adds <link rel="apple-touch-icon">), 180x180 from icon-512.png.
   },
   other: {
     "application-name": "JobFinder",
@@ -158,7 +158,7 @@ export default async function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
       </head>
       <body

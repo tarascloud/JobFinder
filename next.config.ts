@@ -36,11 +36,11 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               // googletagmanager.com — GA4 gtag.js is loaded in layout.tsx;
               // without it CSP silently blocks analytics (caught by e2e smoke).
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://static.cloudflareinsights.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://lh3.googleusercontent.com https://avatars.githubusercontent.com https://*.google-analytics.com https://*.googletagmanager.com",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
+              "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://cloudflareinsights.com",
               "frame-ancestors 'none'",
             ].join("; "),
           },
