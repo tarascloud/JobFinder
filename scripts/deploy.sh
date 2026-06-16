@@ -22,6 +22,10 @@ set -euo pipefail
 REPO_DIR="${JF_REPO_DIR:-/opt/repos/taras-code/jf-private}"
 BACKUP_DIR="${JF_BACKUP_DIR:-/opt/docker/backups}"
 BASE_URL="${JF_URL:-http://127.0.0.1:3456}"
+# Infisical-managed secrets file holding DATABASE_URL (so the DSN is never
+# hardcoded here — a literal would leak into the public jf mirror and trip the
+# sync secret-scanner; DEV-20260616).
+SECRETS_ENV="${JF_SECRETS_ENV:-/opt/docker/secrets/.jobfinder.env}"
 DB_USER="jobfinder"
 DB_NAME="jobfinder"
 MIN_BACKUP_BYTES=10240 # 10KB
@@ -50,8 +54,12 @@ git pull origin main
 
 # --- 3. docker build --------------------------------------------------------
 log "Building jobfinder:latest"
+# Resolve DATABASE_URL from the environment, else from the secrets file. Never
+# hardcode the DSN in this script (public-mirror leak).
+DATABASE_URL="${DATABASE_URL:-$(sed -n 's/^DATABASE_URL=//p' "$SECRETS_ENV" 2>/dev/null | head -1 | tr -d '"')}"
+[ -n "$DATABASE_URL" ] || fail "DATABASE_URL not set and not found in $SECRETS_ENV"
 docker build \
-  --build-arg DATABASE_URL="postgresql://jobfinder:jobfinder@pg:5432/jobfinder" \
+  --build-arg DATABASE_URL="$DATABASE_URL" \
   -t jobfinder:latest .
 
 # --- 4. Migration check (manual psql apply for pending) ----------------------
